@@ -122,6 +122,10 @@ namespace NSProgram
 							book.Clear();
 							Console.WriteLine("Book is empty");
 							break;
+						case "delete":
+							int c = book.Delete(Uci.GetInt(2));
+							Console.WriteLine($"{c:N0} moves was deleted");
+							break;
 						case "load":
 							if (!book.Load(Uci.GetValue(2, 0)))
 								Console.WriteLine("File not found");

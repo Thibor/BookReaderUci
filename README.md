@@ -8,8 +8,17 @@ To use this program you need install  <a href="https://dotnet.microsoft.com/down
 **-bn** opening Book file Name<br/>
 **-ef** chess Engine File name<br/>
 **-ea** chess Engine Arguments<br/>
+**-w** add moves to the book<br/>
 **-lr** Limit maximum ply depth when Read from book (default 0) 0 means no limit<br/>
 **-lw** Limit maximum ply depth when Write to book (default 0) 0 means no limit<br/>
+
+## Console commands
+
+**book load** [filename].[uci|pgn] - clear and add<br/>
+**book save** [filename].[uci|png] - save book to the file<br/>
+**book addfile** [filename].[uci|pgn] - adds moves from another book<br/>
+**book delete** [number x] - delete x moves from the book<br/>
+**book clear** - clear all moves from the book<br/>
 
 ### Examples
 
