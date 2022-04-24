@@ -7,7 +7,7 @@ using NSChess;
 
 namespace NSProgram
 {
-	public class CBookUci
+	public class CBook
 	{
 		public int maxRecords = 0;
 		public const string defExt = ".uci";
@@ -15,7 +15,7 @@ namespace NSProgram
 		public readonly string name = "BookReaderUci";
 		public readonly string version = "2022-03-19";
 		public List<string> moves = new List<string>();
-		readonly CChessExt Chess = new CChessExt();
+		readonly CChessExt chess = new CChessExt();
 
 		public void AddUci(string uci)
 		{
@@ -66,7 +66,6 @@ namespace NSProgram
 				int i = (rnd + n) % moves.Count;
 				if (moves[i].IndexOf(m) == 0)
 				{
-
 					string[] mr = moves[i].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 					if (mr.Length > mo.Length)
 						return mr[mo.Length];
@@ -123,18 +122,18 @@ namespace NSProgram
 					continue;
 				cm = Regex.Replace(cm, @"\.(?! |$)", ". ");
 				string[] arrMoves = cm.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
-				Chess.SetFen();
+				chess.SetFen();
 				string movesUci = String.Empty;
 				foreach (string san in arrMoves)
 				{
 					if (Char.IsDigit(san[0]))
 						continue;
-					string umo = Chess.SanToUmo(san);
+					string umo = chess.SanToUmo(san);
 					if (umo == String.Empty)
 						break;
 					movesUci += $" {umo}";
-					int emo = Chess.UmoToEmo(umo);
-					Chess.MakeMove(emo);
+					int emo = chess.UmoToEmo(umo);
+					chess.MakeMove(emo);
 				}
 				moves.Add(movesUci.Trim());
 			}
@@ -186,20 +185,20 @@ namespace NSProgram
 			foreach (string m in moves)
 			{
 				string[] arrMoves = m.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-				Chess.SetFen();
+				chess.SetFen();
 				string png = String.Empty;
 				foreach (string umo in arrMoves)
 				{
-					string san = Chess.UmoToSan(umo);
+					string san = chess.UmoToSan(umo);
 					if (san == String.Empty)
 						break;
-					int number = (Chess.g_moveNumber >> 1) + 1;
-					if (Chess.whiteTurn)
+					int number = (chess.g_moveNumber >> 1) + 1;
+					if (chess.whiteTurn)
 						png += $" {number}. {san}";
 					else
 						png += $" {san}";
-					int emo = Chess.UmoToEmo(umo);
-					Chess.MakeMove(emo);
+					int emo = chess.UmoToEmo(umo);
+					chess.MakeMove(emo);
 				}
 				listPgn.Add(String.Empty);
 				listPgn.Add("[White \"White\"]");

@@ -11,7 +11,7 @@ namespace NSProgram
 		static void Main(string[] args)
 		{
 			int missingIndex = 0;
-			CBookUci book = new CBookUci();
+			CBook book = new CBook();
 			CUci Uci = new CUci();
 			CChessExt chess = new CChessExt();
 			bool isW = false;
@@ -87,7 +87,7 @@ namespace NSProgram
 			if (!book.Load(bookName))
 				if (!book.Load($"{bookName}.uci"))
 					if (!book.Load($"{bookName}.pgn"))
-						book.Load($"{bookName}{CBookUci.defExt}");
+						book.Load($"{bookName}{CBook.defExt}");
 			Console.WriteLine($"info string book {book.moves.Count:N0} lines");
 			Console.WriteLine($"info string book {book.name} ver {book.version} moves {book.moves.Count:N0}");
 			do
