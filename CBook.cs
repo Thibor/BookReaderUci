@@ -59,7 +59,7 @@ namespace NSProgram
 		{
 			if (moves.Count < 1)
 				return String.Empty;
-			int rnd = CChess.random.Next(moves.Count);
+			int rnd = CChess.rnd.Next(moves.Count);
 			string[] mo = m.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 			for (int n = 0; n < moves.Count; n++)
 			{
@@ -209,6 +209,19 @@ namespace NSProgram
 			File.WriteAllLines(path, listPgn);
 			return true;
 		}
+
+		public void Shuffle()
+		{
+			int n = moves.Count;
+			while (n > 1)
+			{
+				int k = CChess.rnd.Next(n--);
+				string value = moves[k];
+				moves[k] = moves[n];
+				moves[n] = value;
+			}
+		}
+
 
 	}
 
