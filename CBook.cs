@@ -19,12 +19,57 @@ namespace NSProgram
 
 		public void AddUci(string uci)
 		{
+			for (int n = moves.Count - 1; n >= 0; n--)
+				if (uci.IndexOf(moves[n]) == 0)
+					moves.RemoveRange(n, 1);
 			moves.Add(uci);
 		}
 
 		public void AddUci(List<string> moves)
 		{
 			AddUci(String.Join(" ", moves));
+		}
+
+		public void AddMate(List<string> uci)
+		{
+			AddUci(uci);
+			DeleteMate(moves.Count - maxRecords);
+			Save();
+		}
+
+		int SelectDel()
+		{
+			if (moves.Count == 0)
+				return -1;
+			int bi = 0;
+			double bv = moves[0].Length;
+			for(int n = 1;n< moves.Count;n++)
+			{
+				double len = moves[n].Length;
+				double cv = len - (len * n) / moves.Count;
+				if(bv < cv)
+				{
+					bv = cv;
+					bi = n;
+				}
+			}
+			return bi;
+		}
+
+		public int DeleteMate(int count)
+		{
+			if (count <= 0)
+				return 0;
+			int c = moves.Count;
+			if (count >= moves.Count)
+				moves.Clear();
+			else
+			{
+				moves.RemoveRange(SelectDel(), 1);
+				if (--count > 0)
+					moves.RemoveRange(0, count);
+			}
+			return c - moves.Count;
 		}
 
 		void ShowCountLines()
@@ -59,19 +104,14 @@ namespace NSProgram
 		{
 			if (moves.Count < 1)
 				return String.Empty;
-			int rnd = CChess.rnd.Next(moves.Count);
 			string[] mo = m.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-			for (int n = 0; n < moves.Count; n++)
-			{
-				int i = (rnd + n) % moves.Count;
-				if (moves[i].IndexOf(m) == 0)
+			foreach (string cm in moves)
+				if (cm.IndexOf(m) == 0)
 				{
-					string[] mr = moves[i].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+					string[] mr = cm.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 					if (mr.Length > mo.Length)
 						return mr[mo.Length];
 				}
-
-			}
 			return String.Empty;
 		}
 
@@ -155,21 +195,24 @@ namespace NSProgram
 				path += defExt;
 			}
 			if (ext == ".uci")
-				return SaveUci();
+				return SaveToUci(p);
 			if (ext == ".pgn")
 				return SavePgn();
 			return false;
 		}
 
-		public bool SaveUci(string p)
+		public bool SaveToUci(string p)
 		{
-			path = p;
-			return SaveUci();
-		}
-
-		bool SaveUci()
-		{
-			File.WriteAllLines(path, moves);
+			FileStream fs = File.Open(p, FileMode.Create, FileAccess.Write, FileShare.None);
+			using (StreamWriter sw = new StreamWriter(fs))
+			{
+				foreach (String uci in moves)
+				{
+					string m = uci.Trim();
+					if(m.Length >0)
+					sw.WriteLine(uci);
+				}
+			}
 			return true;
 		}
 
@@ -216,9 +259,7 @@ namespace NSProgram
 			while (n > 1)
 			{
 				int k = CChess.rnd.Next(n--);
-				string value = moves[k];
-				moves[k] = moves[n];
-				moves[n] = value;
+				(moves[n], moves[k]) = (moves[k], moves[n]);
 			}
 		}
 

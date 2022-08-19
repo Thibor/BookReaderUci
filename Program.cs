@@ -172,11 +172,8 @@ namespace NSProgram
 								movesUci.Add(em);
 								int c = bookLimitW > 0 ? bookLimitW : movesUci.Count;
 								if (missingIndex <= c)
-								{
-									book.AddUci(movesUci.GetRange(0, missingIndex));
+										book.AddMate(movesUci.GetRange(0, missingIndex));
 									book.Delete();
-									book.Save();
-								}
 							}
 						}
 						break;
