@@ -162,10 +162,7 @@ namespace NSProgram
 								chess.MakeMove(emo);
 							}
 							if (chess.g_moveNumber < 2)
-							{
 								missingIndex = 0;
-								book.Shuffle();
-							}
 							if (isW && chess.Is2ToEnd(out string mm, out string em))
 							{
 								movesUci.Add(mm);

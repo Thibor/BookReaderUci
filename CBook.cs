@@ -43,11 +43,11 @@ namespace NSProgram
 				return -1;
 			int bi = 0;
 			double bv = moves[0].Length;
-			for(int n = 1;n< moves.Count;n++)
+			for (int n = 1; n < moves.Count; n++)
 			{
 				double len = moves[n].Length;
 				double cv = len - (len * n) / moves.Count;
-				if(bv < cv)
+				if (bv < cv)
 				{
 					bv = cv;
 					bi = n;
@@ -105,14 +105,17 @@ namespace NSProgram
 			if (moves.Count < 1)
 				return String.Empty;
 			string[] mo = m.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+			int bstC = 0;
+			string bstM = String.Empty;
 			foreach (string cm in moves)
 				if (cm.IndexOf(m) == 0)
 				{
 					string[] mr = cm.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 					if (mr.Length > mo.Length)
-						return mr[mo.Length];
+						if (CChess.rnd.Next(++bstC) == 0)
+							bstM = mr[mo.Length];
 				}
-			return String.Empty;
+			return bstM;
 		}
 
 		public bool Load(string p)
@@ -209,8 +212,8 @@ namespace NSProgram
 				foreach (String uci in moves)
 				{
 					string m = uci.Trim();
-					if(m.Length >0)
-					sw.WriteLine(uci);
+					if (m.Length > 0)
+						sw.WriteLine(uci);
 				}
 			}
 			return true;
@@ -252,17 +255,6 @@ namespace NSProgram
 			File.WriteAllLines(path, listPgn);
 			return true;
 		}
-
-		public void Shuffle()
-		{
-			int n = moves.Count;
-			while (n > 1)
-			{
-				int k = CChess.rnd.Next(n--);
-				(moves[n], moves[k]) = (moves[k], moves[n]);
-			}
-		}
-
 
 	}
 
