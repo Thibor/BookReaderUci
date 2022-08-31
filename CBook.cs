@@ -21,7 +21,10 @@ namespace NSProgram
 		{
 			for (int n = moves.Count - 1; n >= 0; n--)
 				if (uci.IndexOf(moves[n]) == 0)
+				{
 					moves.RemoveRange(n, 1);
+					break;
+				}
 			moves.Add(uci);
 		}
 
@@ -206,14 +209,14 @@ namespace NSProgram
 
 		public bool SaveToUci(string p)
 		{
-			FileStream fs = File.Open(p, FileMode.Create, FileAccess.Write, FileShare.None);
+			using (FileStream fs = File.Open(p, FileMode.Create, FileAccess.Write, FileShare.None))
 			using (StreamWriter sw = new StreamWriter(fs))
 			{
 				foreach (String uci in moves)
 				{
-					string m = uci.Trim();
-					if (m.Length > 0)
-						sw.WriteLine(uci);
+					string u = uci.Trim();
+					if (!String.IsNullOrEmpty(u))
+						sw.WriteLine(u);
 				}
 			}
 			return true;
