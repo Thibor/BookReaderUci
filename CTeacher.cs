@@ -320,61 +320,6 @@ namespace NSProgram
 			}
 		}
 
-		public void UpdateStart()
-		{
-			int index = 0;
-			while (true)
-			{
-				CTData tdg = GetTData();
-				if (!tdg.finished)
-					continue;
-				if (tdg.best != String.Empty)
-				{
-					tdg.line.AddRec(new MSRec(tdg.best, tdg.score));
-					SetTData(tdg);
-					if ((tdg.line.First().score - tdg.line.Last().score < Constants.minScore))
-					{
-						Program.chess.SetFen(tdg.line.fen);
-						List<int> listEmo = Program.chess.GenerateValidMoves(out bool mate);
-						if (mate)
-							Program.accuracy.fenList.DeleteFen(tdg.line.fen);
-						else
-						{
-							List<string> listUci = new List<string>();
-							foreach (int emo in listEmo)
-							{
-								string u = Program.chess.EmoToUmo(emo);
-								if (!tdg.line.MoveExists(u))
-									listUci.Add(u);
-							}
-							string moves = String.Join(" ", listUci.ToArray());
-							if (!String.IsNullOrEmpty(moves))
-							{
-								TeacherWriteLine($"position fen {tdg.line.fen}");
-								TeacherWriteLine($"go depth {tdg.line.depth} searchmoves {moves}");
-								continue;
-							}
-						}
-					}
-					Program.accuracy.fenList.AddLine(tdg.line);
-					Program.accuracy.fenList.SaveToFile();
-				}
-				Program.accuracy.fenList.SortDepth();
-				MSLine line = Program.accuracy.fenList.GetShallowLine();
-				if ((line == null) || (line.depth >= Constants.minDepth))
-					break;
-				CTData tds = new CTData(false);
-				tds.line.fen = line.fen;
-				tds.line.depth = Constants.minDepth;
-				SetTData(tds);
-				TeacherWriteLine("ucinewgame");
-				TeacherWriteLine($"position fen {tds.line.fen}");
-				TeacherWriteLine($"go depth {tds.line.depth}");
-				Console.WriteLine($"{++index} {tds.line.fen}");
-			}
-			Console.WriteLine("finish");
-		}
-
 		public void StudentAccuracyStart()
 		{
 			CTData tds = new CTData(true);
@@ -503,6 +448,61 @@ namespace NSProgram
 			if (teachers.Count > 0)
 				return SetTeacher(teachers[0]);
 			return false;
+		}
+
+		public void UpdateStart()
+		{
+			int index = 0;
+			while (true)
+			{
+				CTData tdg = GetTData();
+				if (!tdg.finished)
+					continue;
+				if (tdg.best != String.Empty)
+				{
+					tdg.line.AddRec(new MSRec(tdg.best, tdg.score));
+					SetTData(tdg);
+					if ((tdg.line.First().score - tdg.line.Last().score < Constants.minScore))
+					{
+						Program.chess.SetFen(tdg.line.fen);
+						List<int> listEmo = Program.chess.GenerateValidMoves(out bool mate);
+						if (mate)
+							Program.accuracy.fenList.DeleteFen(tdg.line.fen);
+						else
+						{
+							List<string> listUci = new List<string>();
+							foreach (int emo in listEmo)
+							{
+								string u = Program.chess.EmoToUmo(emo);
+								if (!tdg.line.MoveExists(u))
+									listUci.Add(u);
+							}
+							string moves = String.Join(" ", listUci.ToArray());
+							if (!String.IsNullOrEmpty(moves))
+							{
+								TeacherWriteLine($"position fen {tdg.line.fen}");
+								TeacherWriteLine($"go depth {tdg.line.depth} searchmoves {moves}");
+								continue;
+							}
+						}
+					}
+					Program.accuracy.fenList.AddLine(tdg.line);
+					Program.accuracy.fenList.SaveToFile();
+				}
+				Program.accuracy.fenList.SortDepth();
+				MSLine line = Program.accuracy.fenList.GetShallowLine();
+				if ((line == null) || (line.depth >= Constants.minDepth))
+					break;
+				CTData tds = new CTData(false);
+				tds.line.fen = line.fen;
+				tds.line.depth = Constants.minDepth;
+				SetTData(tds);
+				TeacherWriteLine("ucinewgame");
+				TeacherWriteLine($"position fen {tds.line.fen}");
+				TeacherWriteLine($"go depth {tds.line.depth}");
+				Console.WriteLine($"{++index} {tds.line.fen}");
+			}
+			Console.WriteLine("finish");
 		}
 
 	}
