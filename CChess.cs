@@ -338,8 +338,8 @@ namespace NSChess
 			if (chunks[2].IndexOf('q') != -1)
 				g_castleRights |= 8;
 			g_passing = UmoToSquare(chunks[3]);
-			g_move50 = chunks.Length < 5 ? 0 : Int32.Parse(chunks[4]);
-			g_moveNumber = chunks.Length < 6 ? 1 : Int32.Parse(chunks[5]);
+			g_move50 = chunks.Length < 5 ? 0 : Int32.TryParse(chunks[4], out int m50) ? m50 : 0;
+			g_moveNumber = chunks.Length < 6 ? 1 : Int32.TryParse(chunks[5], out int num) ? num : 1;
 			if (g_moveNumber > 0)
 				g_moveNumber--;
 			g_moveNumber <<= 1;
@@ -810,7 +810,7 @@ namespace NSChess
 
 		bool IsRepetition(int count = 3)
 		{
-			int min =  undoIndex - g_move50;
+			int min = undoIndex - g_move50;
 			if (min < 0)
 				min = 0;
 			for (int n = undoIndex - 4; n >= min; n -= 2)

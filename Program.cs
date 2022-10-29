@@ -1,38 +1,79 @@
-﻿using System;
+﻿using NSUci;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using NSUci;
+using System.Runtime.InteropServices;
 
 namespace NSProgram
 {
 	static class Program
 	{
+
+		public static CChessExt chess = new CChessExt();
+		public static CAccuracy accuracy = new CAccuracy();
+		public static CTest test = new CTest();
+		public static CTeacher teacher = new CTeacher();
+		public static CBook book = new CBook();
+		public static CUci Uci = new CUci();
+		[DllImport("Kernel32")]
+		private static extern bool SetConsoleCtrlHandler(SetConsoleCtrlEventHandler handler, bool add);
+
+		private delegate bool SetConsoleCtrlEventHandler(CtrlType sig);
+
+		private static bool Handler(CtrlType signal)
+		{
+			switch (signal)
+			{
+				case CtrlType.CTRL_BREAK_EVENT:
+				case CtrlType.CTRL_C_EVENT:
+				case CtrlType.CTRL_LOGOFF_EVENT:
+				case CtrlType.CTRL_SHUTDOWN_EVENT:
+				case CtrlType.CTRL_CLOSE_EVENT:
+					teacher.Terminate();
+					Environment.Exit(0);
+					return false;
+
+				default:
+					return false;
+			}
+		}
+
+		private enum CtrlType
+		{
+			CTRL_C_EVENT = 0,
+			CTRL_BREAK_EVENT = 1,
+			CTRL_CLOSE_EVENT = 2,
+			CTRL_LOGOFF_EVENT = 5,
+			CTRL_SHUTDOWN_EVENT = 6
+		}
+
 		static void Main(string[] args)
 		{
+			SetConsoleCtrlHandler(Handler, true);
 			int missingIndex = 0;
-			CBook book = new CBook();
-			CUci Uci = new CUci();
-			CChessExt chess = new CChessExt();
 			bool isW = false;
 			bool bookRead = false;
 			int bookLimitW = 0;
 			int bookLimitR = 0;
-			string ax = "-bn";
+			string ax = "-bf";
 			List<string> movesUci = new List<string>();
-			List<string> listBn = new List<string>();
+			List<string> listBf = new List<string>();
 			List<string> listEf = new List<string>();
 			List<string> listEa = new List<string>();
+			List<string> listTf = new List<string>();
 			for (int n = 0; n < args.Length; n++)
 			{
 				string ac = args[n];
 				switch (ac)
 				{
-					case "-bn":
-					case "-ef":
-					case "-ea":
-					case "-lr":
-					case "-lw":
+					case "-bf"://book file
+					case "-ef"://engine file
+					case "-ea"://engine arguments
+					case "-lr"://limit ply read
+					case "-lw"://limit ply write
+					case "-tf"://teacher file
+					case "-acd"://analysis count depth
 						ax = ac;
 						break;
 					case "-w":
@@ -42,14 +83,20 @@ namespace NSProgram
 					default:
 						switch (ax)
 						{
-							case "-bn":
-								listBn.Add(ac);
+							case "-bf":
+								listBf.Add(ac);
 								break;
 							case "-ef":
 								listEf.Add(ac);
 								break;
 							case "-ea":
 								listEa.Add(ac);
+								break;
+							case "-tf":
+								listTf.Add(ac);
+								break;
+							case "-acd":
+								Constants.minDepth = int.TryParse(ac, out int acd) ? acd : Constants.minDepth;
 								break;
 							case "-lr":
 								bookLimitR = int.TryParse(ac, out int lr) ? lr : 0;
@@ -65,29 +112,34 @@ namespace NSProgram
 						break;
 				}
 			}
-			string bookName = String.Join(" ", listBn);
-			string engineName = String.Join(" ", listEf);
-			string arguments = String.Join(" ", listEa);
+			string bookFile = String.Join(" ", listBf);
+			string engineFile = String.Join(" ", listEf);
+			string engineArguments = String.Join(" ", listEa);
+			string teacherFile = String.Join(" ", listTf);
 			Process myProcess = new Process();
-			if (File.Exists(engineName))
+			if (File.Exists(engineFile))
 			{
-				myProcess.StartInfo.FileName = engineName;
-				myProcess.StartInfo.WorkingDirectory = Path.GetDirectoryName(engineName);
+				myProcess.StartInfo.FileName = engineFile;
+				myProcess.StartInfo.WorkingDirectory = Path.GetDirectoryName(engineFile);
 				myProcess.StartInfo.UseShellExecute = false;
 				myProcess.StartInfo.RedirectStandardInput = true;
-				myProcess.StartInfo.Arguments = arguments;
+				myProcess.StartInfo.Arguments = engineArguments;
 				myProcess.Start();
 			}
 			else
 			{
-				if (engineName != String.Empty)
+				if (engineFile != String.Empty)
 					Console.WriteLine("info string missing engine");
-				engineName = String.Empty;
+				engineFile = String.Empty;
 			}
-			if (!book.Load(bookName))
-				if (!book.Load($"{bookName}.uci"))
-					if (!book.Load($"{bookName}.pgn"))
-						book.Load($"{bookName}{CBook.defExt}");
+			if (accuracy.fenList.Count > 0)
+				Console.WriteLine($"info string accuracy on");
+			if (test.fenList.Count > 0)
+				Console.WriteLine($"info string test on");
+			if (!book.Load(bookFile))
+				if (!book.Load($"{bookFile}.uci"))
+					if (!book.Load($"{bookFile}.pgn"))
+						book.Load($"{bookFile}{CBook.defExt}");
 			Console.WriteLine($"info string book {book.moves.Count:N0} lines");
 			Console.WriteLine($"info string book {book.name} ver {book.version} moves {book.moves.Count:N0}");
 			do
@@ -108,6 +160,33 @@ namespace NSProgram
 				{
 					switch (Uci.tokens[1])
 					{
+						case "accuracy":
+							if (accuracy.fenList.Count == 0)
+							{
+								Console.WriteLine("file positions.txt unavabile");
+								break;
+							}
+							Constants.maxTest = Uci.GetInt(2, accuracy.fenList.Count);
+							teacher.AccuracyStart();
+							break;
+						case "test":
+							if (test.fenList.Count == 0)
+							{
+								Console.WriteLine("file test.txt unavabile");
+								break;
+							}
+							teacher.TestStart();
+							break;
+						case "update":
+							if (!teacher.SetTeacher(teacherFile))
+								if (!teacher.SetTeacher())
+								{
+									Console.WriteLine($"teacher {teacherFile} is unavabile");
+									break;
+								}
+							Constants.minDepth = Uci.GetInt(2, Constants.minDepth);
+							teacher.UpdateStart();
+							break;
 						case "addfile":
 							if (!book.AddFile(Uci.GetValue(2, 0)))
 								Console.WriteLine("File not found");
@@ -142,7 +221,7 @@ namespace NSProgram
 					}
 					continue;
 				}
-				if ((Uci.command != "go") && (engineName != String.Empty))
+				if ((Uci.command != "go") && (engineFile != String.Empty))
 					myProcess.StandardInput.WriteLine(msg);
 				switch (Uci.command)
 				{
@@ -169,8 +248,8 @@ namespace NSProgram
 								movesUci.Add(em);
 								int c = bookLimitW > 0 ? bookLimitW : movesUci.Count;
 								if (missingIndex <= c)
-										book.AddMate(movesUci.GetRange(0, missingIndex));
-									book.Delete();
+									book.AddMate(movesUci.GetRange(0, missingIndex));
+								book.Delete();
 							}
 						}
 						break;
@@ -185,14 +264,14 @@ namespace NSProgram
 						}
 						if (move != String.Empty)
 							Console.WriteLine($"bestmove {move}");
-						else if (engineName == String.Empty)
+						else if (engineFile == String.Empty)
 							Console.WriteLine("enginemove");
 						else
 							myProcess.StandardInput.WriteLine(msg);
 						break;
 				}
 			} while (Uci.command != "quit");
-
+			teacher.Terminate();
 		}
 	}
 }
