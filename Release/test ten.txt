@@ -1,5 +1,7 @@
 t: Thibor Test
 8/8/8/8/pK2k1N1/8/8/8 w - - 98 145 am b4a5 b4b5 b4c5;
+8/8/8/1K6/p3k1N1/8/8/8 b - - 99 145 bm a4a3;
+1rb1k2r/2p1p1bp/p5p1/1q3p2/2NPpN2/1PP5/P2Q2PP/R3K2R b k - 0 18;bm e8g8;
 t: CCR One Hour Test
 rn1qkb1r/pp2pppp/5n2/3p1b2/3P4/2N1P3/PP3PPP/R1BQKBNR w KQkq - 0 1 id "CCR01"; bm Qb3;
 rn1qkb1r/pp2pppp/5n2/3p1b2/3P4/1QN1P3/PP3PPP/R1B1KBNR b KQkq - 1 1 id "CCR02";bm Bc8;

@@ -159,13 +159,24 @@ namespace NSProgram
 
 	internal class MSList:List<MSLine>
 	{
-		public string path = "fen accuracy.txt";
+		public string path = "accuracy fen.txt";
 
 		public void DeleteFen(string fen)
 		{
 			for (int n = Count - 1; n >= 0; n--)
 				if (this[n].fen == fen)
 					RemoveAt(n);
+		}
+
+		public int GetDepth()
+		{
+			if (Count == 0)
+				return 0;
+			int result = int.MaxValue;
+			foreach (MSLine msl in this)
+				if (result > msl.depth)
+					result = msl.depth;
+			return result;
 		}
 
 		public void SaveToFile()

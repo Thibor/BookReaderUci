@@ -133,9 +133,9 @@ namespace NSProgram
 				engineFile = String.Empty;
 			}
 			if (accuracy.fenList.Count > 0)
-				Console.WriteLine($"info string accuracy on");
+				Console.WriteLine($"info string accuracy on count {accuracy.fenList.Count} depth {accuracy.fenList.GetDepth()}");
 			if (test.fenList.Count > 0)
-				Console.WriteLine($"info string test on");
+				Console.WriteLine($"info string test on count {test.fenList.Count}");
 			if (!book.Load(bookFile))
 				if (!book.Load($"{bookFile}.uci"))
 					if (!book.Load($"{bookFile}.pgn"))
@@ -163,7 +163,7 @@ namespace NSProgram
 						case "accuracy":
 							if (accuracy.fenList.Count == 0)
 							{
-								Console.WriteLine("file positions.txt unavabile");
+								Console.WriteLine("file \"accuracy fen.txt\" unavabile");
 								break;
 							}
 							Constants.maxTest = Uci.GetInt(2, accuracy.fenList.Count);
@@ -172,10 +172,16 @@ namespace NSProgram
 						case "test":
 							if (test.fenList.Count == 0)
 							{
-								Console.WriteLine("file test.txt unavabile");
+								Console.WriteLine("file \"test fen.txt\" unavabile");
 								break;
 							}
+							Constants.maxTest = Uci.GetInt(2, accuracy.fenList.Count);
 							teacher.TestStart();
+							break;
+						case "testaccuracy":
+							Constants.maxTest = Uci.GetInt(2, accuracy.fenList.Count);
+							teacher.TestStart();
+							teacher.AccuracyStart();
 							break;
 						case "update":
 							if (!teacher.SetTeacher(teacherFile))

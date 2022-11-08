@@ -70,6 +70,7 @@
     <LangVersion>7.3</LangVersion>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
+    <NoWarn>IDE0017</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -90,6 +91,7 @@
     <Compile Include="CChess.cs" />
     <Compile Include="CChessExt.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="CRapLog.cs" />
     <Compile Include="CTeacher.cs" />
     <Compile Include="CTest.cs" />
     <Compile Include="CUci.cs" />

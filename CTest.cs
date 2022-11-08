@@ -70,7 +70,7 @@ namespace NSProgram
 
 		void LoadFromFile()
 		{
-			string fn = "fen test.txt";
+			string fn = "test fen.txt";
 			fenList.Clear();
 			if (!File.Exists(fn))
 				return;
@@ -102,7 +102,7 @@ namespace NSProgram
 			return !String.IsNullOrEmpty(Line);
 		}
 
-		bool GetResult(string move)
+		public bool GetResult(string move)
 		{
 			Program.chess.SetFen(Fen);
 			string san = Program.chess.UmoToSan(move);
@@ -119,9 +119,9 @@ namespace NSProgram
 			return true;
 		}
 
-		public void SetResult(string move)
+		public void SetResult(bool r)
 		{
-			if (GetResult(move))
+			if (r)
 				resultOk++;
 			else
 				resultFail++;

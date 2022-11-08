@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using RapLog;
 
 namespace NSProgram
 {
@@ -44,7 +45,8 @@ namespace NSProgram
 		public List<string> students = new List<string>();
 		public List<string> teachers = new List<string>();
 		public List<string> history = new List<string>();
-		public List<string> report = new List<string>();
+		public CRapLog testReport = new CRapLog("test report.log");
+		public CRapLog accuracyReport = new CRapLog("accuracy report.log");
 
 		public CTData GetTData()
 		{
@@ -197,34 +199,6 @@ namespace NSProgram
 			history.Add(msg);
 		}
 
-		void AccuracyStart(string student)
-		{
-			WriteLine(student);
-			if (!SetStudent($@"Students\{student}"))
-			{
-				WriteLine($"{student} not avabile");
-				return;
-			}
-			StudentAccuracyStart();
-			report.Add($"{student} {Program.accuracy.GetAccuracy():N2}");
-			report.Add(Program.accuracy.bstFen);
-			report.Add($"{Program.accuracy.bstMsg} ({Program.accuracy.bstSb} => {Program.accuracy.bstSc})");
-			StudentTerminate();
-		}
-
-		void TestStart(string student)
-		{
-			WriteLine(student);
-			if (!SetStudent($@"Students\{student}"))
-			{
-				WriteLine($"{student} not avabile");
-				return;
-			}
-			StudentTestStart();
-			report.Add($"{student} ok {Program.test.resultOk} fail {Program.test.resultFail}");
-			StudentTerminate();
-		}
-
 		bool PrepareStudents()
 		{
 			if (!Directory.Exists("Students"))
@@ -239,32 +213,6 @@ namespace NSProgram
 				return false;
 			}
 			return true;
-		}
-
-		public void AccuracyStart()
-		{
-			if (!PrepareStudents())
-				return;
-			history.Clear();
-			report.Clear();
-			Program.accuracy.fenList.SortRandom();
-			foreach (string student in students)
-				AccuracyStart(student);
-			WriteLine("finish");
-			File.WriteAllLines("history.txt", history);
-			File.WriteAllLines("report accuracy.txt", report);
-		}
-
-		public void TestStart()
-		{
-			File.WriteAllLines("fen list.txt", Program.test.GetFens());
-			report.Clear();
-			if (!PrepareStudents())
-				return;
-			foreach (string student in students)
-				TestStart(student);
-			WriteLine("finish");
-			File.WriteAllLines("report test.txt", report);
 		}
 
 		MSLine TeacherStart(string fen)
@@ -288,7 +236,7 @@ namespace NSProgram
 				line.AddRec(new MSRec(tdg.best, tdg.score));
 				int first = line.First().score;
 				int last = line.Last().score;
-				if (first - last < Constants.minScore)
+				if (first - last < Constants.blunders)
 				{
 					Program.chess.SetFen(line.fen);
 					List<int> listEmo = Program.chess.GenerateValidMoves(out bool mate);
@@ -317,68 +265,6 @@ namespace NSProgram
 				}
 				Program.accuracy.fenList.AddLine(line);
 				return line;
-			}
-		}
-
-		public void StudentAccuracyStart()
-		{
-			CTData tds = new CTData(true);
-			SetTData(tds);
-			int index = 0;
-			Program.accuracy.Reset();
-			while (true)
-			{
-				CTData tdg = GetTData();
-				if (!tdg.finished)
-					continue;
-				if (tdg.best != String.Empty)
-				{
-					int best = tdg.line.First().score;
-					int score = tdg.line.GetScore(tdg.best);
-					int delta = best - score;
-					string msg = $"move {tdg.best} best {tdg.line.First().move} delta {delta}";
-					Program.accuracy.Add(tdg.line.fen, msg, best, score);
-					WriteLine($"{msg} accuracy {Program.accuracy.GetAccuracy():N2}");
-					if (index >= Constants.maxTest)
-						return;
-				}
-				MSLine line = Program.accuracy.fenList[index];
-				if ((line.depth < Constants.minDepth) && teacherEnabled)
-					line = TeacherStart(line.fen);
-				tds = new CTData(false);
-				tds.line.Assign(line);
-				SetTData(tds);
-				StudentWriteLine("ucinewgame");
-				StudentWriteLine($"position fen {tds.line.fen}");
-				StudentWriteLine("go movetime 1000");
-				WriteLine($"{++index} {tds.line.fen}");
-			}
-		}
-
-		public void StudentTestStart()
-		{
-			CTData tds = new CTData(true);
-			SetTData(tds);
-			Program.test.Reset();
-			while (true)
-			{
-				CTData tdg = GetTData();
-				if (!tdg.finished)
-					continue;
-				if (tdg.best != String.Empty)
-				{
-					Program.test.SetResult(tdg.best);
-					Console.WriteLine($"ok {Program.test.resultOk} fail {Program.test.resultFail}");
-					if (!Program.test.Next())
-						return;
-				}
-				tds = new CTData(false);
-				tds.line.fen = Program.test.Fen;
-				SetTData(tds);
-				StudentWriteLine("ucinewgame");
-				StudentWriteLine($"position fen {tds.line.fen}");
-				StudentWriteLine("go movetime 1000");
-				WriteLine($"{Program.test.number} {tds.line.fen}");
 			}
 		}
 
@@ -462,7 +348,7 @@ namespace NSProgram
 				{
 					tdg.line.AddRec(new MSRec(tdg.best, tdg.score));
 					SetTData(tdg);
-					if ((tdg.line.First().score - tdg.line.Last().score < Constants.minScore))
+					if (tdg.line.First().score - tdg.line.Last().score < Constants.blunders)
 					{
 						Program.chess.SetFen(tdg.line.fen);
 						List<int> listEmo = Program.chess.GenerateValidMoves(out bool mate);
@@ -505,6 +391,133 @@ namespace NSProgram
 			Console.WriteLine("finish");
 		}
 
-	}
+		#region accuracy
 
+		public void AccuracyStart()
+		{
+			if (!PrepareStudents())
+				return;
+			history.Clear();
+			Program.accuracy.fenList.SortRandom();
+			foreach (string student in students)
+				AccuracyStart(student);
+			WriteLine("finish");
+			File.WriteAllLines("accuracy history.txt", history);
+		}
+
+		void AccuracyStart(string student)
+		{
+			WriteLine(student);
+			if (!SetStudent($@"Students\{student}"))
+			{
+				WriteLine($"{student} not avabile");
+				return;
+			}
+			StudentAccuracyStart();
+			int winChanceSou = Convert.ToInt32(Program.accuracy.WinningChances(Program.accuracy.bstSb)*100.0);
+			int winChanceDes = Convert.ToInt32(Program.accuracy.WinningChances(Program.accuracy.bstSc)*100.0);
+			accuracyReport.Add($"loss {Program.accuracy.GetAccuracy():000.000} count {Program.accuracy.number:0000} {student} blunders {Program.accuracy.blunders} mistakes {Program.accuracy.mistakes} inaccuracies {Program.accuracy.inaccuracies} {Program.accuracy.bstFen} {Program.accuracy.bstMsg} ({Program.accuracy.bstSb} => {Program.accuracy.bstSc}) ({winChanceSou} => {winChanceDes})");
+			StudentTerminate();
+		}
+
+		public void StudentAccuracyStart()
+		{
+			CTData tds = new CTData(true);
+			SetTData(tds);
+			Program.accuracy.Reset();
+			while (true)
+			{
+				CTData tdg = GetTData();
+				if (!tdg.finished)
+					continue;
+				if (tdg.best != String.Empty)
+				{
+					int best = tdg.line.First().score;
+					int score = tdg.line.GetScore(tdg.best);
+					int delta = best - score;
+					string msg = $"move {tdg.best} best {tdg.line.First().move} delta {delta}";
+					Program.accuracy.Add(tdg.line.fen, msg, best, score);
+					WriteLine($"{msg} accuracy {Program.accuracy.GetAccuracy():N2}");
+					if (!Program.accuracy.Next())
+						return;
+					if ((Constants.maxTest > 0) && (Program.accuracy.number >= Constants.maxTest))
+						return;
+				}
+				MSLine line = Program.accuracy.fenList[Program.accuracy.number-1];
+				if ((line.depth < Constants.minDepth) && teacherEnabled)
+					line = TeacherStart(line.fen);
+				tds = new CTData(false);
+				tds.line.Assign(line);
+				SetTData(tds);
+				StudentWriteLine("ucinewgame");
+				StudentWriteLine($"position fen {tds.line.fen}");
+				StudentWriteLine("go nodes 1000000");
+				WriteLine($"{Program.accuracy.number} {tds.line.fen}");
+			}
+		}
+
+		#endregion
+
+		#region test
+
+		public void TestStart()
+		{
+			history.Clear();
+			if (!PrepareStudents())
+				return;
+			foreach (string student in students)
+				TestStart(student);
+			WriteLine("finish");
+			File.WriteAllLines("test history.txt", history);
+		}
+
+		void TestStart(string student)
+		{
+			WriteLine(student);
+			if (!SetStudent($@"Students\{student}"))
+			{
+				WriteLine($"{student} not avabile");
+				return;
+			}
+			StudentTestStart();
+			int ok = Program.test.resultOk;
+			int fail = Program.test.resultFail;
+			double pro = (ok * 100.0) / (ok + fail);
+			testReport.Add($"result {pro:000.000} count {Program.test.number:0000} {student} ok {ok} fail {fail}");
+			StudentTerminate();
+		}
+
+		public void StudentTestStart()
+		{
+			CTData tds = new CTData(true);
+			SetTData(tds);
+			Program.test.Reset();
+			while (true)
+			{
+				CTData tdg = GetTData();
+				if (!tdg.finished)
+					continue;
+				if (tdg.best != String.Empty)
+				{
+					bool r = Program.test.GetResult(tdg.best);
+					Program.test.SetResult(r);
+					string sr = r ? "ok" : "fail";
+					WriteLine($"{sr} ({Program.test.resultOk} : {Program.test.resultFail})");
+					if (!Program.test.Next())
+						return;
+					if ((Constants.maxTest > 0) && (Program.test.number >= Constants.maxTest))
+						return;
+				}
+				tds = new CTData(false);
+				tds.line.fen = Program.test.Fen;
+				SetTData(tds);
+				StudentWriteLine("ucinewgame");
+				StudentWriteLine($"position fen {tds.line.fen}");
+				StudentWriteLine("go nodes 1000000");
+				WriteLine($"{Program.test.number} {tds.line.fen}");
+			}
+		}
+
+		#endregion
+	}
 }
