@@ -91,6 +91,7 @@
     <Compile Include="CChess.cs" />
     <Compile Include="CChessExt.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="CRapIni.cs" />
     <Compile Include="CRapLog.cs" />
     <Compile Include="CTeacher.cs" />
     <Compile Include="CTest.cs" />

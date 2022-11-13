@@ -15,5 +15,6 @@ namespace NSProgram
 		public static int blunders = 300;
 		public static short CHECKMATE_MAX = short.MaxValue;
 		public static short CHECKMATE_NEAR = 0x7000;
+		public static string accuracyGo = "go nodes 1000000";
 	}
 }

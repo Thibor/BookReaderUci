@@ -86,6 +86,7 @@ namespace NSProgram
 			if (Directory.Exists("Students"))
 			{
 				string[] filePaths = Directory.GetFiles("Students", "*.exe");
+				Array.Sort(filePaths, StringComparer.CurrentCultureIgnoreCase);
 				for (int n = 0; n < filePaths.Length; n++)
 				{
 					string fn = Path.GetFileName(filePaths[n]);
@@ -348,7 +349,7 @@ namespace NSProgram
 				{
 					tdg.line.AddRec(new MSRec(tdg.best, tdg.score));
 					SetTData(tdg);
-					if (tdg.line.First().score - tdg.line.Last().score < Constants.blunders)
+					if (tdg.line.GetLoss() < Constants.blunders)
 					{
 						Program.chess.SetFen(tdg.line.fen);
 						List<int> listEmo = Program.chess.GenerateValidMoves(out bool mate);
@@ -386,7 +387,7 @@ namespace NSProgram
 				TeacherWriteLine("ucinewgame");
 				TeacherWriteLine($"position fen {tds.line.fen}");
 				TeacherWriteLine($"go depth {tds.line.depth}");
-				Console.WriteLine($"{++index} {tds.line.fen}");
+				Console.WriteLine($"{++index} depth {line.depth} fen {line.fen}");
 			}
 			Console.WriteLine("finish");
 		}
@@ -451,7 +452,7 @@ namespace NSProgram
 				SetTData(tds);
 				StudentWriteLine("ucinewgame");
 				StudentWriteLine($"position fen {tds.line.fen}");
-				StudentWriteLine("go nodes 1000000");
+				StudentWriteLine(Constants.accuracyGo);
 				WriteLine($"{Program.accuracy.number} {tds.line.fen}");
 			}
 		}

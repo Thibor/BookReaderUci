@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using RapIni;
 
 namespace NSProgram
 {
@@ -15,7 +16,8 @@ namespace NSProgram
 		public static CTest test = new CTest();
 		public static CTeacher teacher = new CTeacher();
 		public static CBook book = new CBook();
-		public static CUci Uci = new CUci();
+		public static CUci uci = new CUci();
+		public static CRapIni ini = new CRapIni();
 		[DllImport("Kernel32")]
 		private static extern bool SetConsoleCtrlHandler(SetConsoleCtrlEventHandler handler, bool add);
 
@@ -50,6 +52,7 @@ namespace NSProgram
 
 		static void Main(string[] args)
 		{
+			Constants.accuracyGo = ini.Read("accuracyGo",Constants.accuracyGo);
 			SetConsoleCtrlHandler(Handler, true);
 			int missingIndex = 0;
 			bool isW = false;
@@ -133,7 +136,12 @@ namespace NSProgram
 				engineFile = String.Empty;
 			}
 			if (accuracy.fenList.Count > 0)
-				Console.WriteLine($"info string accuracy on count {accuracy.fenList.Count} depth {accuracy.fenList.GetDepth()}");
+			{
+				int minD = accuracy.fenList.GetMinDepth();
+				int proD = accuracy.fenList.GetProDepth(minD);
+				int blunders = accuracy.fenList.CountBlunders();
+				Console.WriteLine($"info string accuracy on count {accuracy.fenList.Count} depth {minD} ({proD}%) blunders {blunders}");
+			}
 			if (test.fenList.Count > 0)
 				Console.WriteLine($"info string test on count {test.fenList.Count}");
 			if (!book.Load(bookFile))
@@ -154,11 +162,11 @@ namespace NSProgram
 					Console.WriteLine("book clear - clear all moves from the book");
 					continue;
 				}
-				Uci.SetMsg(msg);
+				uci.SetMsg(msg);
 				int count = book.moves.Count;
-				if (Uci.command == "book")
+				if (uci.command == "book")
 				{
-					switch (Uci.tokens[1])
+					switch (uci.tokens[1])
 					{
 						case "accuracy":
 							if (accuracy.fenList.Count == 0)
@@ -166,7 +174,7 @@ namespace NSProgram
 								Console.WriteLine("file \"accuracy fen.txt\" unavabile");
 								break;
 							}
-							Constants.maxTest = Uci.GetInt(2, accuracy.fenList.Count);
+							Constants.maxTest = uci.GetInt(2, accuracy.fenList.Count);
 							teacher.AccuracyStart();
 							break;
 						case "test":
@@ -175,11 +183,11 @@ namespace NSProgram
 								Console.WriteLine("file \"test fen.txt\" unavabile");
 								break;
 							}
-							Constants.maxTest = Uci.GetInt(2, accuracy.fenList.Count);
+							Constants.maxTest = uci.GetInt(2, accuracy.fenList.Count);
 							teacher.TestStart();
 							break;
 						case "testaccuracy":
-							Constants.maxTest = Uci.GetInt(2, accuracy.fenList.Count);
+							Constants.maxTest = uci.GetInt(2, accuracy.fenList.Count);
 							teacher.TestStart();
 							teacher.AccuracyStart();
 							break;
@@ -190,17 +198,17 @@ namespace NSProgram
 									Console.WriteLine($"teacher {teacherFile} is unavabile");
 									break;
 								}
-							Constants.minDepth = Uci.GetInt(2, Constants.minDepth);
+							Constants.minDepth = uci.GetInt(2, Constants.minDepth);
 							teacher.UpdateStart();
 							break;
 						case "addfile":
-							if (!book.AddFile(Uci.GetValue(2, 0)))
+							if (!book.AddFile(uci.GetValue(2, 0)))
 								Console.WriteLine("File not found");
 							else
 								Console.WriteLine($"{(book.moves.Count - count):N0} lines have been added");
 							break;
 						case "adduci":
-							book.moves.Add(Uci.GetValue(2, 0));
+							book.moves.Add(uci.GetValue(2, 0));
 							Console.WriteLine($"{(book.moves.Count - count):N0} lines have been added");
 							break;
 						case "clear":
@@ -208,40 +216,40 @@ namespace NSProgram
 							Console.WriteLine("Book is empty");
 							break;
 						case "delete":
-							int c = book.Delete(Uci.GetInt(2));
+							int c = book.Delete(uci.GetInt(2));
 							Console.WriteLine($"{c:N0} moves was deleted");
 							break;
 						case "load":
-							if (!book.Load(Uci.GetValue(2, 0)))
+							if (!book.Load(uci.GetValue(2, 0)))
 								Console.WriteLine("File not found");
 							else
 								Console.WriteLine($"{book.moves.Count:N0} lines in the book");
 							break;
 						case "save":
-							book.Save(Uci.GetValue(2, 0));
+							book.Save(uci.GetValue(2, 0));
 							Console.WriteLine("The book has been saved");
 							break;
 						default:
-							Console.WriteLine($"Unknown command [{Uci.tokens[1]}]");
+							Console.WriteLine($"Unknown command [{uci.tokens[1]}]");
 							break;
 					}
 					continue;
 				}
-				if ((Uci.command != "go") && (engineFile != String.Empty))
+				if ((uci.command != "go") && (engineFile != String.Empty))
 					myProcess.StandardInput.WriteLine(msg);
-				switch (Uci.command)
+				switch (uci.command)
 				{
 					case "position":
 						bookRead = false;
 						movesUci.Clear();
 						chess.SetFen();
-						if (Uci.GetIndex("fen") < 0)
+						if (uci.GetIndex("fen") < 0)
 						{
 							bookRead = true;
-							int m = Uci.GetIndex("moves", Uci.tokens.Length);
-							for (int n = m + 1; n < Uci.tokens.Length; n++)
+							int m = uci.GetIndex("moves", uci.tokens.Length);
+							for (int n = m + 1; n < uci.tokens.Length; n++)
 							{
-								string umo = Uci.tokens[n];
+								string umo = uci.tokens[n];
 								movesUci.Add(umo);
 								int emo = chess.UmoToEmo(umo);
 								chess.MakeMove(emo);
@@ -276,7 +284,7 @@ namespace NSProgram
 							myProcess.StandardInput.WriteLine(msg);
 						break;
 				}
-			} while (Uci.command != "quit");
+			} while (uci.command != "quit");
 			teacher.Terminate();
 		}
 	}

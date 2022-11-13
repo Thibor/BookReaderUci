@@ -16,7 +16,7 @@ namespace NSProgram
 			score = rec.score;
 		}
 
-		public MSRec(string m,int s)
+		public MSRec(string m, int s)
 		{
 			move = m;
 			score = s;
@@ -61,16 +61,21 @@ namespace NSProgram
 
 		public MSRec First()
 		{
-			if(Count>0)
-			return this[0];
+			if (Count > 0)
+				return this[0];
 			return null;
 		}
 
 		public MSRec Last()
 		{
 			if (Count > 0)
-				return this[Count-1];
+				return this[Count - 1];
 			return null;
+		}
+
+		public int GetLoss()
+		{
+			return First().score - Last().score;
 		}
 
 		public bool MoveExists(string move)
@@ -91,7 +96,7 @@ namespace NSProgram
 		string GetMoves()
 		{
 			string moves = String.Empty;
-			foreach(MSRec rec in this)
+			foreach (MSRec rec in this)
 			{
 				moves = $"{moves} bm {rec.move} ce {rec.score}";
 			}
@@ -121,7 +126,7 @@ namespace NSProgram
 			List<string> sl = new List<string>(tokens);
 			string last = String.Empty;
 			string move = String.Empty;
-			for(int n = 0; n < sl.Count; n++)
+			for (int n = 0; n < sl.Count; n++)
 			{
 				string s = sl[n];
 				if ((s == "bm") || (s == "ce") || (s == "acd"))
@@ -157,7 +162,7 @@ namespace NSProgram
 
 	}
 
-	internal class MSList:List<MSLine>
+	internal class MSList : List<MSLine>
 	{
 		public string path = "accuracy fen.txt";
 
@@ -168,15 +173,53 @@ namespace NSProgram
 					RemoveAt(n);
 		}
 
-		public int GetDepth()
+		public int GetMinDepth()
 		{
+			int result = int.MaxValue;
 			if (Count == 0)
 				return 0;
-			int result = int.MaxValue;
 			foreach (MSLine msl in this)
 				if (result > msl.depth)
 					result = msl.depth;
 			return result;
+		}
+
+		public int GetProDepth(int d)
+		{
+			int c = 0;
+			foreach (MSLine msl in this)
+				if (msl.depth == d)
+					c++;
+			return (c * 100) / Count;
+		}
+
+		public int CountBlunders()
+		{
+			int result = 0;
+			foreach (MSLine msl in this)
+				if (msl.GetLoss() >= Constants.blunders)
+					result++;
+			return result;
+		}
+
+		public void ResetNoBlunders()
+		{
+			for (int n = 0; n < Count; n++)
+			{
+				MSLine msl = this[n];
+				if (msl.GetLoss() < Constants.blunders)
+					msl.depth = 0;
+			}
+		}
+
+		public void DeleteNoBlunders()
+		{
+			for (int n = Count - 1; n >= 0; n--)
+			{
+				MSLine msl = this[n];
+				if (msl.GetLoss() < Constants.blunders)
+					RemoveAt(n);
+			}
 		}
 
 		public void SaveToFile()
@@ -253,7 +296,7 @@ namespace NSProgram
 			for (int n = 0; n < Count; n++)
 			{
 				int r = CChess.rnd.Next(Count);
-				(this[n],this[r]) = (this[r],this[n]);
+				(this[n], this[r]) = (this[r], this[n]);
 			}
 		}
 
@@ -265,7 +308,8 @@ namespace NSProgram
 			return -1;
 		}
 
-		public void AddLine(MSLine line) {
+		public void AddLine(MSLine line)
+		{
 			int index = GetFenIndex(line.fen);
 			if (index >= 0)
 				this[index].Assign(line);
