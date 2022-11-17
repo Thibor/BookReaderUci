@@ -138,7 +138,6 @@ namespace NSProgram
 					result = AddFilePgn(p);
 				if (ext == ".uci")
 					result = AddFileUci(p);
-				ShowCountLines();
 			}
 			return result;
 		}

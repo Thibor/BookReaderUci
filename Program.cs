@@ -119,6 +119,7 @@ namespace NSProgram
 			string engineFile = String.Join(" ", listEf);
 			string engineArguments = String.Join(" ", listEa);
 			string teacherFile = String.Join(" ", listTf);
+			Console.WriteLine($"info string book {book.name} ver {book.version}");
 			Process myProcess = new Process();
 			if (File.Exists(engineFile))
 			{
@@ -140,16 +141,16 @@ namespace NSProgram
 				int minD = accuracy.fenList.GetMinDepth();
 				int proD = accuracy.fenList.GetProDepth(minD);
 				int blunders = accuracy.fenList.CountBlunders();
-				Console.WriteLine($"info string accuracy on count {accuracy.fenList.Count} depth {minD} ({proD}%) blunders {blunders}");
+				Console.WriteLine($"info string accuracy on {accuracy.fenList.Count} fens depth {minD} ({proD}%) blunders {blunders}");
 			}
 			if (test.fenList.Count > 0)
-				Console.WriteLine($"info string test on count {test.fenList.Count}");
+				Console.WriteLine($"info string test on {test.fenList.Count:N0} fens");
 			if (!book.Load(bookFile))
 				if (!book.Load($"{bookFile}.uci"))
 					if (!book.Load($"{bookFile}.pgn"))
 						book.Load($"{bookFile}{CBook.defExt}");
-			Console.WriteLine($"info string book {book.moves.Count:N0} lines");
-			Console.WriteLine($"info string book {book.name} ver {book.version} moves {book.moves.Count:N0}");
+			if(book.moves.Count>0)
+				Console.WriteLine($"info string book on {book.moves.Count:N0} lines");
 			do
 			{
 				string msg = Console.ReadLine().Trim();
