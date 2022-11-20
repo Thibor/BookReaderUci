@@ -18,6 +18,9 @@ namespace NSProgram
 		public static CBook book = new CBook();
 		public static CUci uci = new CUci();
 		public static CRapIni ini = new CRapIni();
+		public static string teacherFile = String.Empty;
+		public static string studentFile = String.Empty;
+
 		[DllImport("Kernel32")]
 		private static extern bool SetConsoleCtrlHandler(SetConsoleCtrlEventHandler handler, bool add);
 
@@ -53,6 +56,9 @@ namespace NSProgram
 		static void Main(string[] args)
 		{
 			Constants.accuracyGo = ini.Read("accuracyGo",Constants.accuracyGo);
+			Constants.testGo = ini.Read("testGo", Constants.testGo);
+			Constants.teacher = ini.Read("teacher", Constants.teacher);
+			Constants.student = ini.Read("student", Constants.student);
 			SetConsoleCtrlHandler(Handler, true);
 			int missingIndex = 0;
 			bool isW = false;
@@ -65,6 +71,7 @@ namespace NSProgram
 			List<string> listEf = new List<string>();
 			List<string> listEa = new List<string>();
 			List<string> listTf = new List<string>();
+			List<string> listSf = new List<string>();
 			for (int n = 0; n < args.Length; n++)
 			{
 				string ac = args[n];
@@ -76,6 +83,7 @@ namespace NSProgram
 					case "-lr"://limit ply read
 					case "-lw"://limit ply write
 					case "-tf"://teacher file
+					case "-sf"://student file
 					case "-acd"://analysis count depth
 						ax = ac;
 						break;
@@ -98,6 +106,9 @@ namespace NSProgram
 							case "-tf":
 								listTf.Add(ac);
 								break;
+							case "-sf":
+								listSf.Add(ac);
+								break;
 							case "-acd":
 								Constants.minDepth = int.TryParse(ac, out int acd) ? acd : Constants.minDepth;
 								break;
@@ -118,8 +129,9 @@ namespace NSProgram
 			string bookFile = String.Join(" ", listBf);
 			string engineFile = String.Join(" ", listEf);
 			string engineArguments = String.Join(" ", listEa);
-			string teacherFile = String.Join(" ", listTf);
-			Console.WriteLine($"info string book {book.name} ver {book.version}");
+			teacherFile = String.Join(" ", listTf);
+			studentFile = String.Join(" ", listSf);
+			Console.WriteLine($"info string {book.name} ver {book.version}");
 			Process myProcess = new Process();
 			if (File.Exists(engineFile))
 			{
@@ -149,7 +161,11 @@ namespace NSProgram
 				if (!book.Load($"{bookFile}.uci"))
 					if (!book.Load($"{bookFile}.pgn"))
 						book.Load($"{bookFile}{CBook.defExt}");
-			if(book.moves.Count>0)
+			if (File.Exists(Constants.teacher))
+				Console.WriteLine("info string teacher on");
+			if (File.Exists(Constants.student))
+				Console.WriteLine("info string student on");
+			if (book.moves.Count>0)
 				Console.WriteLine($"info string book on {book.moves.Count:N0} lines");
 			do
 			{
@@ -193,12 +209,6 @@ namespace NSProgram
 							teacher.AccuracyStart();
 							break;
 						case "update":
-							if (!teacher.SetTeacher(teacherFile))
-								if (!teacher.SetTeacher())
-								{
-									Console.WriteLine($"teacher {teacherFile} is unavabile");
-									break;
-								}
 							Constants.minDepth = uci.GetInt(2, Constants.minDepth);
 							teacher.UpdateStart();
 							break;
@@ -255,7 +265,7 @@ namespace NSProgram
 								int emo = chess.UmoToEmo(umo);
 								chess.MakeMove(emo);
 							}
-							if (chess.g_moveNumber < 2)
+							if (chess.halfMove < 2)
 								missingIndex = 0;
 							if (isW && chess.Is2ToEnd(out string mm, out string em))
 							{
@@ -270,12 +280,12 @@ namespace NSProgram
 						break;
 					case "go":
 						string move = String.Empty;
-						if (bookRead && ((chess.g_moveNumber < bookLimitR) || (bookLimitR == 0)))
+						if (bookRead && ((chess.halfMove < bookLimitR) || (bookLimitR == 0)))
 						{
 							string moves = String.Join(" ", movesUci);
 							move = book.GetMove(moves);
 							if ((String.IsNullOrEmpty(move)) && (missingIndex == 0))
-								missingIndex = chess.g_moveNumber + 1;
+								missingIndex = chess.halfMove + 1;
 						}
 						if (move != String.Empty)
 							Console.WriteLine($"bestmove {move}");

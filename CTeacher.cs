@@ -66,9 +66,52 @@ namespace NSProgram
 			}
 		}
 
-		public void FillTeachers()
+		bool PrepareTeachers()
 		{
 			teachers.Clear();
+			if (File.Exists(Program.teacherFile))
+			{
+				teachers.Add(Program.teacherFile);
+				return true;
+			}
+			if (File.Exists(Constants.teacher))
+			{
+				teachers.Add(Constants.teacher);
+				return true;
+			}
+			FillTeachers();
+			if (teachers.Count == 0)
+			{
+				Console.WriteLine("No teachers");
+				return false;
+			}
+			return true;
+		}
+
+		bool PrepareStudents()
+		{
+			students.Clear();
+			if (File.Exists(Program.studentFile))
+			{
+				students.Add(Program.studentFile);
+				return true;
+			}
+			if (File.Exists(Constants.student))
+			{
+				students.Add(Constants.student);
+				return true;
+			}
+			FillStudents();
+			if (students.Count == 0)
+			{
+				Console.WriteLine("No students");
+				return false;
+			}
+			return true;
+		}
+
+		public void FillTeachers()
+		{
 			if (Directory.Exists("Teachers"))
 			{
 				string[] filePaths = Directory.GetFiles("Teachers", "*.exe");
@@ -82,7 +125,6 @@ namespace NSProgram
 
 		public void FillStudents()
 		{
-			students.Clear();
 			if (Directory.Exists("Students"))
 			{
 				string[] filePaths = Directory.GetFiles("Students", "*.exe");
@@ -90,7 +132,7 @@ namespace NSProgram
 				for (int n = 0; n < filePaths.Length; n++)
 				{
 					string fn = Path.GetFileName(filePaths[n]);
-					students.Add(fn);
+					students.Add($@"Students\{fn}");
 				}
 			}
 		}
@@ -101,7 +143,6 @@ namespace NSProgram
 			{
 				if (!String.IsNullOrEmpty(e.Data))
 				{
-					//Console.WriteLine(e.Data);
 					uci.SetMsg(e.Data);
 					if (uci.command == "bestmove")
 					{
@@ -198,22 +239,6 @@ namespace NSProgram
 		{
 			Console.WriteLine(msg);
 			history.Add(msg);
-		}
-
-		bool PrepareStudents()
-		{
-			if (!Directory.Exists("Students"))
-			{
-				Console.WriteLine("Please create directory Students");
-				return false;
-			}
-			FillStudents();
-			if (students.Count == 0)
-			{
-				Console.WriteLine("No engines in Students directory");
-				return false;
-			}
-			return true;
 		}
 
 		MSLine TeacherStart(string fen)
@@ -337,8 +362,12 @@ namespace NSProgram
 			return false;
 		}
 
+		#region update
+
 		public void UpdateStart()
 		{
+			if (!PrepareTeachers())
+				return;
 			int index = 0;
 			while (true)
 			{
@@ -392,6 +421,8 @@ namespace NSProgram
 			Console.WriteLine("finish");
 		}
 
+		#endregion update
+
 		#region accuracy
 
 		public void AccuracyStart()
@@ -409,7 +440,7 @@ namespace NSProgram
 		void AccuracyStart(string student)
 		{
 			WriteLine(student);
-			if (!SetStudent($@"Students\{student}"))
+			if (!SetStudent(student))
 			{
 				WriteLine($"{student} not avabile");
 				return;
@@ -417,7 +448,7 @@ namespace NSProgram
 			StudentAccuracyStart();
 			int winChanceSou = Convert.ToInt32(Program.accuracy.WinningChances(Program.accuracy.bstSb)*100.0);
 			int winChanceDes = Convert.ToInt32(Program.accuracy.WinningChances(Program.accuracy.bstSc)*100.0);
-			accuracyReport.Add($"loss {Program.accuracy.GetAccuracy():000.000} count {Program.accuracy.number:0000} {student} blunders {Program.accuracy.blunders} mistakes {Program.accuracy.mistakes} inaccuracies {Program.accuracy.inaccuracies} {Program.accuracy.bstFen} {Program.accuracy.bstMsg} ({Program.accuracy.bstSb} => {Program.accuracy.bstSc}) ({winChanceSou} => {winChanceDes})");
+			accuracyReport.Add($"loss {Program.accuracy.GetAccuracy():N2} count {Program.accuracy.number} {student} blunders {Program.accuracy.blunders} mistakes {Program.accuracy.mistakes} inaccuracies {Program.accuracy.inaccuracies} {Program.accuracy.bstFen} {Program.accuracy.bstMsg} ({Program.accuracy.bstSb} => {Program.accuracy.bstSc}) ({winChanceSou} => {winChanceDes})");
 			StudentTerminate();
 		}
 
@@ -457,15 +488,15 @@ namespace NSProgram
 			}
 		}
 
-		#endregion
+		#endregion accuracy
 
 		#region test
 
 		public void TestStart()
 		{
-			history.Clear();
 			if (!PrepareStudents())
 				return;
+			history.Clear();
 			foreach (string student in students)
 				TestStart(student);
 			WriteLine("finish");
@@ -475,7 +506,7 @@ namespace NSProgram
 		void TestStart(string student)
 		{
 			WriteLine(student);
-			if (!SetStudent($@"Students\{student}"))
+			if (!SetStudent(student))
 			{
 				WriteLine($"{student} not avabile");
 				return;
@@ -484,7 +515,7 @@ namespace NSProgram
 			int ok = Program.test.resultOk;
 			int fail = Program.test.resultFail;
 			double pro = (ok * 100.0) / (ok + fail);
-			testReport.Add($"result {pro:000.000} count {Program.test.number:0000} {student} ok {ok} fail {fail}");
+			testReport.Add($"result {pro:N2}% count {Program.test.number:0000} {student} ok {ok} fail {fail}");
 			StudentTerminate();
 		}
 
@@ -514,11 +545,11 @@ namespace NSProgram
 				SetTData(tds);
 				StudentWriteLine("ucinewgame");
 				StudentWriteLine($"position fen {tds.line.fen}");
-				StudentWriteLine("go nodes 1000000");
+				StudentWriteLine(Constants.testGo);
 				WriteLine($"{Program.test.number} {tds.line.fen}");
 			}
 		}
 
-		#endregion
+		#endregion test
 	}
 }

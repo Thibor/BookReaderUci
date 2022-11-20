@@ -40,13 +40,13 @@ namespace NSChess
 		const int moveflagPromoteKnight = 0x80 << 16;
 		const int maskCastle = moveflagCastleKing | moveflagCastleQueen;
 		const int maskColor = colorBlack | colorWhite;
-		public int g_castleRights = 0xf;
-		ulong g_hash = 0;
-		protected int g_passing = 0;
-		public int g_move50 = 0;
-		public int g_moveNumber = 0;
-		public bool g_inCheck = false;
-		int g_lastCastle = 0;
+		public int castleRights = 0xf;
+		ulong hash = 0;
+		protected int passing = 0;
+		public int move50 = 0;
+		public int halfMove = 0;
+		public bool inCheck = false;
+		int lastCastle = 0;
 		bool adjInsufficient = false;
 		int undoIndex = 0;
 		readonly ulong[,] g_hashBoard = new ulong[256, 16];
@@ -73,7 +73,7 @@ namespace NSChess
 
 		public void Initialize()
 		{
-			g_hash = RAND_32();
+			hash = RAND_32();
 			for (int n = 0; n < undoStack.Length; n++)
 				undoStack[n] = new CUndo();
 			for (int y = 0; y < 8; y++)
@@ -268,7 +268,7 @@ namespace NSChess
 
 		public bool SetFen(string fen = defFen)
 		{
-			if (fen == "")
+			if(String.IsNullOrEmpty(fen))
 				fen = defFen;
 			string[] chunks = fen.Split(' ');
 			if (chunks.Length < 4)
@@ -328,24 +328,24 @@ namespace NSChess
 				whiteTurn = false;
 			else
 				return false;
-			g_castleRights = 0;
+			castleRights = 0;
 			if (chunks[2].IndexOf('K') != -1)
-				g_castleRights |= 1;
+				castleRights |= 1;
 			if (chunks[2].IndexOf('Q') != -1)
-				g_castleRights |= 2;
+				castleRights |= 2;
 			if (chunks[2].IndexOf('k') != -1)
-				g_castleRights |= 4;
+				castleRights |= 4;
 			if (chunks[2].IndexOf('q') != -1)
-				g_castleRights |= 8;
-			g_passing = UmoToSquare(chunks[3]);
-			g_move50 = chunks.Length < 5 ? 0 : Int32.TryParse(chunks[4], out int m50) ? m50 : 0;
-			g_moveNumber = chunks.Length < 6 ? 1 : Int32.TryParse(chunks[5], out int num) ? num : 1;
-			if (g_moveNumber > 0)
-				g_moveNumber--;
-			g_moveNumber <<= 1;
+				castleRights |= 8;
+			passing = UmoToSquare(chunks[3]);
+			move50 = chunks.Length < 5 ? 0 : Int32.TryParse(chunks[4], out int m50) ? m50 : 0;
+			halfMove = chunks.Length < 6 ? 1 : Int32.TryParse(chunks[5], out int num) ? num : 1;
+			if (halfMove > 0)
+				halfMove--;
+			halfMove <<= 1;
 			if (!whiteTurn)
-				g_moveNumber++;
-			undoIndex = g_move50;
+				halfMove++;
+			undoIndex = move50;
 			return true;
 		}
 
@@ -384,35 +384,35 @@ namespace NSChess
 		{
 			string result = GetFenBase();
 			result += whiteTurn ? " w " : " b ";
-			if (g_castleRights == 0)
+			if (castleRights == 0)
 				result += "-";
 			else
 			{
-				if ((g_castleRights & 1) != 0)
+				if ((castleRights & 1) != 0)
 					result += 'K';
-				if ((g_castleRights & 2) != 0)
+				if ((castleRights & 2) != 0)
 					result += 'Q';
-				if ((g_castleRights & 4) != 0)
+				if ((castleRights & 4) != 0)
 					result += 'k';
-				if ((g_castleRights & 8) != 0)
+				if ((castleRights & 8) != 0)
 					result += 'q';
 			}
 			result += ' ';
-			if (g_passing == 0)
+			if (passing == 0)
 				result += '-';
 			else
 			{
 				if (whiteTurn)
 				{
-					if ((g_board[g_passing + 15] == (piecePawn | colorWhite)) || (g_board[g_passing + 17] == (piecePawn | colorWhite)))
-						result += SquareToUmo(g_passing);
+					if ((g_board[passing + 15] == (piecePawn | colorWhite)) || (g_board[passing + 17] == (piecePawn | colorWhite)))
+						result += SquareToUmo(passing);
 					else
 						result += '-';
 				}
 				else
 				{
-					if ((g_board[g_passing - 15] == (piecePawn | colorBlack)) || (g_board[g_passing - 17] == (piecePawn | colorBlack)))
-						result += SquareToUmo(g_passing);
+					if ((g_board[passing - 15] == (piecePawn | colorBlack)) || (g_board[passing - 17] == (piecePawn | colorBlack)))
+						result += SquareToUmo(passing);
 					else
 						result += '-';
 				}
@@ -422,7 +422,7 @@ namespace NSChess
 
 		public string GetFen()
 		{
-			return GetEpd() + ' ' + g_move50 + ' ' + ((g_moveNumber >> 1) + 1);
+			return GetEpd() + ' ' + move50 + ' ' + ((halfMove >> 1) + 1);
 		}
 
 		#endregion
@@ -431,8 +431,8 @@ namespace NSChess
 
 		void GenerateMove(List<int> moves, int fr, int to, bool add, int flag)
 		{
-			if (((g_board[to] & 7) == pieceKing) || (((boardCheck[to] & g_lastCastle) == g_lastCastle) && ((g_lastCastle & maskCastle) > 0)))
-				g_inCheck = true;
+			if (((g_board[to] & 7) == pieceKing) || (((boardCheck[to] & lastCastle) == lastCastle) && ((lastCastle & maskCastle) > 0)))
+				inCheck = true;
 			if (add)
 				moves.Add(fr | (to << 8) | flag);
 		}
@@ -443,12 +443,12 @@ namespace NSChess
 			int count = 0;
 			List<int> moves = new List<int>(64);
 			List<int> am = GenerateAllMoves(whiteTurn, false);
-			if (!g_inCheck)
+			if (!inCheck)
 				foreach (int m in am)
 				{
 					MakeMove(m);
 					GenerateAllMoves(whiteTurn, true);
-					if (!g_inCheck)
+					if (!inCheck)
 					{
 						count++;
 						if (!norep || !IsRepetition())
@@ -459,14 +459,14 @@ namespace NSChess
 			if (count == 0)
 			{
 				GenerateAllMoves(!whiteTurn, true);
-				mate = g_inCheck;
+				mate = inCheck;
 			}
 			return moves;
 		}
 
 		public List<int> GenerateAllMoves(bool wt, bool onlyAattack)
 		{
-			g_inCheck = false;
+			inCheck = false;
 			usColor = wt ? colorWhite : colorBlack;
 			enColor = wt ? colorBlack : colorWhite;
 			int pieceM = 0;
@@ -493,14 +493,14 @@ namespace NSChess
 						}
 						if ((g_board[to - 1] & enColor) > 0)
 							GeneratePwnMoves(moves, fr, to - 1, true, 0);
-						else if ((to - 1) == g_passing)
-							GeneratePwnMoves(moves, fr, g_passing, true, moveflagPassing);
+						else if ((to - 1) == passing)
+							GeneratePwnMoves(moves, fr, passing, true, moveflagPassing);
 						else if ((g_board[to - 1] & colorEmpty) > 0)
 							GeneratePwnMoves(moves, fr, to - 1, false, 0);
 						if ((g_board[to + 1] & enColor) > 0)
 							GeneratePwnMoves(moves, fr, to + 1, true, 0);
-						else if ((to + 1) == g_passing)
-							GeneratePwnMoves(moves, fr, g_passing, true, moveflagPassing);
+						else if ((to + 1) == passing)
+							GeneratePwnMoves(moves, fr, passing, true, moveflagPassing);
 						else if ((g_board[to + 1] & colorEmpty) > 0)
 							GeneratePwnMoves(moves, fr, to + 1, false, 0);
 						break;
@@ -522,7 +522,7 @@ namespace NSChess
 						break;
 					case 6:
 						GenerateUniMoves(moves, onlyAattack, fr, arrDirQueen, 1);
-						int cr = wt ? g_castleRights : g_castleRights >> 2;
+						int cr = wt ? castleRights : castleRights >> 2;
 						if ((cr & 1) > 0)
 							if (((g_board[fr + 1] & colorEmpty) > 0) && ((g_board[fr + 2] & colorEmpty) > 0))
 								GenerateMove(moves, fr, fr + 2, true, moveflagCastleKing);
@@ -583,11 +583,11 @@ namespace NSChess
 			int flags = move & 0xFF0000;
 			int capi = to;
 			CUndo undo = undoStack[--undoIndex];
-			g_passing = undo.passing;
-			g_castleRights = undo.castle;
-			g_move50 = undo.move50;
-			g_lastCastle = undo.lastCastle;
-			g_hash = undo.hash;
+			passing = undo.passing;
+			castleRights = undo.castle;
+			move50 = undo.move50;
+			lastCastle = undo.lastCastle;
+			hash = undo.hash;
 			int captured = undo.captured;
 			if ((flags & moveflagCastleKing) > 0)
 			{
@@ -612,24 +612,24 @@ namespace NSChess
 			}
 			g_board[capi] = captured;
 			whiteTurn ^= true;
-			g_moveNumber--;
+			halfMove--;
 		}
 
 		public void MakeMove(int emo)
 		{
 			CUndo undo = undoStack[undoIndex++];
-			undo.hash = g_hash;
-			undo.passing = g_passing;
-			undo.castle = g_castleRights;
-			undo.move50 = g_move50;
-			undo.lastCastle = g_lastCastle;
+			undo.hash = hash;
+			undo.passing = passing;
+			undo.castle = castleRights;
+			undo.move50 = move50;
+			undo.lastCastle = lastCastle;
 			int fr = emo & 0xff;
 			int to = (emo >> 8) & 0xff;
 			int flags = emo & 0xFF0000;
 			int piecefr = g_board[fr];
 			int piece = piecefr & 0xf;
 			int captured = g_board[to];
-			g_lastCastle = (emo & maskCastle) | (piecefr & maskColor);
+			lastCastle = (emo & maskCastle) | (piecefr & maskColor);
 			if ((flags & moveflagCastleKing) > 0)
 			{
 				g_board[to - 1] = g_board[to + 1];
@@ -647,18 +647,18 @@ namespace NSChess
 				g_board[capi] = colorEmpty;
 			}
 			undo.captured = captured;
-			g_hash ^= g_hashBoard[fr, piece];
-			g_passing = 0;
+			hash ^= g_hashBoard[fr, piece];
+			passing = 0;
 			if ((captured & 0xF) > 0)
-				g_move50 = 0;
+				move50 = 0;
 			else if ((piece & 7) == piecePawn)
 			{
-				if (to == (fr + 32)) g_passing = (fr + 16);
-				if (to == (fr - 32)) g_passing = (fr - 16);
-				g_move50 = 0;
+				if (to == (fr + 32)) passing = (fr + 16);
+				if (to == (fr - 32)) passing = (fr - 16);
+				move50 = 0;
 			}
 			else
-				g_move50++;
+				move50++;
 			if ((flags & moveflagPromotion) > 0)
 			{
 				int newPiece = piecefr & (~0x7);
@@ -671,17 +671,17 @@ namespace NSChess
 				else
 					newPiece |= pieceRook;
 				g_board[to] = newPiece;
-				g_hash ^= g_hashBoard[to, newPiece & 0xf];
+				hash ^= g_hashBoard[to, newPiece & 0xf];
 			}
 			else
 			{
 				g_board[to] = g_board[fr];
-				g_hash ^= g_hashBoard[to, piece];
+				hash ^= g_hashBoard[to, piece];
 			}
 			g_board[fr] = colorEmpty;
-			g_castleRights &= boardCastle[fr] & boardCastle[to];
+			castleRights &= boardCastle[fr] & boardCastle[to];
 			whiteTurn ^= true;
-			g_moveNumber++;
+			halfMove++;
 		}
 
 		public bool MakeMove(string umo, out int emo, out int piece)
@@ -788,10 +788,10 @@ namespace NSChess
 		{
 			GenerateAllMoves(!whiteTurn, true);
 			bool enInsufficient = adjInsufficient;
-			check = g_inCheck;
+			check = inCheck;
 			GenerateAllMoves(whiteTurn, false);
 			bool myInsufficient = adjInsufficient;
-			if (g_move50 >= 100)
+			if (move50 >= 100)
 				return CGameState.move50;
 			if (IsRepetition())
 				return CGameState.repetition;
@@ -810,11 +810,11 @@ namespace NSChess
 
 		bool IsRepetition(int count = 3)
 		{
-			int min = undoIndex - g_move50;
+			int min = undoIndex - move50;
 			if (min < 0)
 				min = 0;
 			for (int n = undoIndex - 4; n >= min; n -= 2)
-				if (undoStack[n].hash == g_hash)
+				if (undoStack[n].hash == hash)
 					if (--count <= 1)
 						return true;
 			return false;
@@ -827,7 +827,7 @@ namespace NSChess
 
 		public static void UmoToSD(string umo, out int s, out int d)
 		{
-			if (umo == "")
+			if (umo == String.Empty)
 			{
 				s = -1;
 				d = -1;

@@ -240,7 +240,7 @@ namespace NSProgram
 					string san = chess.UmoToSan(umo);
 					if (san == String.Empty)
 						break;
-					int number = (chess.g_moveNumber >> 1) + 1;
+					int number = (chess.halfMove >> 1) + 1;
 					if (chess.whiteTurn)
 						png += $" {number}. {san}";
 					else
