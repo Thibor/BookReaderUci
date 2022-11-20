@@ -23,9 +23,10 @@ To use this program you need install  <a href="https://dotnet.microsoft.com/down
 **book addfile** [filename].[uci|pgn] - adds moves from another book<br/>
 **book delete** [number x] - delete x moves from the book<br/>
 **book clear** - clear all moves from the book<br/>
-**book update [depth]** - update file "accuracy.fen" this command need teacher file<br/>
-**book accuracy** - update file "accuracy fen.tx" this command need student file<br/>
-**book test** - update file "accuracy fen.txt" this command need student file<br/>
+**accuracy start** - start test for the average centipawn loss, this command need file "accuracy fen.txt" and student file<br/>
+**accuracy update [depth]** - update file "accuracy.fen" this command need teacher file<br/>
+**accuracy delete** - delete positions from "accuracy.fen" where player cannot make blunder<br/>
+**test start** - start test chess engine, this command need file "accuracy fen.txt" and student file<br/>
 
 ### Examples of using parameters
 
@@ -41,14 +42,26 @@ Opens a chess library of openings named book.uci, and if it doesn't find any mov
 
 ### Examples of using console commands
 
-book update 20
-
-This command requirest existence teacher file and "accuracy fen.txt". File "accuracy fen.txt" will be udpated to depth 20.
-
-book accuracy
+accuracy start
 
 This command requirest existence student file and "accuracy fen.txt". Student chess engine will be tested for the average centipawn loss, report will be generated in "accuracy report.txt" file.
 
-book test
+accuracy update 20
+
+This command requirest existence teacher file and "accuracy fen.txt". File "accuracy fen.txt" will be udpated to depth 20.
+
+test start
 
 This command requirest existence student file and "test fen.txt". Student chess engine will be tested and report will be gnerated in "test report.txt" file.
+
+### Examples of using "bookreaderuci.ini" file
+
+You can create file "bookreaderuci.ini" and add text lines.
+
+teacher>stockfish.exe
+
+Use file "stockfish.exe" as teacher.
+
+student>rapchesscs.exe
+
+Use file "rapchesscs.exe" as student.

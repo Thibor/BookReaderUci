@@ -55,7 +55,7 @@ namespace NSProgram
 
 		static void Main(string[] args)
 		{
-			Constants.accuracyGo = ini.Read("accuracyGo",Constants.accuracyGo);
+			Constants.accuracyGo = ini.Read("accuracyGo", Constants.accuracyGo);
 			Constants.testGo = ini.Read("testGo", Constants.testGo);
 			Constants.teacher = ini.Read("teacher", Constants.teacher);
 			Constants.student = ini.Read("student", Constants.student);
@@ -165,7 +165,7 @@ namespace NSProgram
 				Console.WriteLine("info string teacher on");
 			if (File.Exists(Constants.student))
 				Console.WriteLine("info string student on");
-			if (book.moves.Count>0)
+			if (book.moves.Count > 0)
 				Console.WriteLine($"info string book on {book.moves.Count:N0} lines");
 			do
 			{
@@ -181,11 +181,11 @@ namespace NSProgram
 				}
 				uci.SetMsg(msg);
 				int count = book.moves.Count;
-				if (uci.command == "book")
+				if (uci.command == "accuracy")
 				{
 					switch (uci.tokens[1])
 					{
-						case "accuracy":
+						case "start":
 							if (accuracy.fenList.Count == 0)
 							{
 								Console.WriteLine("file \"accuracy fen.txt\" unavabile");
@@ -194,7 +194,20 @@ namespace NSProgram
 							Constants.maxTest = uci.GetInt(2, accuracy.fenList.Count);
 							teacher.AccuracyStart();
 							break;
-						case "test":
+						case "update":
+							Constants.minDepth = uci.GetInt(2, Constants.minDepth);
+							teacher.AccuracyUpdate();
+							break;
+						case "delete":
+							accuracy.fenList.DeleteNoBlunders();
+							break;
+					}
+				}
+				if (uci.command == "test")
+				{
+					switch (uci.tokens[1])
+					{
+						case "start":
 							if (test.fenList.Count == 0)
 							{
 								Console.WriteLine("file \"test fen.txt\" unavabile");
@@ -203,15 +216,12 @@ namespace NSProgram
 							Constants.maxTest = uci.GetInt(2, accuracy.fenList.Count);
 							teacher.TestStart();
 							break;
-						case "testaccuracy":
-							Constants.maxTest = uci.GetInt(2, accuracy.fenList.Count);
-							teacher.TestStart();
-							teacher.AccuracyStart();
-							break;
-						case "update":
-							Constants.minDepth = uci.GetInt(2, Constants.minDepth);
-							teacher.UpdateStart();
-							break;
+					}
+				}
+				if (uci.command == "book")
+				{
+					switch (uci.tokens[1])
+					{
 						case "addfile":
 							if (!book.AddFile(uci.GetValue(2, 0)))
 								Console.WriteLine("File not found");

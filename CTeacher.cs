@@ -364,7 +364,7 @@ namespace NSProgram
 
 		#region update
 
-		public void UpdateStart()
+		public void AccuracyUpdate()
 		{
 			if (!PrepareTeachers())
 				return;
