@@ -44,7 +44,7 @@ Opens a chess library of openings named book.uci, and if it doesn't find any mov
 
 accuracy start
 
-This command requirest existence student file and "accuracy fen.txt". Student chess engine will be tested for the average centipawn loss, report will be generated in "accuracy report.txt" file.
+This command requirest existence student file and "accuracy fen.txt". Student chess engine will be tested for the average centipawn loss, report will be generated in "accuracy report.log" file.
 
 accuracy update 20
 
@@ -52,7 +52,7 @@ This command requirest existence teacher file and "accuracy fen.txt". File "accu
 
 test start
 
-This command requirest existence student file and "test fen.txt". Student chess engine will be tested and report will be gnerated in "test report.txt" file.
+This command requirest existence student file and "test fen.txt". Student chess engine will be tested and report will be gnerated in "test report.log" file.
 
 ### Examples of using "bookreaderuci.ini" file
 

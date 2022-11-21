@@ -439,6 +439,7 @@ namespace NSProgram
 
 		void AccuracyStart(string student)
 		{
+			string name = Path.GetFileNameWithoutExtension(student);
 			WriteLine(student);
 			if (!SetStudent(student))
 			{
@@ -448,7 +449,7 @@ namespace NSProgram
 			StudentAccuracyStart();
 			int winChanceSou = Convert.ToInt32(Program.accuracy.WinningChances(Program.accuracy.bstSb)*100.0);
 			int winChanceDes = Convert.ToInt32(Program.accuracy.WinningChances(Program.accuracy.bstSc)*100.0);
-			accuracyReport.Add($"loss {Program.accuracy.GetAccuracy():N2} count {Program.accuracy.number} {student} blunders {Program.accuracy.blunders} mistakes {Program.accuracy.mistakes} inaccuracies {Program.accuracy.inaccuracies} {Program.accuracy.bstFen} {Program.accuracy.bstMsg} ({Program.accuracy.bstSb} => {Program.accuracy.bstSc}) ({winChanceSou} => {winChanceDes})");
+			accuracyReport.Add($"loss {Program.accuracy.GetAccuracy():N2} count {Program.accuracy.number} {name} blunders {Program.accuracy.blunders} mistakes {Program.accuracy.mistakes} inaccuracies {Program.accuracy.inaccuracies} {Program.accuracy.bstFen} {Program.accuracy.bstMsg} ({Program.accuracy.bstSb} => {Program.accuracy.bstSc}) ({winChanceSou} => {winChanceDes})");
 			StudentTerminate();
 		}
 
@@ -505,6 +506,7 @@ namespace NSProgram
 
 		void TestStart(string student)
 		{
+			string name = Path.GetFileNameWithoutExtension(student);
 			WriteLine(student);
 			if (!SetStudent(student))
 			{
@@ -515,7 +517,7 @@ namespace NSProgram
 			int ok = Program.test.resultOk;
 			int fail = Program.test.resultFail;
 			double pro = (ok * 100.0) / (ok + fail);
-			testReport.Add($"result {pro:N2}% count {Program.test.number:0000} {student} ok {ok} fail {fail}");
+			testReport.Add($"result {pro:N2}% count {Program.test.number:0000} {name} ok {ok} fail {fail}");
 			StudentTerminate();
 		}
 
