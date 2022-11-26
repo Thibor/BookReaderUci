@@ -22,9 +22,10 @@ namespace NSProgram
 		public string bstMsg = String.Empty;
 		public MSList fenList = new MSList();
 
-		public CAccuracy()
+
+		public void LoadFen()
 		{
-			fenList.LoadFromFile();
+			fenList.LoadFen();
 		}
 
 		public void Reset()

@@ -75,6 +75,10 @@ namespace NSProgram
 
 		public int GetLoss()
 		{
+			MSRec f = First();
+			MSRec l = Last();
+			if ((f == null) || (l == null))
+				return 0;
 			return First().score - Last().score;
 		}
 
@@ -164,7 +168,6 @@ namespace NSProgram
 
 	internal class MSList : List<MSLine>
 	{
-		public string path = "accuracy fen.txt";
 
 		public void DeleteFen(string fen)
 		{
@@ -202,6 +205,14 @@ namespace NSProgram
 			return result;
 		}
 
+		public double CountMoves()
+		{
+			double result = 0;
+			foreach (MSLine msl in this)
+					result+=msl.Count;
+			return result / Count;
+		}
+
 		public void ResetNoBlunders()
 		{
 			for (int n = 0; n < Count; n++)
@@ -226,7 +237,7 @@ namespace NSProgram
 		{
 			string last = String.Empty;
 			SortFen();
-			using (FileStream fs = File.Open(path, FileMode.Create, FileAccess.Write, FileShare.None))
+			using (FileStream fs = File.Open(Constants.accuracyFen, FileMode.Create, FileAccess.Write, FileShare.None))
 			using (StreamWriter sw = new StreamWriter(fs))
 			{
 				foreach (MSLine msl in this)
@@ -241,12 +252,12 @@ namespace NSProgram
 			}
 		}
 
-		public bool LoadFromFile()
+		public bool LoadFen()
 		{
 			Clear();
-			if (!File.Exists(path))
+			if (!File.Exists(Constants.accuracyFen))
 				return false;
-			using (FileStream fs = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+			using (FileStream fs = File.Open(Constants.accuracyFen, FileMode.Open, FileAccess.Read, FileShare.Read))
 			using (StreamReader reader = new StreamReader(fs))
 			{
 				string line = String.Empty;

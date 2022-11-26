@@ -55,10 +55,18 @@ namespace NSProgram
 
 		static void Main(string[] args)
 		{
-			Constants.accuracyGo = ini.Read("accuracyGo", Constants.accuracyGo);
-			Constants.testGo = ini.Read("testGo", Constants.testGo);
-			Constants.teacher = ini.Read("teacher", Constants.teacher);
-			Constants.student = ini.Read("student", Constants.student);
+			if (args.Length == 0)
+			{
+				Constants.accuracyGo = ini.Read("accurac>go", Constants.accuracyGo);
+				Constants.accuracyFen = ini.Read("accuracy>fen", Constants.accuracyFen);
+				Constants.testGo = ini.Read("test>go", Constants.testGo);
+				Constants.testFen = ini.Read("test>fen", Constants.testFen);
+				Constants.teacher = ini.Read("teacher", Constants.teacher);
+				Constants.student = ini.Read("student", Constants.student);
+				Constants.command = ini.Read("command", Constants.command);
+			}
+			accuracy.LoadFen();
+			test.LoadFen();
 			SetConsoleCtrlHandler(Handler, true);
 			int missingIndex = 0;
 			bool isW = false;
@@ -152,8 +160,8 @@ namespace NSProgram
 			{
 				int minD = accuracy.fenList.GetMinDepth();
 				int proD = accuracy.fenList.GetProDepth(minD);
-				int blunders = accuracy.fenList.CountBlunders();
-				Console.WriteLine($"info string accuracy on {accuracy.fenList.Count} fens depth {minD} ({proD}%) blunders {blunders}");
+				int nb = accuracy.fenList.Count - accuracy.fenList.CountBlunders();
+				Console.WriteLine($"info string accuracy on {accuracy.fenList.Count} fens depth {minD} ({proD}%) delete {nb} moves {accuracy.fenList.CountMoves():N0}");
 			}
 			if (test.fenList.Count > 0)
 				Console.WriteLine($"info string test on {test.fenList.Count:N0} fens");
@@ -169,7 +177,8 @@ namespace NSProgram
 				Console.WriteLine($"info string book on {book.moves.Count:N0} lines");
 			do
 			{
-				string msg = Console.ReadLine().Trim();
+				string msg = String.IsNullOrEmpty(Constants.command) ? Console.ReadLine().Trim() : Constants.command;
+				Constants.command = String.Empty;
 				if (String.IsNullOrEmpty(msg) || (msg == "help") || (msg == "book"))
 				{
 					Console.WriteLine("book load [filename].[umo|uci|png] - clear and add moves from file");

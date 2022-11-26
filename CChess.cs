@@ -20,7 +20,7 @@ namespace NSChess
 	{
 		public static CChess This;
 		public const string defFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-		public static Random rnd = new Random();
+		public static Random rnd = new Random(1);
 		public const int piecePawn = 0x01;
 		public const int pieceKnight = 0x02;
 		public const int pieceBishop = 0x03;

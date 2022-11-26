@@ -368,6 +368,7 @@ namespace NSProgram
 		{
 			if (!PrepareTeachers())
 				return;
+			SetTeacher();
 			int index = 0;
 			while (true)
 			{

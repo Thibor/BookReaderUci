@@ -32,11 +32,6 @@ namespace NSProgram
 			}
 		}
 
-		public CTest()
-		{
-			LoadFromFile();
-		}
-
 		public void Reset()
 		{
 			index = -1;
@@ -68,9 +63,9 @@ namespace NSProgram
 			return sl;
 		}
 
-		void LoadFromFile()
+		public void LoadFen()
 		{
-			string fn = "test fen.txt";
+			string fn = Constants.testFen;
 			fenList.Clear();
 			if (!File.Exists(fn))
 				return;

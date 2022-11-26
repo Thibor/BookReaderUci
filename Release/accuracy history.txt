@@ -1,0 +1,1483 @@
+Students\RapChessCs.exe
+1 rnbq1r1k/4p1bP/p3p3/1pn5/8/2Np1N2/PPQ2PP1/R1B1KB1R w KQ - 0 1
+move c2d1 best f3h4 delta 418 accuracy 300,00
+2 2r3k1/1p2q1pp/2b1pr2/p1pp4/6Q1/1P1PP1R1/P1PN2PP/5RK1 w - - 0 1
+move g4g7 best g4g7 delta 0 accuracy 150,00
+3 r1bqk2r/ppp1bppp/2n5/3p4/3P4/2PB1N2/P1P2PPP/R1BQ1RK1 b kq - 0 1
+move c8e6 best e8g8 delta 25 accuracy 108,33
+4 3r1bk1/p4ppp/Qp2p3/8/1P1B4/Pq2P1P1/2r2P1P/R3R1K1 b - - 0 1
+move d8d7 best e6e5 delta 424 accuracy 156,25
+5 8/4p3/p2p4/2pP4/2P1P3/1P4k1/1P1K4/8 w - - 0 1
+move d2e3 best b3b4 delta 1253 accuracy 185,00
+6 r1bqk1r1/1p1p1n2/p1n2pN1/2p1b2Q/2P1Pp2/1PN5/PB4PP/R4RK1 w q - 0 1
+move h5h7 best f7e7 delta 332 accuracy 204,17
+7 r1bq1rk1/4bppp/ppnppn2/8/2P1P3/2N5/PPN1BPPP/R1BQK2R w KQ - 0 1
+move e1g1 best c1f4 delta 0 accuracy 175,00
+8 5r1k/1p4bp/3p1q2/1NpP1b2/1pP2p2/1Q5P/1P1KBP2/r2RN2R b - - 0 1
+move a1d1 best f4f3 delta 353 accuracy 190,63
+9 2b1k2r/2p2ppp/1qp4n/7B/1p2P3/5Q2/PPPr2PP/R2N1R1K b k - 0 1
+move c8e6 best e1g1 delta 31 accuracy 172,89
+10 r1bqkb1r/pp3ppp/2n5/2pp4/3Pn3/2N2N2/PPP1BPPP/R1BQK2R w KQkq - 0 1
+move e2b5 best f3g5 delta 516 accuracy 185,60
+11 8/5Bp1/4P3/6pP/1b1k1P2/5K2/8/8 w - - 0 1
+move f4g5 best f3g4 delta 1168 accuracy 196,00
+12 r1bqk2r/bp3ppp/p1n1pn2/3p4/1PP5/P1N1PN2/1B3PPP/R2QKB1R b KQkq - 0 1
+move h7h6 best e8g8 delta 362 accuracy 204,67
+13 rn1q1rk1/1b2bppp/1pn1p3/p2pP3/3P4/P2BBN1P/1P1N1PP1/R2Q1RK1 b - - 0 1
+move f7f5 best e8g8 delta 140 accuracy 199,69
+14 5nk1/Q4bpp/5p2/8/P1n1PN2/q4P2/6PP/1R4K1 w - - 0 1
+move f4d5 best a7d4 delta 114 accuracy 193,57
+15 r1bq1rk1/1pp2pbp/p1np1np1/3Pp3/2P1P3/2N1BP2/PP4PP/R1NQKB1R b KQ - 1 9
+move c6e7 best d4f5 delta 214 accuracy 194,93
+16 4r1k1/1bq2r1p/p2p1np1/3Pppb1/P1P5/1N3P2/1R2B1PP/1Q1R2BK w - - 0 1
+move b3a5 best c4c5 delta 294 accuracy 201,13
+17 r4rk1/3nppbp/bq1p1np1/2pP4/8/2N2NPP/PP2PPB1/R1BQR1K1 b - - 1 12
+move g8h8 best g3f5 delta 32780 accuracy 206,94
+18 6k1/4pp1p/3p2p1/P1pPb3/R7/1r2P1PP/3B1P2/6K1 w - - 0 1
+move a5a6 best f2f4 delta 411 accuracy 212,11
+19 8/6B1/p5p1/Pp4kp/1P5r/5P1Q/4q1PK/8 w - - 0 32
+move g7f6 best g7h6 delta 746 accuracy 216,74
+20 1nkr1b1r/5p2/1q2p2p/1ppbP1p1/2pP4/2N3B1/1P1QBPPP/R4RK1 w - - 0 1
+move d4c5 best c3d5 delta 494 accuracy 220,90
+21 r3r1k1/pp1q1ppp/2p5/P2n1p2/1b1P4/1B2PP2/1PQ3PP/R1B2RK1 w - - 0 1
+move e3e4 best d1d4 delta 1 accuracy 210,43
+22 1nrrb1k1/1qn1bppp/pp2p3/3pP3/N2P3P/1P1B1NP1/PBR1QPK1/2R5 w - - 0 1
+move e2f1 best d3h7 delta 306 accuracy 214,50
+23 r1b1kb1r/1p1n1ppp/p2ppn2/6BB/2qNP3/2N5/PPP2PPP/R2Q1RK1 w kq - 0 1
+move h5e2 best d4e6 delta 882 accuracy 218,22
+24 r2qr1k1/pp2bpp1/2pp3p/4nbN1/2P4P/4BP2/PPPQ2P1/1K1R1B1R w - - 0 1
+move g5e4 best f1e2 delta 230 accuracy 218,71
+25 2r2rk1/1p1bq3/p3p2p/3pPpp1/1P1Q4/P7/2P2PPP/2R1RBK1 b - - 0 1
+move b7b5 best d7b5 delta 617 accuracy 221,96
+26 r1r3k1/1bq2pbp/pp1pp1p1/2n5/P3PP2/R2B4/1PPBQ1PP/3N1R1K w - - 0 1
+move d2c3 best g5c1 delta 686 accuracy 224,96
+27 rn1q1rk1/p4pbp/bp1p1np1/2pP4/8/P1N2NP1/1PQ1PPBP/R1B1K2R w KQ - 0 1
+move c1f4 best e1g1 delta 10 accuracy 217,00
+28 8/4nk2/1p3p2/1r1p2pp/1P1R1N1P/6P1/3KPP2/8 w - - 0 1
+move h4g5 best f5e4 delta 0 accuracy 209,25
+29 rn3rk1/pbppq1pp/1p2pb2/4N2Q/3PN3/3B4/PPP2PPP/R3K2R w KQ - 0 1
+move e4c5 best h5h7 delta 32869 accuracy 212,38
+30 3rkb1r/pppb1pp1/4n2p/2p5/3NN3/1P5P/PBP2PP1/3RR1K1 w - - 0 1
+move d4e6 best d4f5 delta 415 accuracy 215,30
+31 8/4k3/p2p2p1/P1pPn2p/1pP1P2P/1P1NK1P1/8/8 w - - 0 1
+move d3e5 best g3g4 delta 325 accuracy 218,03
+32 2r2r2/3qbpkp/p3n1p1/2ppP3/6Q1/1P1B3R/PBP3PP/5R1K w - - 0 1
+move b2c1 best h3h7 delta 5583 accuracy 220,59
+33 5k2/7R/4P2p/5K2/p1r2P1p/8/8/8 b - - 0 1
+move a4a3 best e1g1 delta 52 accuracy 215,48
+34 1r2r1k1/p4p1p/6pB/q7/8/3Q2P1/PbP2PKP/1R3R2 w - - 0 1
+move h6f4 best b1b2 delta 1615 accuracy 217,97
+35 r1b1r1k1/1pqn1pbp/p2pp1p1/P7/1n1NPP1Q/2NBBR2/1PP3PP/R6K w - - 0 1
+move d3e2 best f4f5 delta 123 accuracy 215,26
+36 rnbq1b1r/ppp2kpp/3p1n2/8/3PP3/8/PPP2PPP/RNBQKB1R b KQ - 1 5
+move d8e8 best c7c5 delta 433 accuracy 217,61
+37 8/p2p4/r7/1k6/8/pK5Q/P7/b7 w - - 0 1
+move h3f1 best h3d3 delta 111 accuracy 214,73
+38 r1bq1rk1/pp1n1pbp/2n1p1p1/2ppP3/8/2PP1NP1/PP1N1PBP/R1BQ1RK1 w - - 0 1
+move d2b3 best d3d4 delta 306 accuracy 216,97
+39 4kbr1/1b1nqp2/2p1p3/2N4p/1p1PP1pP/1PpQ2B1/4BPP1/r4RK1 w - - 0 1
+move f1a1 best f6f5 delta 305 accuracy 219,10
+40 r2qnrnk/p2b2b1/1p1p2pp/2pPpp2/1PP1P3/PRNBB3/3QNPPP/5RK1 w - - 0 1
+move f2f4 best b3a4 delta 434 accuracy 221,13
+41 2r2rk1/1bqnbpp1/1p1ppn1p/pP6/N1P1P3/P2B1N1P/1B2QPP1/R2R2K1 b - - 0 1
+move f8d8 best b7e4 delta 93 accuracy 218,00
+42 5r1k/6pp/1n2Q3/4p3/8/7P/PP4PK/R1B1q3 b - - 0 1
+move b6c8 best h7h6 delta 516 accuracy 219,95
+43 3r2k1/ppq2pp1/4p2p/3n3P/3N2P1/2P5/PP2QP2/K2R4 b - - 0 1
+move d5f6 best d5c3 delta 560 accuracy 221,81
+44 5k2/1rn2p2/3pb1p1/7p/p3PP2/PnNBK2P/3N2P1/1R6 w - - 0 1
+move c3a4 best d2f3 delta 77 accuracy 218,52
+45 rnbq1rk1/pppp1ppp/4pn2/8/1bPP4/P1N5/1PQ1PPPP/R1B1KBNR b KQ - 1 5
+move b4c3 best f1f7 delta 457 accuracy 220,33
+46 r3qb1k/1b4p1/p2pr2p/3n4/Pnp1N1N1/6RP/1B3PP1/1B1QR1K1 w - - 0 1
+move d1d4 best g4h6 delta 780 accuracy 222,07
+47 r1b2rk1/pp4pp/1q1Nppn1/2n4B/1P3P2/2B2RP1/P6P/R2Q3K b - - 0 1
+move c5a6 best f4h6 delta 879 accuracy 223,72
+48 4q1k1/1p6/1Rb4p/R4B1P/1P2p3/4P3/1B3PK1/2r5 b - - 33 127
+move c1d1 best e8d8 delta 3 accuracy 219,13
+49 1r3k2/2N2pp1/1pR2n1p/4p3/8/1P1K1P2/P5PP/8 w - - 0 1
+move a2a4 best h4g6 delta 120 accuracy 217,10
+50 4rrk1/Rpp3pp/6q1/2PPn3/4p3/2N5/1P2QPPP/5RK1 w - - 0 1
+move a7b7 best a7a4 delta 523 accuracy 218,76
+51 r1bqkb1r/4npp1/p1p4p/1p1pP1B1/8/1B6/PPPN1PPP/R2Q1RK1 w kq - 0 1
+move d2e4 best a5a6 delta 122 accuracy 216,86
+52 r2q1rk1/pppb1pbp/2np1np1/4p3/2P5/P1NPPNP1/1P3PBP/R1BQK2R w KQ - 0 1
+move e3e4 best g2g4 delta 1119 accuracy 218,46
+53 1r4k1/1nq3pp/pp1pp1r1/8/PPP2P2/6P1/5N1P/2RQR1K1 w - - 0 1
+move f2e4 best g5f6 delta 281 accuracy 219,64
+54 q4rk1/1n1Qbppp/2p5/1p2p3/1P2P3/2P4P/6P1/2B1NRK1 b - - 0 1
+move e7f6 best a8c8 delta 361 accuracy 221,13
+55 r2qkbnr/ppp1pp1p/3p2p1/3Pn3/4P1b1/2N2N2/PPP2PPP/R1BQKB1R w KQkq - 2 6
+move f3e5 best f3e5 delta 0 accuracy 217,11
+56 4rrk1/pp4pp/3p4/3P3b/2PpPp1q/1Q5P/PB4B1/R4RK1 b - - 0 1
+move d4d3 best f8f6 delta 151 accuracy 215,93
+57 8/8/3pp1k1/1R4p1/3P4/4R1K1/3q4/8 w - - 1 43
+move b5b3 best c4c5 delta 705 accuracy 217,40
+58 r4rk1/pp1n1p1p/1nqP2p1/2b1P1B1/4NQ2/1B3P2/PP2K2P/2R5 w - - 0 1
+move e4c5 best c1c5 delta 396 accuracy 218,83
+59 r1bqk2r/pp2bppp/2n1p3/1B1n4/3P4/2N2N2/PP3PPP/R1BQ1RK1 b kq - 0 1
+move a7a6 best e8g8 delta 318 accuracy 220,20
+60 r4rk1/ppp2ppp/1nnb4/8/1P1P3q/PBN1B2P/4bPP1/R2QR1K1 w - - 0 1
+move e1e2 best e1e2 delta 0 accuracy 216,53
+61 r1bq1rk1/1p1n1pp1/p4n1p/2bp4/8/2NBPN2/PPQB1PPP/R3K2R w KQ - 0 1
+move e1g1 best e1g1 delta 0 accuracy 212,98
+62 rnb1kb1r/p4p2/1qp1pn2/1p2N2p/2p1P1p1/2N3B1/PPQ1BPPP/3RK2R w Kkq - 0 1
+move h2h3 best d1d2 delta 605 accuracy 214,39
+63 r1bq1rk1/ppp2ppp/2n1pn2/3p4/1bPP4/2NBPN2/PP3PPP/R1BQK2R w KQ - 0 1
+move a2a3 best f4f3 delta 326 accuracy 215,75
+64 8/1p3pp1/7p/5P1P/2k3P1/8/2K2P2/8 w - - 0 1
+move f5f6 best f5f6 delta 0 accuracy 212,38
+65 8/3p4/p1bk3p/Pp6/1Kp1PpPp/2P2P1P/2P5/5B2 b - - 0 1
+move c6b7 best c6e4 delta 851 accuracy 213,72
+66 rnb2rk1/pp1n1pp1/1q1Pp2p/2pp4/3P4/1P3N2/P1P2PPP/R1BQKB1R w KQ - 1 10
+move c1f4 best g5g6 delta 592 accuracy 215,03
+67 r2qr1k1/p3bppp/1p2n3/3Q1N2/5P2/4B1P1/PP3R1P/R5K1 w - - 0 1
+move f5e7 best a1d1 delta 38 accuracy 212,39
+68 rn1qkb1r/pp2pppp/5n2/3p1b2/3P4/2N1P3/PP3PPP/R1BQKBNR w KQkq - 0 1
+move d1b3 best d4e6 delta 318 accuracy 213,68
+69 r1bqkb1r/ppp3pp/2np4/3N1p2/3pnB2/5N2/PPP1QPPP/2KR1B1R b kq - 0 1
+move c8e6 best c6e7 delta 379 accuracy 214,93
+70 rnbqk2r/pppp2pp/4pn2/5p2/1b1P4/2P2NP1/PP2PPBP/RNBQK2R b KQkq - 0 1
+move b4f8 best b3b4 delta 1030 accuracy 216,14
+71 8/2p2kpp/p6r/4Pp2/1P2pPb1/2P3P1/P2B1K1P/4R3 w - - 0 1
+move h2h4 best e5f6 delta 132 accuracy 214,96
+72 r2qk2r/1b1n1ppp/4pn2/p7/1pPP4/3BPN2/1B3PPP/R2QK2R w KQkq - 0 1
+move c4c5 best h3h7 delta 5596 accuracy 216,14
+73 4rr2/2p5/1p1p1kp1/p6p/P1P4P/6P1/1P3PK1/3R1R2 w - - 0 1
+move f1e1 best f1e1 delta 0 accuracy 213,18
+74 2k2Br1/p6b/Pq1r4/1p2p1b1/1Ppp2p1/Q1P3N1/5RPP/R3N1K1 b - - 0 1
+move g5e3 best d6f6 delta 138 accuracy 212,16
+75 3rr1k1/pp3pp1/1qn2np1/8/3p4/PP1R1P2/2P1NQPP/R1B3K1 b - - 0 1
+move b6c5 best g5h7 delta 405 accuracy 213,33
+76 8/2k5/4p3/1nb2p2/2K5/8/6B1/8 w - - 0 1
+move c4c5 best f1d1 delta 760 accuracy 214,47
+77 8/1pp5/p3k1pp/8/P1p2PPP/2P2K2/1P3R2/5r2 b - - 0 1
+move f1h1 best a1c1 delta 14 accuracy 211,87
+78 r1bq1rk1/pp3ppp/2n2n2/3p4/8/P1NB4/1PP2PPP/R1BQK2R w KQ - 0 1
+move c1g5 best e1g1 delta 551 accuracy 213,00
+79 6k1/6p1/7p/P1N5/1r3p2/7P/1b3PP1/3bR1K1 w - - 0 1
+move e1d1 best a5a6 delta 748 accuracy 214,10
+80 3r1rk1/p1q4p/1pP1ppp1/2n1b1B1/2P5/6P1/P1Q2PBP/1R3RK1 w - - 0 1
+move g5h6 best g5h6 delta 0 accuracy 211,43
+81 rnb2rk1/ppq1ppbp/6p1/2p5/3PP3/2P2N2/P3BPPP/1RBQK2R w K - 0 1
+move e4e5 best e1g1 delta 152 accuracy 210,69
+82 r4rk1/pp2qpp1/2pRb2p/4P3/2p5/2Q1PN2/PP3PPP/4K2R w K - 0 1
+move e1e2 best e4e5 delta 621 accuracy 211,78
+83 rnbqk2r/1p3ppp/p7/1NpPp3/QPP1P1n1/P4N2/4KbPP/R1B2B1R b kq - 0 1
+move b8d7 best a6b5 delta 1480 accuracy 212,84
+84 r2q1rk1/1b3ppp/4pn2/1pP5/1b6/2NBPN2/1PQ2PPP/R3K2R w KQ - 0 1
+move e1e2 best e1g1 delta 693 accuracy 213,88
+85 r1bqrnk1/pp2bp1p/2p2np1/3p2B1/3P4/2NBPN2/PPQ2PPP/1R3RK1 w - - 1 12
+move f3e5 best c8c3 delta 1508 accuracy 214,89
+86 q3rn1k/2QR4/pp2pp2/8/P1P5/1P4N1/6n1/6K1 w - - 0 1
+move d7d2 best g3f5 delta 32053 accuracy 215,88
+87 r1bq1rk1/pppnnppp/4p3/3pP3/1b1P4/2NB3N/PPP2PPP/R1BQK2R w KQ - 3 7
+move h3g5 best d3h7 delta 1447 accuracy 216,85
+88 rnbqk2r/ppp2ppp/1b1p1n2/4p3/2B1P3/2PP1N2/PP1N1PPP/R1BQK2R b KQkq - 0 1
+move b8c6 best e8g8 delta 13 accuracy 214,53
+89 1r1q1rk1/p1p2pbp/2pp1np1/6B1/4P3/2NQ4/PPP2PPP/3R1RK1 w - - 0 1
+move e4e5 best e4e5 delta 0 accuracy 212,12
+90 2r3k1/pppR1pp1/4p3/4P1P1/5P2/1P4K1/P1P5/8 w - - 0 1
+move a2a3 best a4d7 delta 590 accuracy 213,10
+91 8/p4p2/2R3k1/6p1/P2Br2p/5K2/4r3/8 b - - 5 55
+move g6h7 best g6h7 delta 0 accuracy 210,76
+92 rn1q1rk1/pp2bppp/1n2p1b1/8/2pPP3/1BN1BP2/PP2N1PP/R2Q1RK1 w - - 0 1
+move b3c2 best b3c2 delta 0 accuracy 208,47
+93 r1b2rk1/2qnbp1p/p1npp1p1/1p4PQ/4PP2/1NNBB3/PPP4P/R4RK1 w - - 0 1
+move h5d1 best h5h6 delta 368 accuracy 209,45
+94 3rk2r/1b2bppp/p1qppn2/1p6/4P3/PBN2PQ1/1PP3PP/R1B1R1K1 b k - 0 1
+move e8f8 best f6h5 delta 320 accuracy 210,41
+95 r1bq1rk1/pppp1pbp/2n2np1/4p3/2P5/P1N2NP1/1P1PPPBP/R1BQK2R w KQ - 0 1
+move d2d4 best d2d3 delta 571 accuracy 211,36
+96 8/3nk3/3pp3/1B6/8/3PPP2/4K3/8 w - - 0 1
+move d3d4 best b5d7 delta 1294 accuracy 212,28
+97 q5k1/p2p2bp/1p1p2r1/2p1np2/6p1/1PP2PP1/P2PQ1KP/4R1NR b - - 0 1
+move g6e6 best a8d5 delta 34 accuracy 210,44
+98 r2q1rk1/4bppp/p2p4/2pP4/3pP3/3Q4/PP1B1PPP/R3R1K1 w - - 0 1
+move b2b4 best d7b5 delta 50 accuracy 208,81
+99 rn3rk1/pbp1qppp/1p1ppn2/8/2PP4/P1Q2NP1/1P2PPBP/R1B1K2R w KQ - 0 1
+move c1e3 best e1g1 delta 306 accuracy 209,73
+100 4K1k1/8/1p5p/1Pp3b1/8/1P3P2/P1B2P2/8 w - - 0 1
+move e8d7 best a2a4 delta 47 accuracy 208,10
+101 r1q1k2r/1b1nbppp/pp1ppn2/8/2PQP3/1PN2NP1/PB3PBP/R2R2K1 b kq - 0 1
+move c8c7 best c4d4 delta 128 accuracy 207,31
+102 r1b2rk1/1p1nbppp/pq1p4/3B4/P2NP3/2N1p3/1PP3PP/R2Q1R1K w - - 0 1
+move d5b3 best f1f7 delta 371 accuracy 208,22
+103 3r2k1/p1q1npp1/3r1n1p/2p1p3/4P2B/P1P2Q1P/B4PP1/1R2R1K1 w - - 0 1
+move a2c4 best c4f7 delta 576 accuracy 209,11
+104 1rbq1rk1/p1b1nppp/1p2p3/8/1B1pN3/P2B4/1P3PPP/2RQ1R1K w - - 0 1
+move e4g5 best e4f6 delta 327 accuracy 209,98
+105 2rbrnk1/1b3p2/p2pp3/1p4PQ/1PqBPP2/P1NR4/2P4P/5RK1 b - - 0 1
+move f8g6 best b6b7 delta 335 accuracy 210,84
+106 r1b1kb1N/pppnq1pB/8/3p4/3P4/8/PPPK1nPP/RNB1R3 b q - 0 1
+move f2e4 best d7e5 delta 290 accuracy 211,58
+107 r2qk2r/ppp1b1pp/2n1p3/3pP1n1/3P2b1/2PB1NN1/PP4PP/R1BQK2R w KQkq - 0 1
+move h2h3 best d4f5 delta 213 accuracy 211,60
+108 r3k2r/pp2pp1p/6p1/2nP4/1R2PB2/4PK2/P5PP/5bNR w kq - 0 1
+move g1e2 best g1e2 delta 0 accuracy 209,64
+109 8/8/R7/1b4k1/5p2/1B3r2/7P/7K w - - 0 1
+move a6a3 best f1d1 delta 416 accuracy 210,47
+110 r2qrb1k/1p1b2p1/p2ppn1p/8/3NP3/1BN5/PPP3QP/1K3RR1 w - - 0 1
+move g2h3 best c3e2 delta 426 accuracy 211,28
+111 4b3/p3kp2/6p1/3pP2p/2pP1P2/4K1P1/P3N2P/8 w - - 0 1
+move f4f5 best f4f5 delta 0 accuracy 209,38
+112 r1b2rk1/p2nqppp/1ppbpn2/3p4/2P5/1PN1PN2/PBQPBPPP/R4RK1 w - - 0 1
+move f3d4 best c4d5 delta 32 accuracy 207,79
+113 3n1r1k/2p1p1bp/Rn4p1/6N1/3P3P/2N1B3/2r2PP1/5RK1 w - - 0 1
+move c3e4 best e1g1 delta 30 accuracy 206,22
+114 r1q1k2r/pb1nbppp/1p2pn2/8/P1PNP3/2B3P1/2QN1PBP/R4RK1 b kq - 0 1
+move a7a5 best e8g8 delta 723 accuracy 207,04
+115 2q1rr1k/3bbnnp/p2p1pp1/2pPp3/PpP1P1P1/1P2BNNP/2BQ1PRK/7R b - - 0 1
+move c8c7 best e7d8 delta 562 accuracy 207,85
+116 r1bqk2r/pp2ppbp/2np1np1/2p5/4P3/1B1P1N1P/PPP2PP1/RNBQK2R w KQkq - 0 1
+move b1c3 best d5d4 delta 504 accuracy 208,65
+117 r4r1k/p1p3bp/2pp2p1/4nb2/N1P4q/1P5P/PBNQ1PP1/R4RK1 b - - 0 1
+move a8b8 best h3h4 delta 335 accuracy 209,43
+118 r3kb1r/pp3ppp/4bn2/3p4/P7/4N1P1/1P2PPBP/R1B1K2R w KQkq - 0 1
+move e1g1 best d5f6 delta 6348 accuracy 210,19
+119 2r3k1/5pp1/1p2p1np/p1q5/P1P4P/1P1Q1NP1/5PK1/R7 w - - 0 1
+move a1d1 best a1a2 delta 30 accuracy 208,68
+120 r4rk1/1bqp1ppp/pp2pn2/4b3/P1P1P3/2N2BP1/1PQB1P1P/2R2RK1 w - - 0 1
+move b2b3 best a8d8 delta 230 accuracy 208,86
+121 4k1br/1K1p1n1r/2p2pN1/P2p1N2/2P3pP/5B2/P2P4/8 w - - 0 1
+move a5a6 best a5a6 delta 0 accuracy 207,13
+122 r5k1/3n1ppp/1p6/3p1p2/3P1B2/r3P2P/PR3PP1/2R3K1 b - - 0 1
+move f7f6 best e8g8 delta 120 accuracy 206,42
+123 1r1r2k1/2pq3p/4p3/2Q1Pp2/1PNn1R2/P5P1/5P1P/4R2K b - - 0 1
+move d4c2 best b8b5 delta 232 accuracy 206,63
+124 r1bqk2r/ppp2ppp/2nb4/3np3/8/PP2P3/1BQP1PPP/RN2KBNR b KQkq - 0 1
+move c8e6 best f2f4 delta 351 accuracy 207,38
+125 6k1/p3q2p/1nr3pB/8/3Q1P2/6P1/PP5P/3R2K1 b - - 0 1
+move c6c2 best c6e7 delta 441 accuracy 208,12
+126 r1bq1rk1/pp2ppbp/2np2p1/2n5/P3PP2/N1P2N2/1PB3PP/R1B1QRK1 b - - 0 1
+move c8d7 best c5b3 delta 1058 accuracy 208,85
+127 5rk1/pp1b4/4pqp1/2Ppb2p/1P2p3/4Q2P/P3BPP1/1R3R1K b - - 0 1
+move f6f4 best d5d4 delta 922 accuracy 209,57
+128 r1bqr1k1/3n1ppp/p2p1b2/3N1PP1/1p1B1P2/1P6/1PP1Q2P/2KR2R1 w - - 0 1
+move d4f6 best e2e8 delta 643 accuracy 210,27
+129 r3kb1r/pbq2ppp/1pn1p3/2p1P3/1nP5/1P3NP1/PB1N1PBP/R2Q1RK1 w kq - 0 1
+move d2e4 best a2a3 delta 1350 accuracy 210,97
+130 1r2r1k1/4ppbp/B5p1/3P4/pp1qPB2/2n2Q1P/P4PP1/4RRK1 b - - 0 1
+move g7e5 best c3a2 delta 314 accuracy 211,65
+131 r1bqkb1r/2pp1ppp/p1n5/1p2p3/3Pn3/1B3N2/PPP2PPP/RNBQ1RK1 b kq - 2 7
+move c8b7 best d7d5 delta 477 accuracy 212,33
+132 5rk1/1ppbq1pp/3p3r/pP1PppbB/2P5/P1BP4/5PPP/3QRRK1 b - - 0 1
+move f5f4 best g5c1 delta 226 accuracy 212,43
+133 5rk1/n2qbpp1/pp2p1p1/3pP1P1/PP1P3P/2rNPN2/R7/1Q3RK1 w - - 0 1
+move a4a5 best h4h5 delta 1020 accuracy 213,09
+134 3r2k1/pp2npp1/2rqp2p/8/3PQ3/1BR3P1/PP3P1P/3R2K1 b - - 0 1
+move e7d5 best g7g6 delta 33 accuracy 211,75
+135 r2q1r1k/pb3p1p/2n1p2Q/5p2/8/3B2N1/PP3PPP/R3R1K1 w - - 0 1
+move g3f5 best d3f5 delta 1890 accuracy 212,40
+136 r2q1rk1/1b1nbpp1/pp2pn1p/8/2BN3B/2N1P3/PP2QPPP/2R2RK1 w - - 0 1
+move f1d1 best f1d1 delta 0 accuracy 210,84
+137 r2qkbnr/2p2pp1/p1pp4/4p2p/4P1b1/5N1P/PPPP1PP1/RNBQ1RK1 w kq - 1 8
+move b1a3 best f3g4 delta 1645 accuracy 211,49
+138 rnbq1rk1/ppp1ppbp/6p1/8/8/2P2NP1/P2PPPBP/R1BQK2R w KQ - 0 1
+move a1b1 best c6e5 delta 669 accuracy 212,13
+139 r2qk2r/1b2bppp/p1n1pn2/1p6/1P6/P2BPN2/1B2QPPP/RN3RK1 b kq - 0 1
+move d8b6 best f5f4 delta 493 accuracy 212,76
+140 r1bqkb1r/pp3ppp/2np1n2/4p1B1/3NP3/2N5/PPP2PPP/R2QKB1R w KQkq - 1 7
+move d4c6 best g5f6 delta 92 accuracy 211,90
+141 rnbqkb1r/p3pppp/1p6/2ppP3/3N4/2P5/PPP1QPPP/R1B1KB1R w KQkq - 0 1
+move e5e6 best e5e6 delta 0 accuracy 210,40
+142 bn6/1q4n1/1p1p1kp1/2pPp1pp/1PP1P1P1/3N1P1P/4B1K1/2Q2N2 w - - 0 1
+move g4h5 best h3h4 delta 609 accuracy 211,03
+143 r1bqk1nr/pppnbppp/3p4/8/2BNP3/8/PPP2PPP/RNBQK2R w KQkq - 2 6
+move c4f7 best c4f7 delta 0 accuracy 209,55
+144 r1bq1rk1/pp3ppp/2n1pn2/2p5/1bBP4/2N1PN2/PP3PPP/R1BQ1RK1 w - - 0 1
+move a2a3 best d4c5 delta 354 accuracy 210,18
+145 r1b1kb1r/1p1npppp/p2p1n2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 1
+move b1b3 best g5f6 delta 290 accuracy 210,73
+146 3q1rk1/7p/rp1n4/p1pPbp2/P1P2pb1/1QN4P/1B2B1P1/1R3RK1 w - - 0 1
+move h3g4 best c3b5 delta 728 accuracy 211,34
+147 rnbqkb1r/pppp1ppp/5n2/4p3/4PP2/2N5/PPPP2PP/R1BQKBNR b KQkq - 1 3
+move d7d5 best d7d5 delta 0 accuracy 209,90
+148 r2r2k1/p1pnqpp1/1p2p2p/3b4/3P4/3BPN2/PP3PPP/2RQR1K1 b - - 0 1
+move c7c5 best d1e1 delta 390 accuracy 210,51
+149 rn2k2r/3pbppp/p3p3/8/Nq1Nn3/4B1P1/PP3P1P/R2Q1RK1 w k - 0 1
+move d1c2 best d4f5 delta 61 accuracy 209,51
+150 4b1k1/1p3p2/4pPp1/p2pP1P1/P2P4/1P1B4/8/2K5 w - - 0 1
+move c1c2 best b3b4 delta 1076 accuracy 210,11
+151 r1b1kb1r/1pqpnppp/p1n1p3/8/3NP3/2N1B3/PPP1BPPP/R2QK2R w KQkq - 3 8
+move f2f4 best d4b5 delta 651 accuracy 210,71
+152 rnbq2k1/p1r2p1p/1p1p1Pp1/1BpPn1N1/P7/2P5/6PP/R1B1QRK1 w - - 0 1
+move a4a5 best g5h7 delta 1334 accuracy 211,30
+153 r3rbk1/ppq2ppp/2b1pB2/8/6Q1/1P1B3P/P1P2PP1/R2R2K1 w - - 0 1
+move d1e1 best d3h7 delta 95 accuracy 210,54
+154 r2qkb1r/pb1n1p2/2p1p2p/4P1pn/PppP4/2N2NB1/1P2BPPP/R2Q1RK1 w kq - 0 1
+move c3e4 best c3e4 delta 0 accuracy 209,17
+155 r3k2r/pbn2ppp/8/1P1pP3/P1qP4/5B2/3Q1PPP/R3K2R w KQkq - 0 1
+move a1c1 best f3e2 delta 1060 accuracy 209,75
+156 r1b1k1nr/1p3ppp/p1np4/4p1q1/2P1P3/N1NB4/PP3PPP/2RQK2R w Kkq - 0 1
+move e1g1 best e1g1 delta 0 accuracy 208,41
+157 r1bqkbnr/ppp2ppp/2n5/8/2BpP3/5N2/PP3PPP/RNBQK2R w KQkq - 0 1
+move d1b3 best c1d2 delta 63 accuracy 207,48
+158 1k1r4/pp1b1R2/3q2pp/4p3/2B5/4Q3/PPP2B2/2K5 b - - 0 1
+move d6d1 best d6d1 delta 0 accuracy 206,17
+159 r1b1kb1r/pp2qppp/2pp4/8/4nP2/2N2N2/PPPP2PP/R1BQK2R w KQkq - 0 1
+move e1g1 best h5h7 delta 32758 accuracy 206,76
+160 1b1rr1k1/pp1q1pp1/8/NP1p1b1p/1B1Pp1n1/PQR1P1P1/4BP1P/5RK1 w - - 0 1
+move c3c1 best a5c6 delta 303 accuracy 207,34
+161 r1bqk2r/ppn1bppp/2n5/2p1p3/8/2NP1NP1/PP1BPPBP/R2Q1RK1 b kq - 0 1
+move c8e6 best e8g8 delta 30 accuracy 206,24
+162 4r1k1/1q1n1ppp/3pp3/rp6/p2PP3/N5P1/PPQ2P1P/3RR1K1 w - - 0 1
+move d1c1 best d1c1 delta 0 accuracy 204,97
+163 rn3rk1/1bqp1ppp/p3pn2/8/Nb1NP3/4B3/PP2BPPP/R2Q1RK1 w - - 0 1
+move a1c1 best e2d3 delta 17 accuracy 203,82
+164 r3k2r/1b1nb1p1/p1q1pn1p/1pp3N1/4PP2/2N5/PPB3PP/R1BQ1RK1 w kq - 0 1
+move g5f3 best g5f3 delta 0 accuracy 202,57
+165 r2qk2r/2p2ppp/p1n1b3/1pbpP3/4n3/1BP2N2/PP1N1PPP/R1BQ1RK1 b kq - 0 1
+move e4d2 best a2c4 delta 316 accuracy 203,16
+166 8/5p1p/3P1k2/p1P2n2/3rp3/1B6/P4R2/6K1 w - - 0 1
+move f2f1 best b3a4 delta 448 accuracy 203,75
+167 r3kr2/pppb1p2/2n3p1/3Bp2p/4P2N/2P5/PP3PPP/2KR3R b q - 0 1
+move e8c8 best e4f6 delta 427 accuracy 204,32
+168 rqn2rk1/pp2b2p/2n2pp1/1N2p3/5P1N/1PP1B3/4Q1PP/R4RK1 w - - 0 1
+move f4e5 best h4g6 delta 492 accuracy 204,89
+169 r3r1k1/1bnq1pbn/p2p2p1/1p1P3p/2p1PP1B/P1N2B1P/1PQN2P1/3RR1K1 w - - 0 1
+move e4e5 best e4e5 delta 0 accuracy 203,68
+170 r1bqkb1r/pp3ppp/2npp3/3nP3/2BP4/5N2/PP3PPP/RNBQK2R w KQkq - 0 1
+move b1c3 best e7e8 delta 424 accuracy 204,25
+171 3rr1k1/1pq2b1p/2pp2p1/4bp2/pPPN4/4P1PP/P1QR1PB1/1R4K1 b - - 0 1
+move d8a8 best c4d3 delta 188 accuracy 204,15
+172 1nk1r1r1/pp2n1pp/4p3/q2pPp1N/b1pP1P2/B1P2R2/2P1B1PP/R2Q2K1 w - - 0 1
+move h5f6 best c2f2 delta 178 accuracy 204,00
+173 1r3rk1/6p1/p1pb1qPp/3p4/4nPR1/2N4Q/PPP4P/2K1BR2 b - - 0 1
+move e4c3 best b8b2 delta 396 accuracy 204,55
+174 r1b2rk1/2q1b1pp/p2ppn2/1p6/3QP3/1BN1B3/PPP3PP/R4RK1 w - - 0 1
+move a2a4 best c3d5 delta 114 accuracy 204,03
+175 rnbqk1nr/pp3pbp/2ppp1p1/8/2BPP3/2N2Q2/PPP2PPP/R1B1K1NR w KQkq - 0 1
+move g1h3 best g1e2 delta 417 accuracy 204,58
+176 r1bqk2r/pp2bppp/2n1p3/3n4/3P4/2NB1N2/PP3PPP/R1BQ1RK1 b kq - 0 1
+move c6b4 best c8d7 delta 20 accuracy 203,53
+177 2rr2k1/1b3ppp/pb2p3/1p2P3/1P2BPnq/P1N3P1/1B2Q2P/R4R1K b - - 0 1
+move b7e4 best c8c3 delta 1334 accuracy 204,08
+178 rn1q1rk1/pp3ppp/4bn2/2bp4/5B2/2NBP1N1/PP3PPP/R2QK2R w KQ - 0 1
+move g3f5 best e1g1 delta 56 accuracy 203,25
+179 rn1q1rk1/pb3p2/1p5p/3n2P1/3p4/P4P2/1P1Q1BP1/R3KBNR b KQ - 0 1
+move d8g5 best f8e8 delta 127 accuracy 202,82
+180 r1n2N1k/2n2K1p/3pp3/5Pp1/b5R1/8/1PPP4/8 w - - 0 1
+move f8e6 best f5f6 delta 2073 accuracy 203,36
+181 rnbqr1k1/pp1p1ppp/5n2/3Pb3/1P6/P1N3P1/4NPBP/R1BQK2R w KQ - 0 1
+move e1g1 best e1g1 delta 0 accuracy 202,24
+182 2r2k2/r4p2/2b1p1p1/1p1p2Pp/3R1P1P/P1P5/1PB5/2K1R3 w - - 0 1
+move c1d2 best e8g8 delta 411 accuracy 202,77
+183 2kr2nr/1pp3pp/p1pb4/4p2b/4P1P1/5N1P/PPPN1P2/R1B1R1K1 b - - 0 1
+move h5f7 best h5f7 delta 0 accuracy 201,67
+184 1k1r3r/pp2qpp1/3b1n1p/3pNQ2/2pP1P2/2N1P3/PP4PP/1K1RR3 b - - 0 1
+move g7g6 best d6b4 delta 566 accuracy 202,20
+185 rnbqkb1r/pppp1ppp/3n4/8/2BQ4/5N2/PPP2PPP/RNB2RK1 b kq - 1 6
+move f7f6 best d7d5 delta 365 accuracy 202,73
+186 r1bq1rk1/1p2ppbp/p2p1np1/6B1/2P1P3/2N5/PP1QBPPP/R3K2R w KQ - 0 1
+move e1g1 best d1b1 delta 81 accuracy 202,08
+187 1nrq1rk1/p4pp1/bp2pn1p/3p4/2PP1B2/P1PB2N1/4QPPP/1R2R1K1 w - - 0 1
+move c4d5 best d3c2 delta 135 accuracy 201,72
+188 rn1qkb1r/pp2pppp/5n2/3p1b2/3P4/1QN1P3/PP3PPP/R1B1KBNR b KQkq - 1 1
+move d8b6 best b8c6 delta 106 accuracy 201,21
+189 r2qkb1r/pp2nppp/1np1p3/4Pb2/3P4/PB3N2/1P3PPP/RNBQ1RK1 b kq - 0 1
+move e7d5 best b3b4 delta 1327 accuracy 201,73
+190 r3nrk1/pp2qpb1/3p1npp/2pPp3/2P1P2N/2N3Pb/PP1BBP1P/R2Q1RK1 w - - 0 1
+move h4g2 best e4c6 delta 654 accuracy 202,25
+191 r2q1rk1/pb2bppp/npp1pn2/3pN3/2PP4/1PB3P1/P2NPPBP/R2Q1RK1 w - - 0 1
+move g1h1 best e2e4 delta 508 accuracy 202,76
+192 r4k2/pb2bp1r/1p1qp2p/3pNp2/3P1P2/2N3P1/PPP1Q2P/2KRR3 w - - 0 1
+move d1d2 best g3g4 delta 573 accuracy 203,27
+193 r1b1k2r/ppq1bppp/2n5/2N1p3/8/2P1B1P1/P3PPBP/R2Q1RK1 b kq - 0 1
+move c7a5 best e8g8 delta 26 accuracy 202,35
+194 2kb4/p7/r1p3p1/p1P2pBp/R2P3P/2K3P1/5P2/8 w - - 0 1
+move g5d8 best g5d8 delta 0 accuracy 201,30
+195 rnb2r1k/pp2p2p/2pp2p1/q2P1p2/8/1Pb2NP1/PB2PPBP/R2Q1RK1 w - - 0 1
+move d1d2 best d1d2 delta 0 accuracy 200,27
+196 r1bq1rk1/pp2ppbp/2n2np1/2p3B1/4P3/2P2N2/PP1NBPPP/R2QK2R w KQ - 0 1
+move g5f4 best g5e3 delta 597 accuracy 200,78
+197 2r1k2r/2pn1pp1/1p3n1p/p3PP2/4q2B/P1P5/2Q1N1PP/R4RK1 w q - 0 1
+move c2e4 best e5f6 delta 950 accuracy 201,28
+198 3r2k1/2q2p1p/5bp1/p1pP4/PpQ5/1P3NP1/5PKP/3R4 b - - 0 1
+move h7h5 best c7d6 delta 0 accuracy 200,27
+199 1r4k1/1q2bp2/3p2p1/2pP4/p1N4R/2P2QP1/1P3PK1/8 w - - 0 1
+move h4h1 best c4d6 delta 361 accuracy 200,77
+200 r1bqk2r/ppp2ppp/2n5/4P3/2Bp2n1/5N1P/PP1N1PP1/R2Q1RK1 b kq - 1 10
+move g4h6 best e6e5 delta 278 accuracy 201,16
+201 1r2r1k1/3bnppp/p2q4/2RPp3/4P3/6P1/2Q1NPBP/2R3K1 w - - 0 1
+move g1h1 best d2c2 delta 444 accuracy 201,65
+202 r1bqk2r/ppp2ppp/3b4/4p3/8/1PPP1N2/2PB1PPP/R2Q1RK1 b kq - 0 1
+move f7f6 best c3b5 delta 275 accuracy 202,01
+203 6k1/pb1r1qbp/3p1p2/2p2p2/2P1rN2/1P1R3P/PB3QP1/3R2K1 b - - 0 1
+move f7e7 best g7h6 delta 204 accuracy 202,02
+204 8/8/1p1r1k2/p1pPN1p1/P3KnP1/1P6/8/3R4 b - - 0 1
+move d6d8 best f3e2 delta 632 accuracy 202,50
+205 r1bq1rk1/ppp1npb1/3p2pp/3Pp2n/1PP1P3/2N5/P2NBPPP/R1BQR1K1 b - - 0 1
+move h5f4 best d5c3 delta 687 accuracy 202,98
+206 r1b1k2r/p1pp1ppp/1np1q3/4P3/1bP5/1P6/PB1NQPPP/R3KB1R b KQkq - 0 1
+move c8b7 best e8g8 delta 354 accuracy 203,45
+207 r1br2k1/1p2qppp/pN2pn2/P7/2pn4/4N1P1/1P2PPBP/R3QRK1 b - - 0 1
+move a8b8 best a8b8 delta 0 accuracy 202,46
+208 8/3Pk1p1/1p2P1K1/1P1Bb3/7p/7P/6P1/8 w - - 0 1
+move g6g5 best g2g4 delta 1165 accuracy 202,93
+209 r2qk2r/pbpp1ppp/1pn1pn2/1Nb5/7P/1P2P3/PBPP1PP1/R2QKBNR w KQkq - 5 7
+move h4h5 best c6e4 delta 1043 accuracy 203,40
+210 1qr3k1/p2nbppp/bp2p3/3p4/3P4/1P2PNP1/P2Q1PBP/1N2R1K1 b - - 0 1
+move b8c7 best b8c7 delta 0 accuracy 202,43
+211 r2q1rk1/1ppnbppp/p2p1nb1/3Pp3/2P1P1P1/2N2N1P/PPB1QP2/R1B2RK1 b - - 0 1
+move c7c5 best a8c8 delta 115 accuracy 202,01
+212 r7/3rq1kp/2p1bpp1/p1Pnp3/2B4P/PP4P1/1B1RQP2/2R3K1 b - - 0 1
+move h7h5 best a2a3 delta 36 accuracy 201,23
+213 8/6pp/5k2/1p1r4/4R3/7P/5PP1/5K2 w - - 0 1
+move g2g3 best c6e5 delta 79 accuracy 200,66
+214 r3r2k/1bq1nppp/p2b4/1pn1p2P/2p1P1QN/2P1N1P1/PPBB1P1R/2KR4 w - - 0 1
+move h4f5 best h4g6 delta 493 accuracy 201,12
+215 2r1nrk1/p2q1ppp/bp1p4/n1pPp3/P1P1P3/2PBB1N1/4QPPP/R4RK1 w - - 0 1
+move f2f4 best f2f4 delta 0 accuracy 200,19
+216 r4r1k/pp1bq1b1/n2p2p1/2pPp1Np/2P4P/P1N1BP2/1P1Q2P1/2KR3R w - - 0 1
+move g5e6 best d2c2 delta 343 accuracy 200,65
+217 r3kb1r/pbqp1pp1/1pn1pn1p/8/3PP3/2PB1N2/3N1PPP/R1BQR1K1 w kq - 0 1
+move d2c4 best c4c3 delta 308 accuracy 201,11
+218 rn2kb1r/pp2nppp/1q2p3/3pP3/3P4/5N2/PP2NPPP/R1BQK2R w KQkq - 0 1
+move e1g1 best d4b5 delta 270 accuracy 201,42
+219 3r2k1/1p3ppp/2pq4/p1n5/P6P/1P6/1PB2QP1/1K2R3 w - - 0 1
+move g2g4 best f2f5 delta 29 accuracy 200,63
+220 r3k2r/1pqnnppp/p5b1/1PPp1p2/3P4/2N5/P2NB1PP/2RQ1RK1 b kq - 0 1
+move c7a5 best c4c5 delta 529 accuracy 201,09
+221 r1bqk2r/pppp1ppp/5n2/4p3/Bb2P3/5Q2/PPPPNPPP/R1B1K2R b KQkq - 0 1
+move e8g8 best e8g8 delta 0 accuracy 200,18
+222 3q1rk1/2nbppb1/pr1p1n1p/2pP1Pp1/2P1P2Q/2N2N2/1P2B1PP/R1B2RK1 w - - 0 1
+move h4f2 best f3g5 delta 525 accuracy 200,63
+223 r2qkb1r/pp3ppp/2bppn2/8/2PQP3/2N2N2/PP3PPP/R1B1K2R w KQkq - 0 1
+move b2b4 best e5f6 delta 581 accuracy 201,07
+224 1r3rk1/2qbppbp/3p1np1/nP1P2B1/2p2P2/2N1P2P/1P1NB1P1/R2Q1RK1 b - - 0 1
+move b8a8 best c7b6 delta 465 accuracy 201,51
+225 r1k1n2n/8/pP6/5R2/8/1b1B4/4N3/1K5N w - - 0 1
+move b6b7 best b6b7 delta 0 accuracy 200,62
+226 r4rk1/1q2bppp/p1bppn2/8/3BPP2/3B2Q1/1PP1N1PP/4RR1K w - - 0 1
+move e2c1 best c2a2 delta 62 accuracy 200,00
+227 r3k2r/5ppp/3pbb2/qp1Np3/2BnP3/N7/PP1Q1PPP/R3K2R w KQkq - 0 1
+move d2a5 best a3b5 delta 110 accuracy 199,61
+228 8/5p2/pk2p3/4P2p/2b1pP1P/P3P2B/8/7K w - - 0 1
+move h1g2 best h3g4 delta 390 accuracy 200,05
+229 r3k2r/ppp1bppp/2n5/3n4/3PB3/8/PP3PPP/RNB1R1K1 b kq - 0 1
+move d5f6 best e8c8 delta 347 accuracy 200,48
+230 3r2k1/p2r1p1p/1p2p1p1/q4n2/3P4/PQ5P/1P1RNPP1/3R2K1 b - - 0 1
+move h7h5 best d3h7 delta 1025 accuracy 200,92
+231 rnbq1rk1/pp2ppbp/2pp1np1/8/P2PP3/2N2N2/1PP1BPPP/R1BQK2R w KQ - 0 1
+move e4e5 best g1f3 delta 304 accuracy 201,35
+232 8/pp2r1k1/2p1p3/3pP2p/1P1P1P1P/P5KR/8/8 w - - 0 1
+move f4f5 best f4f5 delta 0 accuracy 200,48
+233 rn1qr1k1/pb3p2/1p5p/3n2P1/3p4/P4P2/1P1QNBP1/R3KB1R b KQ - 0 1
+move d8g5 best d8g5 delta 0 accuracy 199,62
+234 r1b2rk1/ppp3p1/4p2p/4Qpq1/3P4/2PB4/PPK2PPP/R6R b - - 0 1
+move g5g2 best f6f3 delta 32921 accuracy 200,05
+235 2r4k/pB4bp/1p4p1/6q1/1P1n4/2N5/P4PPP/2R1Q1K1 b - - 0 1
+move g5c1 best g5c1 delta 0 accuracy 199,20
+236 r1bqrbk1/1pp3pp/2n2p2/p2np3/8/PP1PPN2/1BQNBPPP/R3K2R w KQ - 0 1
+move d3d4 best d2e4 delta 33 accuracy 198,49
+237 rn1qkb1r/pb1p1ppp/1p2pn2/2p5/2PP4/5NP1/PP2PPBP/RNBQK2R w KQkq - 1 6
+move d4d5 best d4d5 delta 0 accuracy 197,65
+238 4r1k1/1r1np3/1pqp1ppB/p7/2b1P1PQ/2P2P2/P3B2R/3R2K1 w - - 0 1
+move h6e3 best h6g5 delta 312 accuracy 198,08
+239 r2q1rk1/1p2bpp1/p1b2n1p/8/5B2/2NB4/PP1Q1PPP/3R1RK1 w - - 0 1
+move f1e1 best f4h6 delta 134 accuracy 197,82
+240 r1bqnr2/pp1ppkbp/4N1p1/n3P3/8/2N1B3/PPP2PPP/R2QK2R b KQ - 2 11
+move f7e6 best c1d2 delta 641 accuracy 198,24
+241 r4rk1/q4bb1/p1R4p/3pN1p1/8/2N3P1/P4PP1/3QR1K1 w - - 0 1
+move e5f7 best e5g4 delta 176 accuracy 198,15
+242 r1b2rk1/ppq1bppp/2p1pn2/8/2NP4/2N1P3/PP2BPPP/2RQK2R w K - 0 1
+move e1g1 best e1g1 delta 0 accuracy 197,33
+243 5b2/p2k1p2/P3pP1p/n2pP1p1/1p1P2P1/1P1KBN2/7P/8 w - - 0 1
+move d3c2 best f3g5 delta 296 accuracy 197,74
+244 2k5/p7/Pp1p1b2/1P1P1p2/2P2P1p/3K3P/5B2/8 w - - 0 1
+move f2e1 best c4c5 delta 636 accuracy 198,16
+245 r2q1r1k/1b1nN2p/pp3pp1/8/Q7/PP5P/1BP2RPN/7K w - - 0 1
+move a4d7 best a4d7 delta 0 accuracy 197,35
+246 r1bq1rk1/1p3ppp/p1np4/3Np1b1/2B1P3/P7/1PP2PPP/RN1QK2R w KQ - 0 1
+move b1d2 best a7a4 delta 92 accuracy 196,92
+247 2r3qk/p5p1/1n3p1p/4PQ2/8/3B4/5P1P/3R2K1 w - - 0 1
+move e5e6 best e5e6 delta 0 accuracy 196,12
+248 r1bqk2r/5ppp/p1np4/1p1Np1b1/4P3/2P5/PPN2PPP/R2QKB1R b KQkq - 0 1
+move c6e7 best a8b8 delta 24 accuracy 195,43
+249 r2qk2r/ppp1bppp/2n5/3p1b2/3P1Bn1/1QN1P3/PP3P1P/R3KBNR w KQkq - 0 1
+move b3b7 best c1e1 delta 321 accuracy 195,85
+250 rn2kb1r/pp2pppp/1qP2n2/8/6b1/1Q6/PP1PPPBP/RNB1K1NR b KQkq - 1 6
+move b8c6 best e1g1 delta 20 accuracy 195,14
+251 b4r1k/6bp/3q1ppN/1p2p3/3nP1Q1/3BB2P/1P3PP1/2R3K1 w - - 0 1
+move g1h2 best e5f3 delta 228 accuracy 195,27
+252 8/8/8/8/4kp2/1R6/P2q1PPK/8 w - - 0 1
+move f2f3 best b1d2 delta 938 accuracy 195,69
+253 r1b1k2r/ppppqppp/8/2bP4/3p4/6P1/PPQPPPBP/R1B2RK1 b kq - 0 1
+move d7d6 best e8g8 delta 362 accuracy 196,10
+254 8/p1ppk1p1/2n2p2/8/4B3/2P1KPP1/1P5P/8 w - - 0 1
+move e4c6 best e4c6 delta 0 accuracy 195,33
+255 r2r2k1/pq2bppp/1np1bN2/1p2B1P1/5Q2/P4P2/1PP4P/2KR1B1R b - - 0 1
+move g7f6 best g5d8 delta 1203 accuracy 195,74
+256 r1b2rk1/ppp1qppp/1b1n4/8/B2n4/3NN3/PPPP1PPP/R1BQK2R w KQ - 0 1
+move b2b3 best e1g1 delta 217 accuracy 195,82
+257 8/8/4p1Pk/1rp1K1p1/4P1P1/1nP2Q2/p2b1P2/8 w - - 0 1
+move f3f8 best e5f6 delta 1082 accuracy 196,23
+258 r1b1kb1r/1p1n1p2/p3pP1p/q7/3N3p/2N5/P1PQB1PP/1R3R1K b kq - 0 1
+move h4h3 best d1b3 delta 124 accuracy 195,95
+259 4rb1k/1bqn1pp1/p3rn1p/1p2pN2/1PP1p1N1/P1P2Q1P/1BB2PP1/3RR1K1 w - - 0 1
+move f3e3 best e1g1 delta 133 accuracy 195,71
+260 3rr3/2pq2pk/p2p1pnp/8/2QBPP2/1P6/P5PP/4RRK1 b - - 0 1
+move e8e4 best a6b5 delta 3 accuracy 194,97
+261 r4r1k/4bppb/2n1p2p/p1n1P3/1p1p1BNP/3P1NP1/qP2QPB1/2RR2K1 w - - 0 1
+move g4f6 best b1b2 delta 601 accuracy 195,37
+262 r3r1k1/pp3ppp/2ppqn2/5R2/2P5/2PQP1P1/P2P2BP/5RK1 w - - 0 1
+move g1h1 best g3f3 delta 173 accuracy 195,28
+263 8/8/3pp1k1/1p4p1/3P4/4R1K1/q7/1R6 w - - 0 42
+move b1b5 best d5d6 delta 869 accuracy 195,68
+264 r1b1r1k1/1ppn1p1p/3pnqp1/8/p1P1P3/5P2/PbNQNBPP/1R2RB1K w - - 0 1
+move e2d4 best b1b2 delta 790 accuracy 196,08
+265 rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2
+move b1c3 best a5a6 delta 69 accuracy 195,60
+266 r1b1kq1r/1p1n2bp/p2p2p1/3PppB1/Q1P1N3/8/PP2BPPP/R4RK1 w kq - 0 1
+move e4c3 best e5g6 delta 128 accuracy 195,34
+267 r3kb1r/3n1ppp/p3p3/1p1pP2P/P3PBP1/4P3/1q2B3/R2Q1K1R b kq - 0 1
+move b5b4 best f8c5 delta 521 accuracy 195,73
+268 6r1/6r1/2p1k1pp/p1pbP2q/Pp1p1PpP/1P1P2NR/1KPQ3R/8 b - - 0 1
+move g4h3 best h5f5 delta 403 accuracy 196,12
+269 r3kb1r/pp1n1ppp/1q2p3/n2p4/3P1Bb1/2PB1N2/PPQ2PPP/RN2K2R w KQkq - 3 11
+move b1d2 best e3d3 delta 329 accuracy 196,51
+270 2kr1bnr/pbpq4/2n1pp2/3p3p/3P1P1B/2N2N1Q/PPP3PP/2KR1B1R w - - 0 1
+move d1e1 best d1e1 delta 0 accuracy 195,78
+271 2b1r3/5pkp/6p1/4P3/QppqPP2/5RPP/6BK/8 b - - 0 1
+move e8e7 best c4c3 delta 382 accuracy 196,17
+272 r2q1rk1/2p1bppp/p2p1n2/1p2P3/4P1b1/1nP1BN2/PP3PPP/RN1QR1K1 w - - 1 12
+move e5f6 best e5f6 delta 0 accuracy 195,44
+273 rr1nb1k1/2q1b1pp/pn1p1p2/1p1PpNPP/4P3/1PP1BN2/2B2P2/R2QR1K1 w - - 0 1
+move h5h6 best g5g6 delta 473 accuracy 195,83
+274 r1b2r1k/ppp2ppp/8/4p3/2BPQ3/P3P1K1/1B3PPP/n3q1NR w - - 0 1
+move h2h4 best d4e5 delta 346 accuracy 196,21
+275 r1bqk2r/p2pppbp/2p3pn/2p5/4P3/2P2N2/PP1P1PPP/RNBQR1K1 b kq - 0 1
+move c5c4 best h4h5 delta 406 accuracy 196,59
+276 rnbqr1k1/1p3pbp/p2p1np1/2pP4/4P3/2N5/PP1NBPPP/R1BQ1RK1 w - - 1 11
+move d1c2 best a2a4 delta 405 accuracy 196,96
+277 r3k2r/pp2pp1p/8/q2Pb3/2P5/4p3/B1Q2PPP/2R2RK1 w kq - 0 1
+move f2e3 best c4c5 delta 619 accuracy 197,33
+278 r3kbnr/1b3ppp/pqn5/1pp1P3/3p4/1BN2N2/PP2QPPP/R1BR2K1 w kq - 0 1
+move c3d5 best b3f7 delta 679 accuracy 197,70
+279 8/2P1P3/b1B2p2/1pPRp3/2k3P1/P4pK1/nP3p1p/N7 w - - 0 1
+move d5d1 best d5d1 delta 0 accuracy 196,99
+280 rn1qk2r/1b2bppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQR1K1 w kq - 5 10
+move d1d3 best b3c2 delta 145 accuracy 196,81
+281 1nr5/2rbkppp/p3p3/Np6/2PRPP2/8/PKP1B1PP/3R4 b - - 0 1
+move b8c6 best e6e5 delta 45 accuracy 196,27
+282 6k1/pp2rp1p/2p2bp1/1n1n4/1PN3P1/P2rP2P/R3NPK1/2B2R2 w - - 0 1
+move a2d2 best c1d2 delta 306 accuracy 196,63
+283 4n3/7r/2kp1R2/1p5p/7P/P1PK4/1P5B/8 w - - 0 52
+move f6f8 best f6f5 delta 968 accuracy 197,00
+284 2rq1rk1/pb1n1ppN/4p3/1pb5/3P1Pn1/P1N5/1PQ1B1PP/R1B2RK1 b - - 0 1
+move d8h4 best d7e5 delta 219 accuracy 197,08
+285 r1b2rk1/pp2ppbp/2n2np1/2q5/5B2/1BN1PN2/PP3PPP/2RQK2R w K - 0 1
+move c3e2 best e1g1 delta 552 accuracy 197,44
+286 6k1/5p2/3P2p1/7n/3QPP2/7q/r2N3P/6RK b - - 0 1
+move h3d7 best g5f4 delta 427 accuracy 197,80
+287 3q1rk1/3rbppp/ppbppn2/1N6/2P1P3/BP6/P1B1QPPP/R3R1K1 w - - 0 1
+move b5d4 best b5d4 delta 0 accuracy 197,11
+288 r4rk1/ppq3pp/2p1Pn2/4p1Q1/8/2N5/PP4PP/2KR1R2 w - - 0 1
+move f1f5 best f1f6 delta 632 accuracy 197,47
+289 r3rbk1/p2b1p2/5p1p/1q1p4/N7/6P1/PP1BPPBP/3Q1RK1 w - - 0 1
+move b2b3 best a4c3 delta 244 accuracy 197,63
+290 r3r1k1/1bq2ppp/p1p2n2/3ppPP1/4P3/1PbB4/PBP1Q2P/R4R1K w - - 0 1
+move b2c3 best c4d6 delta 383 accuracy 197,98
+291 6k1/pp1q1pp1/2nBp1bp/P2pP3/3P4/8/1P2BPPP/2Q3K1 w - - 0 1
+move c1c3 best c1d2 delta 682 accuracy 198,33
+292 rnb1k2r/1pq2ppp/p2ppn2/2b5/3NPP2/2P2B2/PP4PP/RNBQ1R1K b kq - 0 1
+move b8c6 best e2f1 delta 167 accuracy 198,22
+293 3rr1k1/1pq2ppp/p1n5/3p4/6b1/2P2N2/PP1QBPPP/3R1RK1 w - - 0 1
+move h2h3 best e1g1 delta 31 accuracy 197,65
+294 1r1bk2r/2R2ppp/p3p3/1b2P2q/4QP2/4N3/1B4PP/3R2K1 w k - 0 1
+move g2g4 best d1d8 delta 592 accuracy 198,00
+295 rnb2rk1/pp2q2p/3p4/2pP2p1/2P1Pp2/2N5/PP1QBRPP/R5K1 w - - 0 1
+move g2g3 best b1b2 delta 430 accuracy 198,35
+296 r1bq1rk1/pp2ppbp/2n3p1/2p5/2BPP3/2P1B3/P3NPPP/R2QK2R w KQ - 0 1
+move a1b1 best e1g1 delta 44 accuracy 197,82
+297 3b4/3k1pp1/p1pP2q1/1p2B2p/1P2P1P1/P2Q3P/4K3/8 w - - 0 1
+move e2f3 best g2g4 delta 110 accuracy 197,53
+298 8/8/p1p5/1p5p/1P5p/8/PPP2K1p/4R1rk w - - 0 1
+move e1e6 best e1f1 delta 1317 accuracy 197,87
+299 r2qkb1r/1b3ppp/p3pn2/1p6/1n1P4/1BN2N2/PP2QPPP/R1BR2K1 w kq - 0 1
+move a2a4 best d4d5 delta 910 accuracy 198,21
+300 r2r2k1/pp1b1ppp/8/3p2P1/3N4/P3P3/1P3P1P/3RK2R b K - 0 1
+move a8c8 best d8e8 delta 861 accuracy 198,55
+301 r6k/pp4p1/2p1b3/3pP3/7q/P2B3r/1PP2Q1P/2K1R1R1 w - - 0 1
+move e1e2 best f2c5 delta 339 accuracy 198,89
+302 1B1b4/7K/1p6/1k6/8/8/8/8 w - - 0 1
+move b8a7 best b8a7 delta 0 accuracy 198,23
+303 rq2rbk1/6p1/p2p2Pp/1p1Rn3/4PB2/6Q1/PPP1B3/2K3R1 w - - 0 1
+move g3b3 best f4h6 delta 1007 accuracy 198,57
+304 rn1qkbnr/pp1b1ppp/8/1Bpp4/3P4/8/PPPNQPPP/R1B1K1NR b KQkq - 0 1
+move f8e7 best f8e7 delta 0 accuracy 197,91
+305 r2qrnk1/pp3ppb/3b1n1p/1Pp1p3/2P1P2N/P5P1/1B1NQPBP/R4RK1 w - - 0 1
+move h4f5 best g2h3 delta 649 accuracy 198,25
+306 r3r1k1/ppqb1ppp/8/4p1NQ/8/2P5/PP3PPP/R3R1K1 b - - 0 1
+move d7f5 best b8b2 delta 62 accuracy 197,80
+307 5r2/pp1b1kpp/8/2pPp3/2P1p2P/4P1r1/PPRKB1P1/6R1 b - - 0 1
+move f7e7 best f7e7 delta 0 accuracy 197,16
+308 r1bqk2r/2ppbppp/p1n2n2/1p2p3/4P3/1B3N2/PPPPQPPP/RNB2RK1 b kq - 0 1
+move d7d6 best a2c4 delta 103 accuracy 196,85
+309 r3k2r/4qn2/p1p1b2p/6pB/P1p5/2P5/5PPP/RQ2R1K1 b kq - 0 1
+move e7f6 best e5f6 delta 791 accuracy 197,19
+310 r2qr1k1/pp1bbp2/n5p1/2pPp2p/8/P2PP1PP/1P2N1BK/R1BQ1R2 w - - 0 1
+move d5d6 best h3g4 delta 627 accuracy 197,52
+311 rnq1nrk1/pp3pbp/6p1/3p4/3P4/5N2/PP2BPPP/R1BQK2R w KQ - 0 1
+move c1f4 best e1g1 delta 39 accuracy 197,01
+312 rnbqkb1r/ppp1pppp/5n2/8/3PP3/2N5/PP3PPP/R1BQKBNR b KQkq - 3 5
+move e7e5 best f4f5 delta 123 accuracy 196,77
+313 r1bq1rk1/pp1pppbp/2n2np1/8/4P3/1NN5/PPP1BPPP/R1BQK2R w KQ - 0 1
+move c1e3 best e1g1 delta 10 accuracy 196,18
+314 r3r1kb/p2bp2p/1q1p1npB/5NQ1/2p1P1P1/2N2P2/PPP5/2KR3R w - - 0 1
+move f5e7 best h6g7 delta 308 accuracy 196,51
+315 8/3b4/5k2/2pPnp2/1pP4N/pP1B2P1/P3K3/8 b - - 0 1
+move e5g4 best f5f4 delta 477 accuracy 196,83
+316 r3kbnr/1pp3pp/p1p2p2/8/3qP3/5Q1P/PP3PP1/RNB2RK1 w kq - 0 1
+move f1d1 best f1d1 delta 0 accuracy 196,21
+317 r1b3k1/p2p1nP1/2pqr1Rp/1p2p2P/2B1PnQ1/1P6/P1PP4/1K4R1 w - - 0 1
+move c4e6 best g6h6 delta 229 accuracy 196,32
+318 2brr1k1/ppq2ppp/2pb1n2/8/3NP3/2P2P2/P1Q2BPP/1R1R1BK1 w - - 0 1
+move h2h3 best e8g8 delta 81 accuracy 195,95
+319 r3kb1r/ppnq2pp/2n5/4pp2/1P1PN3/P4N2/4QPPP/R1B1K2R w KQkq - 0 1
+move e4c5 best f3e5 delta 109 accuracy 195,68
+320 r1b1qrk1/pp4b1/2pRn1pp/5p2/2n2B2/2N2NPP/PPQ1PPB1/5RK1 w - - 0 1
+move c2b3 best h2h4 delta 300 accuracy 196,01
+321 3r4/2k5/p3N3/4p3/1p1p4/4r3/PPP3P1/1K1R4 b - - 0 1
+move c7d7 best c7d7 delta 0 accuracy 195,40
+322 8/3P4/1p3b1p/p7/P7/1P3NPP/4p1K1/3k4 w - - 0 1
+move g2f2 best g3g4 delta 705 accuracy 195,72
+323 1k6/bPN2pp1/Pp2p3/p1p5/2pn4/3P4/PPR5/1K6 w - - 0 1
+move c2f2 best d6d1 delta 32433 accuracy 196,04
+324 8/8/8/8/pK2k1N1/8/8/8 w - - 98 145
+move b4a4 best b4a4 delta 0 accuracy 195,44
+325 2r1k2r/1p1qbppp/p3pn2/3pBb2/3P4/1QN1P3/PP2BPPP/2R2RK1 b k - 0 1
+move e8g8 best e1g1 delta 117 accuracy 195,20
+326 6k1/1R5p/r2p2p1/2pN2B1/2bb4/P7/1P1K2PP/8 w - - 0 1
+move b7b8 best d8e7 delta 10 accuracy 194,63
+327 3rn2k/ppb2rpp/2ppqp2/5N2/2P1P3/1P5Q/PB3PPP/3RR1K1 w - - 0 1
+move f5h6 best f5h6 delta 0 accuracy 194,03
+328 8/2k5/N3p1p1/2KpP1P1/b2P4/8/8/8 b - - 0 1
+move c7d7 best c7b7 delta 1465 accuracy 194,36
+329 2r1r1k1/pbpp1npp/1p1b3q/3P4/4RN1P/1P4P1/PB1Q1PB1/2R3K1 w - - 0 1
+move c1e1 best c1e1 delta 0 accuracy 193,77
+330 r1b2r1k/pp2q1pp/2p2p2/2p1n2N/4P3/1PNP2QP/1PP2RP1/5RK1 w - - 0 1
+move h5g7 best h5f4 delta 225 accuracy 193,86
+331 3rk2r/1bq2pp1/2pb1n1p/p3pP2/P1B1P3/8/1P2QBPP/2RN1R1K b k - 0 1
+move d6b4 best d6b4 delta 0 accuracy 193,27
+332 r3k2r/3bbp1p/p1nppp2/5P2/1p1NP3/5NP1/PPPK3P/3R1B1R b kq - 0 1
+move e7f8 best c6e5 delta 488 accuracy 193,60
+333 r2r2k1/1p1n1pp1/4pnp1/8/PpBRqP2/1Q2B1P1/1P5P/R5K1 b - - 0 1
+move e4f3 best d7c5 delta 142 accuracy 193,44
+334 2r2r2/1p1qbkpp/p2ppn2/P1n1p3/4P3/2N1BB2/QPP2PPP/R4RK1 w - - 0 1
+move b2b4 best b2b4 delta 0 accuracy 192,86
+335 q2B2k1/pb4bp/4p1p1/2p1N3/2PnpP2/PP3B2/6PP/2RQ2K1 b - - 0 1
+move e4f3 best a8d8 delta 318 accuracy 193,18
+336 8/7p/5P1k/1p5P/5p2/2p1p3/P1P1P1P1/1K3Nb1 w - - 0 1
+move g2g4 best a2a3 delta 604 accuracy 193,50
+337 r4rk1/p2nbpp1/2p2np1/q7/Np1PPB2/8/PPQ1N1PP/1K1R3R w - - 0 1
+move e4e5 best h2h4 delta 532 accuracy 193,82
+338 rq6/5k2/p3pP1p/3p2p1/6PP/1PB1Q3/2P5/1K6 w - - 0 1
+move h4g5 best e3d3 delta 782 accuracy 194,13
+339 r1bq1rk1/p4ppp/3p2n1/1PpPp2n/4P2P/P1PB1PP1/2Q1N3/R1B1K2R b KQ - 0 1
+move a7a6 best d6b4 delta 239 accuracy 194,26
+340 r3r1k1/1pqn1pbp/p2p2p1/2nP2B1/P1P1P3/2NB3P/5PP1/R2QR1K1 w - - 0 1
+move a1c1 best g6h7 delta 7015 accuracy 194,57
+341 2b5/1p4k1/p2R2P1/4Np2/1P3Pp1/1r6/5K2/8 w - - 0 1
+move d6d8 best g1e2 delta 74 accuracy 194,22
+342 2q2rk1/2p2pb1/PpP1p1pp/2n5/5B1P/3Q2P1/4PPN1/2R3K1 w - - 0 1
+move d3e3 best f3e5 delta 244 accuracy 194,37
+343 rnbq1rk1/5ppp/p3pn2/1p6/2BP4/P1P2N2/5PPP/R1BQ1RK1 w - - 0 1
+move c4d3 best c4d3 delta 0 accuracy 193,80
+344 5rk1/p1p1rpb1/q1Pp2p1/3Pp2p/4Pn2/1R4N1/P1BQ1PPP/R5K1 w - - 0 1
+move c2d1 best g1h1 delta 91 accuracy 193,50
+345 2r1rbk1/1pqb1p1p/p2p1np1/P4p2/3NP1P1/2NP1R1Q/1P5P/R5BK w - - 0 1
+move g4f5 best d4f5 delta 529 accuracy 193,81
+346 r5k1/1bqp1rpp/p1n1p3/1p4p1/1b2PP2/2NBB1P1/PPPQ4/2KR3R w - - 0 1
+move e4e5 best a2a3 delta 524 accuracy 194,12
+347 4r1k1/3b1p2/5qp1/1BPpn2p/7n/r3P1N1/2Q1RPPP/1R3NK1 b - - 0 1
+move d7b5 best f6f3 delta 32635 accuracy 194,42
+348 r1rn2k1/pp1qppbp/6p1/3pP3/3P4/1P3N1P/PB1Q1PP1/R3R1K1 w - - 0 1
+move a1c1 best d5d1 delta 32733 accuracy 194,72
+349 r1bqkbnr/3p1ppp/p1p1p3/8/4P3/3B4/PPP2PPP/RNBQK2R w KQkq - 0 1
+move b1c3 best e1g1 delta 654 accuracy 195,03
+350 2b1r3/r2ppN2/8/1p1p1k2/pP1P4/2P3R1/PP3PP1/2K5 w - - 0 1
+move g3e3 best e8c8 delta 528 accuracy 195,33
+351 r2qk2r/3n1ppp/p3p3/3nP3/3R4/5N2/1P1N1PPP/3QR1K1 b kq - 0 1
+move e8e7 best b5d7 delta 1289 accuracy 195,62
+352 3r1k2/4npp1/1ppr3p/p6P/P2PPPP1/1NR5/5K2/2R5 w - - 0 1
+move f4f5 best d4d5 delta 230 accuracy 195,72
+353 Q5k1/5pp1/5n1p/2b2P2/8/5N1P/5PP1/2q1B1K1 b - - 0 1
+move g8h7 best g3g4 delta 454 accuracy 196,02
+354 2b1r1k1/r4ppp/p7/2pNP3/4Q3/q6P/2P2PP1/3RR1K1 w - - 0 1
+move d1a1 best d5f6 delta 6301 accuracy 196,31
+355 7k/5K2/5P1p/3p4/6P1/3p4/8/8 w - - 0 1
+move f7e7 best f7e7 delta 0 accuracy 195,76
+356 r2q1rk1/pb1nppbp/6p1/1p6/3PP3/3QBN1P/P3BPP1/R3K2R w KQ - 0 1
+move e4e5 best g3g4 delta 657 accuracy 196,05
+357 3q1r1k/4RPp1/p6p/2pn4/2P5/1P6/P3Q2P/6K1 w - - 0 1
+move c4d5 best e7e8 delta 469 accuracy 196,34
+358 r3k2r/p1q1nppp/1pn5/2P1p3/4P1Q1/P1P2P2/4N1PP/R1B2K1R b kq - 0 1
+move e8g8 best d6f6 delta 360 accuracy 196,63
+359 3r4/2R1np1p/1p1rpk2/p2b1p2/8/PP2P3/4BPPP/2R1NK2 w - - 0 1
+move c7c3 best c7c3 delta 0 accuracy 196,08
+360 1q1k4/2Rr4/8/2Q3K1/8/8/8/8 w - - 0 1
+move g5h6 best g5h6 delta 0 accuracy 195,54
+361 r1b1k2r/pp3ppp/1qn1p3/2bn4/8/6P1/PPN1PPBP/RNBQ1RK1 w kq - 0 1
+move b1d2 best a2a3 delta 701 accuracy 195,83
+362 N4rk1/pp1b1ppp/n3p1n1/3pP1Q1/1P1N4/8/1PP2PPP/q1B1KB1R b K - 0 1
+move f8a8 best a6b4 delta 624 accuracy 196,12
+363 8/6p1/3k4/3p1p1p/p2K1P1P/4P1P1/P7/8 b - - 0 1
+move a4a3 best g5f3 delta 924 accuracy 196,40
+364 2k2b1r/1pq3p1/2p1pp2/p1n1PnNp/2P2B2/2N4P/PP2QPP1/3R2K1 w - - 0 1
+move g5e4 best e5f6 delta 780 accuracy 196,69
+365 r1bqk2r/pp2bppp/2p5/3pP3/P2Q1P2/2N1B3/1PP3PP/R4RK1 b kq - 0 1
+move c8f5 best f7f6 delta 569 accuracy 196,97
+366 r3kb1r/3n1pp1/p6p/2pPp2q/Pp2N3/3B2PP/1PQ2P2/R3K2R w KQkq - 0 1
+move g3g4 best e5f6 delta 528 accuracy 197,25
+367 1r4k1/7p/5np1/3p3n/8/2NB4/7P/3N1RK1 w - - 0 1
+move c3d5 best c1c7 delta 134 accuracy 197,08
+368 r1b2rk1/1pqn1pp1/p2bpn1p/8/3P4/2NB1N2/PPQB1PPP/3R1RK1 w - - 0 1
+move d1c1 best c2c1 delta 8 accuracy 196,57
+369 r2qk2r/p1pn1ppp/b3pn2/3p4/Nb1P4/1P3NP1/P3PPBP/1RBQ1RK1 b kq - 0 1
+move f6e4 best d4b4 delta 154 accuracy 196,45
+370 r2q1r1k/3bppbp/pp1p4/2pPn1Bp/P1P1P2P/2N2P2/1P1Q2P1/R3KB1R w KQ - 0 1
+move b2b3 best f1e2 delta 749 accuracy 196,73
+Students\RapChessCs-beta.exe
+1 rnbq1r1k/4p1bP/p3p3/1pn5/8/2Np1N2/PPQ2PP1/R1B1KB1R w KQ - 0 1
+move c2d1 best f3h4 delta 418 accuracy 300,00
+2 2r3k1/1p2q1pp/2b1pr2/p1pp4/6Q1/1P1PP1R1/P1PN2PP/5RK1 w - - 0 1
+move g3f3 best g4g7 delta 193 accuracy 246,50
+3 r1bqk2r/ppp1bppp/2n5/3p4/3P4/2PB1N2/P1P2PPP/R1BQ1RK1 b kq - 0 1
+move c8g4 best e8g8 delta 5 accuracy 166,00
+4 3r1bk1/p4ppp/Qp2p3/8/1P1B4/Pq2P1P1/2r2P1P/R3R1K1 b - - 0 1
+move d8d7 best e6e5 delta 424 accuracy 199,50
+5 8/4p3/p2p4/2pP4/2P1P3/1P4k1/1P1K4/8 w - - 0 1
+move d2e3 best b3b4 delta 1253 accuracy 219,60
+6 r1bqk1r1/1p1p1n2/p1n2pN1/2p1b2Q/2P1Pp2/1PN5/PB4PP/R4RK1 w q - 0 1
+move g6e5 best f7e7 delta 332 accuracy 233,00
+7 r1bq1rk1/4bppp/ppnppn2/8/2P1P3/2N5/PPN1BPPP/R1BQK2R w KQ - 0 1
+move c1f4 best c1f4 delta 0 accuracy 199,71
+8 5r1k/1p4bp/3p1q2/1NpP1b2/1pP2p2/1Q5P/1P1KBP2/r2RN2R b - - 0 1
+move f8a8 best f4f3 delta 353 accuracy 212,25
+9 2b1k2r/2p2ppp/1qp4n/7B/1p2P3/5Q2/PPPr2PP/R2N1R1K b k - 0 1
+move c8e6 best e1g1 delta 31 accuracy 192,11
+10 r1bqkb1r/pp3ppp/2n5/2pp4/3Pn3/2N2N2/PPP1BPPP/R1BQK2R w KQkq - 0 1
+move c1f4 best f3g5 delta 516 accuracy 202,90
+11 8/5Bp1/4P3/6pP/1b1k1P2/5K2/8/8 w - - 0 1
+move f4g5 best f3g4 delta 1168 accuracy 211,73
+12 r1bqk2r/bp3ppp/p1n1pn2/3p4/1PP5/P1N1PN2/1B3PPP/R2QKB1R b KQkq - 0 1
+move d5d4 best e8g8 delta 362 accuracy 219,08
+13 rn1q1rk1/1b2bppp/1pn1p3/p2pP3/3P4/P2BBN1P/1P1N1PP1/R2Q1RK1 b - - 0 1
+move f7f5 best e8g8 delta 140 accuracy 213,00
+14 5nk1/Q4bpp/5p2/8/P1n1PN2/q4P2/6PP/1R4K1 w - - 0 1
+move f4d5 best a7d4 delta 114 accuracy 205,93
+15 r1bq1rk1/1pp2pbp/p1np1np1/3Pp3/2P1P3/2N1BP2/PP4PP/R1NQKB1R b KQ - 1 9
+move c6d4 best d4f5 delta 164 accuracy 203,13
+16 4r1k1/1bq2r1p/p2p1np1/3Pppb1/P1P5/1N3P2/1R2B1PP/1Q1R2BK w - - 0 1
+move g1f2 best c4c5 delta 226 accuracy 204,56
+17 r4rk1/3nppbp/bq1p1np1/2pP4/8/2N2NPP/PP2PPB1/R1BQR1K1 b - - 1 12
+move a6c4 best g3f5 delta 32780 accuracy 210,18
+18 6k1/4pp1p/3p2p1/P1pPb3/R7/1r2P1PP/3B1P2/6K1 w - - 0 1
+move a5a6 best f2f4 delta 411 accuracy 215,17
+19 8/6B1/p5p1/Pp4kp/1P5r/5P1Q/4q1PK/8 w - - 0 32
+move g7h6 best g7h6 delta 0 accuracy 203,84
+20 1nkr1b1r/5p2/1q2p2p/1ppbP1p1/2pP4/2N3B1/1P1QBPPP/R4RK1 w - - 0 1
+move c3d5 best c3d5 delta 0 accuracy 193,65
+21 r3r1k1/pp1q1ppp/2p5/P2n1p2/1b1P4/1B2PP2/1PQ3PP/R1B2RK1 w - - 0 1
+move e3e4 best d1d4 delta 1 accuracy 184,48
+22 1nrrb1k1/1qn1bppp/pp2p3/3pP3/N2P3P/1P1B1NP1/PBR1QPK1/2R5 w - - 0 1
+move f3g5 best d3h7 delta 306 accuracy 189,73
+23 r1b1kb1r/1p1n1ppp/p2ppn2/6BB/2qNP3/2N5/PPP2PPP/R2Q1RK1 w kq - 0 1
+move h5e2 best d4e6 delta 882 accuracy 194,52
+24 r2qr1k1/pp2bpp1/2pp3p/4nbN1/2P4P/4BP2/PPPQ2P1/1K1R1B1R w - - 0 1
+move g5e4 best f1e2 delta 230 accuracy 196,00
+25 2r2rk1/1p1bq3/p3p2p/3pPpp1/1P1Q4/P7/2P2PPP/2R1RBK1 b - - 0 1
+move f5f4 best d7b5 delta 617 accuracy 200,16
+26 r1r3k1/1bq2pbp/pp1pp1p1/2n5/P3PP2/R2B4/1PPBQ1PP/3N1R1K w - - 0 1
+move d1c3 best g5c1 delta 686 accuracy 204,00
+27 rn1q1rk1/p4pbp/bp1p1np1/2pP4/8/P1N2NP1/1PQ1PPBP/R1B1K2R w KQ - 0 1
+move c1f4 best e1g1 delta 10 accuracy 196,81
+28 8/4nk2/1p3p2/1r1p2pp/1P1R1N1P/6P1/3KPP2/8 w - - 0 1
+move h4g5 best f5e4 delta 0 accuracy 189,79
+29 rn3rk1/pbppq1pp/1p2pb2/4N2Q/3PN3/3B4/PPP2PPP/R3K2R w KQ - 0 1
+move e4f6 best h5h7 delta 32869 accuracy 193,59
+30 3rkb1r/pppb1pp1/4n2p/2p5/3NN3/1P5P/PBP2PP1/3RR1K1 w - - 0 1
+move d4f5 best d4f5 delta 0 accuracy 187,13
+31 8/4k3/p2p2p1/P1pPn2p/1pP1P2P/1P1NK1P1/8/8 w - - 0 1
+move d3e5 best g3g4 delta 325 accuracy 190,77
+32 2r2r2/3qbpkp/p3n1p1/2ppP3/6Q1/1P1B3R/PBP3PP/5R1K w - - 0 1
+move d3a6 best h3h7 delta 5583 accuracy 194,19
+33 5k2/7R/4P2p/5K2/p1r2P1p/8/8/8 b - - 0 1
+move a4a3 best e1g1 delta 52 accuracy 189,88
+34 1r2r1k1/p4p1p/6pB/q7/8/3Q2P1/PbP2PKP/1R3R2 w - - 0 1
+move h6f4 best b1b2 delta 1615 accuracy 193,12
+35 r1b1r1k1/1pqn1pbp/p2pp1p1/P7/1n1NPP1Q/2NBBR2/1PP3PP/R6K w - - 0 1
+move d3e2 best f4f5 delta 123 accuracy 191,11
+36 rnbq1b1r/ppp2kpp/3p1n2/8/3PP3/8/PPP2PPP/RNBQKB1R b KQ - 1 5
+move f6e4 best c7c5 delta 433 accuracy 194,14
+37 8/p2p4/r7/1k6/8/pK5Q/P7/b7 w - - 0 1
+move h3f1 best h3d3 delta 111 accuracy 191,89
+38 r1bq1rk1/pp1n1pbp/2n1p1p1/2ppP3/8/2PP1NP1/PP1N1PBP/R1BQ1RK1 w - - 0 1
+move d3d4 best d3d4 delta 0 accuracy 186,84
+39 4kbr1/1b1nqp2/2p1p3/2N4p/1p1PP1pP/1PpQ2B1/4BPP1/r4RK1 w - - 0 1
+move f1a1 best f6f5 delta 305 accuracy 189,74
+40 r2qnrnk/p2b2b1/1p1p2pp/2pPpp2/1PP1P3/PRNBB3/3QNPPP/5RK1 w - - 0 1
+move b4c5 best b3a4 delta 434 accuracy 192,50
+41 2r2rk1/1bqnbpp1/1p1ppn1p/pP6/N1P1P3/P2B1N1P/1B2QPP1/R2R2K1 b - - 0 1
+move f8e8 best b7e4 delta 93 accuracy 190,07
+42 5r1k/6pp/1n2Q3/4p3/8/7P/PP4PK/R1B1q3 b - - 0 1
+move b6a4 best h7h6 delta 516 accuracy 192,69
+43 3r2k1/ppq2pp1/4p2p/3n3P/3N2P1/2P5/PP2QP2/K2R4 b - - 0 1
+move d5f6 best d5c3 delta 560 accuracy 195,19
+44 5k2/1rn2p2/3pb1p1/7p/p3PP2/PnNBK2P/3N2P1/1R6 w - - 0 1
+move c3a4 best d2f3 delta 77 accuracy 192,50
+45 rnbq1rk1/pppp1ppp/4pn2/8/1bPP4/P1N5/1PQ1PPPP/R1B1KBNR b KQ - 1 5
+move b4c3 best f1f7 delta 457 accuracy 194,89
+46 r3qb1k/1b4p1/p2pr2p/3n4/Pnp1N1N1/6RP/1B3PP1/1B1QR1K1 w - - 0 1
+move d1d4 best g4h6 delta 780 accuracy 197,17
+47 r1b2rk1/pp4pp/1q1Nppn1/2n4B/1P3P2/2B2RP1/P6P/R2Q3K b - - 0 1
+move c5a6 best f4h6 delta 879 accuracy 199,36
+48 4q1k1/1p6/1Rb4p/R4B1P/1P2p3/4P3/1B3PK1/2r5 b - - 33 127
+move c1d1 best e8d8 delta 3 accuracy 195,27
+49 1r3k2/2N2pp1/1pR2n1p/4p3/8/1P1K1P2/P5PP/8 w - - 0 1
+move d3e2 best h4g6 delta 302 accuracy 197,41
+50 4rrk1/Rpp3pp/6q1/2PPn3/4p3/2N5/1P2QPPP/5RK1 w - - 0 1
+move a7b7 best a7a4 delta 523 accuracy 199,46
+51 r1bqkb1r/4npp1/p1p4p/1p1pP1B1/8/1B6/PPPN1PPP/R2Q1RK1 w kq - 0 1
+move d1h5 best a5a6 delta 329 accuracy 201,43
+52 r2q1rk1/pppb1pbp/2np1np1/4p3/2P5/P1NPPNP1/1P3PBP/R1BQK2R w KQ - 0 1
+move b2b4 best g2g4 delta 1119 accuracy 203,33
+53 1r4k1/1nq3pp/pp1pp1r1/8/PPP2P2/6P1/5N1P/2RQR1K1 w - - 0 1
+move e1e3 best g5f6 delta 341 accuracy 205,15
+54 q4rk1/1n1Qbppp/2p5/1p2p3/1P2P3/2P4P/6P1/2B1NRK1 b - - 0 1
+move a8a7 best a8c8 delta 361 accuracy 206,91
+55 r2qkbnr/ppp1pp1p/3p2p1/3Pn3/4P1b1/2N2N2/PPP2PPP/R1BQKB1R w KQkq - 2 6
+move f1b5 best f3e5 delta 559 accuracy 208,60
+56 4rrk1/pp4pp/3p4/3P3b/2PpPp1q/1Q5P/PB4B1/R4RK1 b - - 0 1
+move f4f3 best f8f6 delta 221 accuracy 208,82
+57 8/8/3pp1k1/1R4p1/3P4/4R1K1/3q4/8 w - - 1 43
+move e3e6 best c4c5 delta 705 accuracy 210,42
+58 r4rk1/pp1n1p1p/1nqP2p1/2b1P1B1/4NQ2/1B3P2/PP2K2P/2R5 w - - 0 1
+move e4c5 best c1c5 delta 396 accuracy 211,97
+59 r1bqk2r/pp2bppp/2n1p3/1B1n4/3P4/2N2N2/PP3PPP/R1BQ1RK1 b kq - 0 1
+move a7a6 best e8g8 delta 318 accuracy 213,46
+60 r4rk1/ppp2ppp/1nnb4/8/1P1P3q/PBN1B2P/4bPP1/R2QR1K1 w - - 0 1
+move e1e2 best e1e2 delta 0 accuracy 209,90
+61 r1bq1rk1/1p1n1pp1/p4n1p/2bp4/8/2NBPN2/PPQB1PPP/R3K2R w KQ - 0 1
+move e1g1 best e1g1 delta 0 accuracy 206,46
+62 rnb1kb1r/p4p2/1qp1pn2/1p2N2p/2p1P1p1/2N3B1/PPQ1BPPP/3RK2R w Kkq - 0 1
+move h2h3 best d1d2 delta 605 accuracy 207,97
+63 r1bq1rk1/ppp2ppp/2n1pn2/3p4/1bPP4/2NBPN2/PP3PPP/R1BQK2R w KQ - 0 1
+move a2a3 best f4f3 delta 326 accuracy 209,43
+64 8/1p3pp1/7p/5P1P/2k3P1/8/2K2P2/8 w - - 0 1
+move f5f6 best f5f6 delta 0 accuracy 206,16
+65 8/3p4/p1bk3p/Pp6/1Kp1PpPp/2P2P1P/2P5/5B2 b - - 0 1
+move h6h5 best c6e4 delta 1084 accuracy 207,60
+66 rnb2rk1/pp1n1pp1/1q1Pp2p/2pp4/3P4/1P3N2/P1P2PPP/R1BQKB1R w KQ - 1 10
+move c1f4 best g5g6 delta 592 accuracy 209,00
+67 r2qr1k1/p3bppp/1p2n3/3Q1N2/5P2/4B1P1/PP3R1P/R5K1 w - - 0 1
+move f5e7 best a1d1 delta 38 accuracy 206,45
+68 rn1qkb1r/pp2pppp/5n2/3p1b2/3P4/2N1P3/PP3PPP/R1BQKBNR w KQkq - 0 1
+move g1f3 best d4e6 delta 318 accuracy 207,82
+69 r1bqkb1r/ppp3pp/2np4/3N1p2/3pnB2/5N2/PPP1QPPP/2KR1B1R b kq - 0 1
+move g7g6 best c6e7 delta 379 accuracy 209,16
+70 rnbqk2r/pppp2pp/4pn2/5p2/1b1P4/2P2NP1/PP2PPBP/RNBQK2R b KQkq - 0 1
+move b4d6 best b3b4 delta 1030 accuracy 210,46
+71 8/2p2kpp/p6r/4Pp2/1P2pPb1/2P3P1/P2B1K1P/4R3 w - - 0 1
+move h2h4 best e5f6 delta 132 accuracy 209,35
+72 r2qk2r/1b1n1ppp/4pn2/p7/1pPP4/3BPN2/1B3PPP/R2QK2R w KQkq - 0 1
+move c4c5 best h3h7 delta 5596 accuracy 210,61
+73 4rr2/2p5/1p1p1kp1/p6p/P1P4P/6P1/1P3PK1/3R1R2 w - - 0 1
+move d1d5 best f1e1 delta 32 accuracy 208,16
+74 2k2Br1/p6b/Pq1r4/1p2p1b1/1Ppp2p1/Q1P3N1/5RPP/R3N1K1 b - - 0 1
+move d6f6 best d6f6 delta 0 accuracy 205,35
+75 3rr1k1/pp3pp1/1qn2np1/8/3p4/PP1R1P2/2P1NQPP/R1B3K1 b - - 0 1
+move e8e5 best g5h7 delta 405 accuracy 206,61
+76 8/2k5/4p3/1nb2p2/2K5/8/6B1/8 w - - 0 1
+move c4c5 best f1d1 delta 760 accuracy 207,84
+77 8/1pp5/p3k1pp/8/P1p2PPP/2P2K2/1P3R2/5r2 b - - 0 1
+move f1d1 best a1c1 delta 18 accuracy 205,38
+78 r1bq1rk1/pp3ppp/2n2n2/3p4/8/P1NB4/1PP2PPP/R1BQK2R w KQ - 0 1
+move c1f4 best e1g1 delta 551 accuracy 206,59
+79 6k1/6p1/7p/P1N5/1r3p2/7P/1b3PP1/3bR1K1 w - - 0 1
+move e1d1 best a5a6 delta 748 accuracy 207,77
+80 3r1rk1/p1q4p/1pP1ppp1/2n1b1B1/2P5/6P1/P1Q2PBP/1R3RK1 w - - 0 1
+move g5d2 best g5h6 delta 15 accuracy 205,36
+81 rnb2rk1/ppq1ppbp/6p1/2p5/3PP3/2P2N2/P3BPPP/1RBQK2R w K - 0 1
+move e4e5 best e1g1 delta 152 accuracy 204,70
+82 r4rk1/pp2qpp1/2pRb2p/4P3/2p5/2Q1PN2/PP3PPP/4K2R w K - 0 1
+move e1e2 best e4e5 delta 621 accuracy 205,87
+83 rnbqk2r/1p3ppp/p7/1NpPp3/QPP1P1n1/P4N2/4KbPP/R1B2B1R b kq - 0 1
+move c5b4 best a6b5 delta 1480 accuracy 207,00
+84 r2q1rk1/1b3ppp/4pn2/1pP5/1b6/2NBPN2/1PQ2PPP/R3K2R w KQ - 0 1
+move e1e2 best e1g1 delta 693 accuracy 208,11
+85 r1bqrnk1/pp2bp1p/2p2np1/3p2B1/3P4/2NBPN2/PPQ2PPP/1R3RK1 w - - 1 12
+move f3e5 best c8c3 delta 1508 accuracy 209,19
+86 q3rn1k/2QR4/pp2pp2/8/P1P5/1P4N1/6n1/6K1 w - - 0 1
+move d7d2 best g3f5 delta 32053 accuracy 210,24
+87 r1bq1rk1/pppnnppp/4p3/3pP3/1b1P4/2NB3N/PPP2PPP/R1BQK2R w KQ - 3 7
+move a2a3 best d3h7 delta 1447 accuracy 211,28
+88 rnbqk2r/ppp2ppp/1b1p1n2/4p3/2B1P3/2PP1N2/PP1N1PPP/R1BQK2R b KQkq - 0 1
+move b8c6 best e8g8 delta 13 accuracy 209,02
+89 1r1q1rk1/p1p2pbp/2pp1np1/6B1/4P3/2NQ4/PPP2PPP/3R1RK1 w - - 0 1
+move e4e5 best e4e5 delta 0 accuracy 206,67
+90 2r3k1/pppR1pp1/4p3/4P1P1/5P2/1P4K1/P1P5/8 w - - 0 1
+move d7d1 best a4d7 delta 590 accuracy 207,71
+91 8/p4p2/2R3k1/6p1/P2Br2p/5K2/4r3/8 b - - 5 55
+move e4e6 best g6h7 delta 7110 accuracy 208,73
+92 rn1q1rk1/pp2bppp/1n2p1b1/8/2pPP3/1BN1BP2/PP2N1PP/R2Q1RK1 w - - 0 1
+move b3c2 best b3c2 delta 0 accuracy 206,46
+93 r1b2rk1/2qnbp1p/p1npp1p1/1p4PQ/4PP2/1NNBB3/PPP4P/R4RK1 w - - 0 1
+move h5h6 best h5h6 delta 0 accuracy 204,24
+94 3rk2r/1b2bppp/p1qppn2/1p6/4P3/PBN2PQ1/1PP3PP/R1B1R1K1 b k - 0 1
+move f6h5 best f6h5 delta 0 accuracy 202,06
+95 r1bq1rk1/pppp1pbp/2n2np1/4p3/2P5/P1N2NP1/1P1PPPBP/R1BQK2R w KQ - 0 1
+move d2d4 best d2d3 delta 571 accuracy 203,09
+96 8/3nk3/3pp3/1B6/8/3PPP2/4K3/8 w - - 0 1
+move b5c6 best b5d7 delta 1294 accuracy 204,10
+97 q5k1/p2p2bp/1p1p2r1/2p1np2/6p1/1PP2PP1/P2PQ1KP/4R1NR b - - 0 1
+move g6e6 best a8d5 delta 34 accuracy 202,35
+98 r2q1rk1/4bppp/p2p4/2pP4/3pP3/3Q4/PP1B1PPP/R3R1K1 w - - 0 1
+move e4e5 best d7b5 delta 194 accuracy 202,27
+99 rn3rk1/pbp1qppp/1p1ppn2/8/2PP4/P1Q2NP1/1P2PPBP/R1B1K2R w KQ - 0 1
+move c1g5 best e1g1 delta 306 accuracy 203,25
+100 4K1k1/8/1p5p/1Pp3b1/8/1P3P2/P1B2P2/8 w - - 0 1
+move c2e4 best a2a4 delta 91 accuracy 202,13
+101 r1q1k2r/1b1nbppp/pp1ppn2/8/2PQP3/1PN2NP1/PB3PBP/R2R2K1 b kq - 0 1
+move d7c5 best c4d4 delta 143 accuracy 201,54
+102 r1b2rk1/1p1nbppp/pq1p4/3B4/P2NP3/2N1p3/1PP3PP/R2Q1R1K w - - 0 1
+move d1d3 best f1f7 delta 371 accuracy 202,51
+103 3r2k1/p1q1npp1/3r1n1p/2p1p3/4P2B/P1P2Q1P/B4PP1/1R2R1K1 w - - 0 1
+move a2c4 best c4f7 delta 576 accuracy 203,46
+104 1rbq1rk1/p1b1nppp/1p2p3/8/1B1pN3/P2B4/1P3PPP/2RQ1R1K w - - 0 1
+move d1a4 best e4f6 delta 327 accuracy 204,38
+105 2rbrnk1/1b3p2/p2pp3/1p4PQ/1PqBPP2/P1NR4/2P4P/5RK1 b - - 0 1
+move e6e5 best b6b7 delta 335 accuracy 205,30
+106 r1b1kb1N/pppnq1pB/8/3p4/3P4/8/PPPK1nPP/RNB1R3 b q - 0 1
+move f2e4 best d7e5 delta 290 accuracy 206,09
+107 r2qk2r/ppp1b1pp/2n1p3/3pP1n1/3P2b1/2PB1NN1/PP4PP/R1BQK2R w KQkq - 0 1
+move c1e3 best d4f5 delta 279 accuracy 206,78
+108 r3k2r/pp2pp1p/6p1/2nP4/1R2PB2/4PK2/P5PP/5bNR w kq - 0 1
+move g1e2 best g1e2 delta 0 accuracy 204,86
+109 8/8/R7/1b4k1/5p2/1B3r2/7P/7K w - - 0 1
+move b3d5 best f1d1 delta 416 accuracy 205,73
+110 r2qrb1k/1p1b2p1/p2ppn1p/8/3NP3/1BN5/PPP3QP/1K3RR1 w - - 0 1
+move b3a4 best c3e2 delta 426 accuracy 206,59
+111 4b3/p3kp2/6p1/3pP2p/2pP1P2/4K1P1/P3N2P/8 w - - 0 1
+move e2c3 best f4f5 delta 839 accuracy 207,43
+112 r1b2rk1/p2nqppp/1ppbpn2/3p4/2P5/1PN1PN2/PBQPBPPP/R4RK1 w - - 0 1
+move a2a4 best c4d5 delta 33 accuracy 205,88
+113 3n1r1k/2p1p1bp/Rn4p1/6N1/3P3P/2N1B3/2r2PP1/5RK1 w - - 0 1
+move a6a3 best e1g1 delta 50 accuracy 204,50
+114 r1q1k2r/pb1nbppp/1p2pn2/8/P1PNP3/2B3P1/2QN1PBP/R4RK1 b kq - 0 1
+move d7c5 best e8g8 delta 723 accuracy 205,33
+115 2q1rr1k/3bbnnp/p2p1pp1/2pPp3/PpP1P1P1/1P2BNNP/2BQ1PRK/7R b - - 0 1
+move f8g8 best e7d8 delta 562 accuracy 206,16
+116 r1bqk2r/pp2ppbp/2np1np1/2p5/4P3/1B1P1N1P/PPP2PP1/RNBQK2R w KQkq - 0 1
+move b1c3 best d5d4 delta 504 accuracy 206,97
+117 r4r1k/p1p3bp/2pp2p1/4nb2/N1P4q/1P5P/PBNQ1PP1/R4RK1 b - - 0 1
+move f5e6 best h3h4 delta 335 accuracy 207,76
+118 r3kb1r/pp3ppp/4bn2/3p4/P7/4N1P1/1P2PPBP/R1B1K2R w KQkq - 0 1
+move b2b3 best d5f6 delta 6348 accuracy 208,54
+119 2r3k1/5pp1/1p2p1np/p1q5/P1P4P/1P1Q1NP1/5PK1/R7 w - - 0 1
+move a1e1 best a1a2 delta 23 accuracy 206,98
+120 r4rk1/1bqp1ppp/pp2pn2/4b3/P1P1P3/2N2BP1/1PQB1P1P/2R2RK1 w - - 0 1
+move b2b3 best a8d8 delta 230 accuracy 207,18
+121 4k1br/1K1p1n1r/2p2pN1/P2p1N2/2P3pP/5B2/P2P4/8 w - - 0 1
+move f3g4 best a5a6 delta 318 accuracy 207,94
+122 r5k1/3n1ppp/1p6/3p1p2/3P1B2/r3P2P/PR3PP1/2R3K1 b - - 0 1
+move a3a2 best e8g8 delta 355 accuracy 208,70
+123 1r1r2k1/2pq3p/4p3/2Q1Pp2/1PNn1R2/P5P1/5P1P/4R2K b - - 0 1
+move d7c6 best b8b5 delta 404 accuracy 209,44
+124 r1bqk2r/ppp2ppp/2nb4/3np3/8/PP2P3/1BQP1PPP/RN2KBNR b KQkq - 0 1
+move c8g4 best f2f4 delta 351 accuracy 210,17
+125 6k1/p3q2p/1nr3pB/8/3Q1P2/6P1/PP5P/3R2K1 b - - 0 1
+move c6c5 best c6e7 delta 441 accuracy 210,89
+126 r1bq1rk1/pp2ppbp/2np2p1/2n5/P3PP2/N1P2N2/1PB3PP/R1B1QRK1 b - - 0 1
+move c8e6 best c5b3 delta 1058 accuracy 211,60
+127 5rk1/pp1b4/4pqp1/2Ppb2p/1P2p3/4Q2P/P3BPP1/1R3R1K b - - 0 1
+move f6h4 best d5d4 delta 922 accuracy 212,29
+128 r1bqr1k1/3n1ppp/p2p1b2/3N1PP1/1p1B1P2/1P6/1PP1Q2P/2KR2R1 w - - 0 1
+move d5f6 best e2e8 delta 643 accuracy 212,98
+129 r3kb1r/pbq2ppp/1pn1p3/2p1P3/1nP5/1P3NP1/PB1N1PBP/R2Q1RK1 w kq - 0 1
+move f1e1 best a2a3 delta 1350 accuracy 213,65
+130 1r2r1k1/4ppbp/B5p1/3P4/pp1qPB2/2n2Q1P/P4PP1/4RRK1 b - - 0 1
+move g7e5 best c3a2 delta 314 accuracy 214,32
+131 r1bqkb1r/2pp1ppp/p1n5/1p2p3/3Pn3/1B3N2/PPP2PPP/RNBQ1RK1 b kq - 2 7
+move e5d4 best d7d5 delta 477 accuracy 214,97
+132 5rk1/1ppbq1pp/3p3r/pP1PppbB/2P5/P1BP4/5PPP/3QRRK1 b - - 0 1
+move f5f4 best g5c1 delta 226 accuracy 215,05
+133 5rk1/n2qbpp1/pp2p1p1/3pP1P1/PP1P3P/2rNPN2/R7/1Q3RK1 w - - 0 1
+move a4a5 best h4h5 delta 1020 accuracy 215,69
+134 3r2k1/pp2npp1/2rqp2p/8/3PQ3/1BR3P1/PP3P1P/3R2K1 b - - 0 1
+move e7d5 best g7g6 delta 33 accuracy 214,33
+135 r2q1r1k/pb3p1p/2n1p2Q/5p2/8/3B2N1/PP3PPP/R3R1K1 w - - 0 1
+move a1d1 best d3f5 delta 1890 accuracy 214,96
+136 r2q1rk1/1b1nbpp1/pp2pn1p/8/2BN3B/2N1P3/PP2QPPP/2R2RK1 w - - 0 1
+move e2d2 best f1d1 delta 1668 accuracy 215,59
+137 r2qkbnr/2p2pp1/p1pp4/4p2p/4P1b1/5N1P/PPPP1PP1/RNBQ1RK1 w kq - 1 8
+move h3g4 best f3g4 delta 1645 accuracy 216,20
+138 rnbq1rk1/ppp1ppbp/6p1/8/8/2P2NP1/P2PPPBP/R1BQK2R w KQ - 0 1
+move c1a3 best c6e5 delta 669 accuracy 216,81
+139 r2qk2r/1b2bppp/p1n1pn2/1p6/1P6/P2BPN2/1B2QPPP/RN3RK1 b kq - 0 1
+move e7d6 best f5f4 delta 493 accuracy 217,41
+140 r1bqkb1r/pp3ppp/2np1n2/4p1B1/3NP3/2N5/PPP2PPP/R2QKB1R w KQkq - 1 7
+move d4f5 best g5f6 delta 19 accuracy 215,99
+141 rnbqkb1r/p3pppp/1p6/2ppP3/3N4/2P5/PPP1QPPP/R1B1KB1R w KQkq - 0 1
+move e2b5 best e5e6 delta 326 accuracy 216,59
+142 bn6/1q4n1/1p1p1kp1/2pPp1pp/1PP1P1P1/3N1P1P/4B1K1/2Q2N2 w - - 0 1
+move b4c5 best h3h4 delta 609 accuracy 217,18
+143 r1bqk1nr/pppnbppp/3p4/8/2BNP3/8/PPP2PPP/RNBQK2R w KQkq - 2 6
+move d4f5 best c4f7 delta 529 accuracy 217,76
+144 r1bq1rk1/pp3ppp/2n1pn2/2p5/1bBP4/2N1PN2/PP3PPP/R1BQ1RK1 w - - 0 1
+move a2a3 best d4c5 delta 354 accuracy 218,33
+145 r1b1kb1r/1p1npppp/p2p1n2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 1
+move b1b3 best g5f6 delta 290 accuracy 218,82
+146 3q1rk1/7p/rp1n4/p1pPbp2/P1P2pb1/1QN4P/1B2B1P1/1R3RK1 w - - 0 1
+move h3g4 best c3b5 delta 728 accuracy 219,38
+147 rnbqkb1r/pppp1ppp/5n2/4p3/4PP2/2N5/PPPP2PP/R1BQKBNR b KQkq - 1 3
+move d7d5 best d7d5 delta 0 accuracy 217,88
+148 r2r2k1/p1pnqpp1/1p2p2p/3b4/3P4/3BPN2/PP3PPP/2RQR1K1 b - - 0 1
+move e7b4 best d1e1 delta 390 accuracy 218,44
+149 rn2k2r/3pbppp/p3p3/8/Nq1Nn3/4B1P1/PP3P1P/R2Q1RK1 w k - 0 1
+move d1g4 best d4f5 delta 142 accuracy 217,93
+150 4b1k1/1p3p2/4pPp1/p2pP1P1/P2P4/1P1B4/8/2K5 w - - 0 1
+move c1b2 best b3b4 delta 1076 accuracy 218,47
+151 r1b1kb1r/1pqpnppp/p1n1p3/8/3NP3/2N1B3/PPP1BPPP/R2QK2R w KQkq - 3 8
+move e3g5 best d4b5 delta 651 accuracy 219,01
+152 rnbq2k1/p1r2p1p/1p1p1Pp1/1BpPn1N1/P7/2P5/6PP/R1B1QRK1 w - - 0 1
+move e1h4 best g5h7 delta 1334 accuracy 219,55
+153 r3rbk1/ppq2ppp/2b1pB2/8/6Q1/1P1B3P/P1P2PP1/R2R2K1 w - - 0 1
+move d3c4 best d3h7 delta 103 accuracy 218,78
+154 r2qkb1r/pb1n1p2/2p1p2p/4P1pn/PppP4/2N2NB1/1P2BPPP/R2Q1RK1 w kq - 0 1
+move c3e4 best c3e4 delta 0 accuracy 217,36
+155 r3k2r/pbn2ppp/8/1P1pP3/P1qP4/5B2/3Q1PPP/R3K2R w KQkq - 0 1
+move a1c1 best f3e2 delta 1060 accuracy 217,90
+156 r1b1k1nr/1p3ppp/p1np4/4p1q1/2P1P3/N1NB4/PP3PPP/2RQK2R w Kkq - 0 1
+move h1g1 best e1g1 delta 441 accuracy 218,42
+157 r1bqkbnr/ppp2ppp/2n5/8/2BpP3/5N2/PP3PPP/RNBQK2R w KQkq - 0 1
+move a2a4 best c1d2 delta 160 accuracy 218,05
+158 1k1r4/pp1b1R2/3q2pp/4p3/2B5/4Q3/PPP2B2/2K5 b - - 0 1
+move d7f5 best d6d1 delta 32551 accuracy 218,57
+159 r1b1kb1r/pp2qppp/2pp4/8/4nP2/2N2N2/PPPP2PP/R1BQK2R w KQkq - 0 1
+move e1g1 best h5h7 delta 32758 accuracy 219,08
+160 1b1rr1k1/pp1q1pp1/8/NP1p1b1p/1B1Pp1n1/PQR1P1P1/4BP1P/5RK1 w - - 0 1
+move h2h3 best a5c6 delta 303 accuracy 219,59
+161 r1bqk2r/ppn1bppp/2n5/2p1p3/8/2NP1NP1/PP1BPPBP/R2Q1RK1 b kq - 0 1
+move c8e6 best e8g8 delta 30 accuracy 218,41
+162 4r1k1/1q1n1ppp/3pp3/rp6/p2PP3/N5P1/PPQ2P1P/3RR1K1 w - - 0 1
+move b2b4 best d1c1 delta 105 accuracy 217,71
+163 rn3rk1/1bqp1ppp/p3pn2/8/Nb1NP3/4B3/PP2BPPP/R2Q1RK1 w - - 0 1
+move d4c2 best e2d3 delta 146 accuracy 217,27
+164 r3k2r/1b1nb1p1/p1q1pn1p/1pp3N1/4PP2/2N5/PPB3PP/R1BQ1RK1 w kq - 0 1
+move g5f3 best g5f3 delta 0 accuracy 215,95
+165 r2qk2r/2p2ppp/p1n1b3/1pbpP3/4n3/1BP2N2/PP1N1PPP/R1BQ1RK1 b kq - 0 1
+move e4g5 best a2c4 delta 316 accuracy 216,45
+166 8/5p1p/3P1k2/p1P2n2/3rp3/1B6/P4R2/6K1 w - - 0 1
+move b3f7 best b3a4 delta 448 accuracy 216,96
+167 r3kr2/pppb1p2/2n3p1/3Bp2p/4P2N/2P5/PP3PPP/2KR3R b q - 0 1
+move a8d8 best e4f6 delta 427 accuracy 217,46
+168 rqn2rk1/pp2b2p/2n2pp1/1N2p3/5P1N/1PP1B3/4Q1PP/R4RK1 w - - 0 1
+move f4e5 best h4g6 delta 492 accuracy 217,95
+169 r3r1k1/1bnq1pbn/p2p2p1/1p1P3p/2p1PP1B/P1N2B1P/1PQN2P1/3RR1K1 w - - 0 1
+move f4f5 best e4e5 delta 287 accuracy 218,36
+170 r1bqkb1r/pp3ppp/2npp3/3nP3/2BP4/5N2/PP3PPP/RNBQK2R w KQkq - 0 1
+move b1c3 best e7e8 delta 424 accuracy 218,84
+171 3rr1k1/1pq2b1p/2pp2p1/4bp2/pPPN4/4P1PP/P1QR1PB1/1R4K1 b - - 0 1
+move g8h8 best c4d3 delta 173 accuracy 218,57
+172 1nk1r1r1/pp2n1pp/4p3/q2pPp1N/b1pP1P2/B1P2R2/2P1B1PP/R2Q2K1 w - - 0 1
+move a3d6 best c2f2 delta 208 accuracy 218,51
+173 1r3rk1/6p1/p1pb1qPp/3p4/4nPR1/2N4Q/PPP4P/2K1BR2 b - - 0 1
+move f6e7 best b8b2 delta 396 accuracy 218,98
+174 r1b2rk1/2q1b1pp/p2ppn2/1p6/3QP3/1BN1B3/PPP3PP/R4RK1 w - - 0 1
+move a2a4 best c3d5 delta 114 accuracy 218,37
+175 rnbqk1nr/pp3pbp/2ppp1p1/8/2BPP3/2N2Q2/PPP2PPP/R1B1K1NR w KQkq - 0 1
+move g1e2 best g1e2 delta 0 accuracy 217,13
+176 r1bqk2r/pp2bppp/2n1p3/3n4/3P4/2NB1N2/PP3PPP/R1BQ1RK1 b kq - 0 1
+move a7a6 best c8d7 delta 24 accuracy 216,03
+177 2rr2k1/1b3ppp/pb2p3/1p2P3/1P2BPnq/P1N3P1/1B2Q2P/R4R1K b - - 0 1
+move b7e4 best c8c3 delta 1334 accuracy 216,50
+178 rn1q1rk1/pp3ppp/4bn2/2bp4/5B2/2NBP1N1/PP3PPP/R2QK2R w KQ - 0 1
+move d1b3 best e1g1 delta 336 accuracy 216,97
+179 rn1q1rk1/pb3p2/1p5p/3n2P1/3p4/P4P2/1P1Q1BP1/R3KBNR b KQ - 0 1
+move f8e8 best f8e8 delta 0 accuracy 215,76
+180 r1n2N1k/2n2K1p/3pp3/5Pp1/b5R1/8/1PPP4/8 w - - 0 1
+move f5e6 best f5f6 delta 2073 accuracy 216,23
+181 rnbqr1k1/pp1p1ppp/5n2/3Pb3/1P6/P1N3P1/4NPBP/R1BQK2R w KQ - 0 1
+move c1e3 best e1g1 delta 1 accuracy 215,04
+182 2r2k2/r4p2/2b1p1p1/1p1p2Pp/3R1P1P/P1P5/1PB5/2K1R3 w - - 0 1
+move c1d2 best e8g8 delta 411 accuracy 215,51
+183 2kr2nr/1pp3pp/p1pb4/4p2b/4P1P1/5N1P/PPPN1P2/R1B1R1K1 b - - 0 1
+move h5f7 best h5f7 delta 0 accuracy 214,33
+184 1k1r3r/pp2qpp1/3b1n1p/3pNQ2/2pP1P2/2N1P3/PP4PP/1K1RR3 b - - 0 1
+move g7g6 best d6b4 delta 566 accuracy 214,79
+185 rnbqkb1r/pppp1ppp/3n4/8/2BQ4/5N2/PPP2PPP/RNB2RK1 b kq - 1 6
+move d6c4 best d7d5 delta 365 accuracy 215,25
+186 r1bq1rk1/1p2ppbp/p2p1np1/6B1/2P1P3/2N5/PP1QBPPP/R3K2R w KQ - 0 1
+move e1g1 best d1b1 delta 81 accuracy 214,53
+187 1nrq1rk1/p4pp1/bp2pn1p/3p4/2PP1B2/P1PB2N1/4QPPP/1R2R1K1 w - - 0 1
+move c4c5 best d3c2 delta 251 accuracy 214,73
+188 rn1qkb1r/pp2pppp/5n2/3p1b2/3P4/1QN1P3/PP3PPP/R1B1KBNR b KQkq - 1 1
+move b8d7 best b8c6 delta 47 accuracy 213,84
+189 r2qkb1r/pp2nppp/1np1p3/4Pb2/3P4/PB3N2/1P3PPP/RNBQ1RK1 b kq - 0 1
+move e7d5 best b3b4 delta 1327 accuracy 214,29
+190 r3nrk1/pp2qpb1/3p1npp/2pPp3/2P1P2N/2N3Pb/PP1BBP1P/R2Q1RK1 w - - 0 1
+move f1e1 best e4c6 delta 654 accuracy 214,74
+191 r2q1rk1/pb2bppp/npp1pn2/3pN3/2PP4/1PB3P1/P2NPPBP/R2Q1RK1 w - - 0 1
+move g1h1 best e2e4 delta 508 accuracy 215,19
+192 r4k2/pb2bp1r/1p1qp2p/3pNp2/3P1P2/2N3P1/PPP1Q2P/2KRR3 w - - 0 1
+move e2b5 best g3g4 delta 573 accuracy 215,63
+193 r1b1k2r/ppq1bppp/2n5/2N1p3/8/2P1B1P1/P3PPBP/R2Q1RK1 b kq - 0 1
+move c8f5 best e8g8 delta 115 accuracy 215,11
+194 2kb4/p7/r1p3p1/p1P2pBp/R2P3P/2K3P1/5P2/8 w - - 0 1
+move g5f4 best g5d8 delta 943 accuracy 215,55
+195 rnb2r1k/pp2p2p/2pp2p1/q2P1p2/8/1Pb2NP1/PB2PPBP/R2Q1RK1 w - - 0 1
+move d1d2 best d1d2 delta 0 accuracy 214,44
+196 r1bq1rk1/pp2ppbp/2n2np1/2p3B1/4P3/2P2N2/PP1NBPPP/R2QK2R w KQ - 0 1
+move e2c4 best g5e3 delta 597 accuracy 214,88
+197 2r1k2r/2pn1pp1/1p3n1p/p3PP2/4q2B/P1P5/2Q1N1PP/R4RK1 w q - 0 1
+move c2e4 best e5f6 delta 950 accuracy 215,31
+198 3r2k1/2q2p1p/5bp1/p1pP4/PpQ5/1P3NP1/5PKP/3R4 b - - 0 1
+move f6c3 best c7d6 delta 30 accuracy 214,37
+199 1r4k1/1q2bp2/3p2p1/2pP4/p1N4R/2P2QP1/1P3PK1/8 w - - 0 1
+move h4h1 best c4d6 delta 361 accuracy 214,80
+200 r1bqk2r/ppp2ppp/2n5/4P3/2Bp2n1/5N1P/PP1N1PP1/R2Q1RK1 b kq - 1 10
+move g4e5 best e6e5 delta 587 accuracy 215,23
+201 1r2r1k1/3bnppp/p2q4/2RPp3/4P3/6P1/2Q1NPBP/2R3K1 w - - 0 1
+move c2d2 best d2c2 delta 444 accuracy 215,65
+202 r1bqk2r/ppp2ppp/3b4/4p3/8/1PPP1N2/2PB1PPP/R2Q1RK1 b kq - 0 1
+move c8g4 best c3b5 delta 344 accuracy 216,07
+203 6k1/pb1r1qbp/3p1p2/2p2p2/2P1rN2/1P1R3P/PB3QP1/3R2K1 b - - 0 1
+move g7h6 best g7h6 delta 0 accuracy 215,00
+204 8/8/1p1r1k2/p1pPN1p1/P3KnP1/1P6/8/3R4 b - - 0 1
+move d6d8 best f3e2 delta 632 accuracy 215,42
+205 r1bq1rk1/ppp1npb1/3p2pp/3Pp2n/1PP1P3/2N5/P2NBPPP/R1BQR1K1 b - - 0 1
+move h5f4 best d5c3 delta 687 accuracy 215,83
+206 r1b1k2r/p1pp1ppp/1np1q3/4P3/1bP5/1P6/PB1NQPPP/R3KB1R b KQkq - 0 1
+move c8a6 best e8g8 delta 354 accuracy 216,24
+207 r1br2k1/1p2qppp/pN2pn2/P7/2pn4/4N1P1/1P2PPBP/R3QRK1 b - - 0 1
+move a8b8 best a8b8 delta 0 accuracy 215,20
+208 8/3Pk1p1/1p2P1K1/1P1Bb3/7p/7P/6P1/8 w - - 0 1
+move g6f5 best g2g4 delta 1165 accuracy 215,61
+209 r2qk2r/pbpp1ppp/1pn1pn2/1Nb5/7P/1P2P3/PBPP1PP1/R2QKBNR w KQkq - 5 7
+move f1d3 best c6e4 delta 1043 accuracy 216,01
+210 1qr3k1/p2nbppp/bp2p3/3p4/3P4/1P2PNP1/P2Q1PBP/1N2R1K1 b - - 0 1
+move b8c7 best b8c7 delta 0 accuracy 214,98
+211 r2q1rk1/1ppnbppp/p2p1nb1/3Pp3/2P1P1P1/2N2N1P/PPB1QP2/R1B2RK1 b - - 0 1
+move h7h5 best a8c8 delta 19 accuracy 214,05
+212 r7/3rq1kp/2p1bpp1/p1Pnp3/2B4P/PP4P1/1B1RQP2/2R3K1 b - - 0 1
+move a8b8 best a2a3 delta 421 accuracy 214,46
+213 8/6pp/5k2/1p1r4/4R3/7P/5PP1/5K2 w - - 0 1
+move f2f3 best c6e5 delta 67 accuracy 213,77
+214 r3r2k/1bq1nppp/p2b4/1pn1p2P/2p1P1QN/2P1N1P1/PPBB1P1R/2KR4 w - - 0 1
+move h5h6 best h4g6 delta 493 accuracy 214,17
+215 2r1nrk1/p2q1ppp/bp1p4/n1pPp3/P1P1P3/2PBB1N1/4QPPP/R4RK1 w - - 0 1
+move f2f4 best f2f4 delta 0 accuracy 213,17
+216 r4r1k/pp1bq1b1/n2p2p1/2pPp1Np/2P4P/P1N1BP2/1P1Q2P1/2KR3R w - - 0 1
+move g5e6 best d2c2 delta 343 accuracy 213,57
+217 r3kb1r/pbqp1pp1/1pn1pn1p/8/3PP3/2PB1N2/3N1PPP/R1BQR1K1 w kq - 0 1
+move e4e5 best c4c3 delta 217 accuracy 213,59
+218 rn2kb1r/pp2nppp/1q2p3/3pP3/3P4/5N2/PP2NPPP/R1BQK2R w KQkq - 0 1
+move d1c2 best d4b5 delta 308 accuracy 213,99
+219 3r2k1/1p3ppp/2pq4/p1n5/P6P/1P6/1PB2QP1/1K2R3 w - - 0 1
+move f2f5 best f2f5 delta 0 accuracy 213,01
+220 r3k2r/1pqnnppp/p5b1/1PPp1p2/3P4/2N5/P2NB1PP/2RQ1RK1 b kq - 0 1
+move a6b5 best c4c5 delta 529 accuracy 213,40
+221 r1bqk2r/pppp1ppp/5n2/4p3/Bb2P3/5Q2/PPPPNPPP/R1B1K2R b KQkq - 0 1
+move b7b6 best e8g8 delta 321 accuracy 213,80
+222 3q1rk1/2nbppb1/pr1p1n1p/2pP1Pp1/2P1P2Q/2N2N2/1P2B1PP/R1B2RK1 w - - 0 1
+move h4g3 best f3g5 delta 525 accuracy 214,18
+223 r2qkb1r/pp3ppp/2bppn2/8/2PQP3/2N2N2/PP3PPP/R1B1K2R w KQkq - 0 1
+move c1g5 best e5f6 delta 581 accuracy 214,57
+224 1r3rk1/2qbppbp/3p1np1/nP1P2B1/2p2P2/2N1P2P/1P1NB1P1/R2Q1RK1 b - - 0 1
+move c7b6 best c7b6 delta 0 accuracy 213,61
+225 r1k1n2n/8/pP6/5R2/8/1b1B4/4N3/1K5N w - - 0 1
+move e2d4 best b6b7 delta 804 accuracy 214,00
+226 r4rk1/1q2bppp/p1bppn2/8/3BPP2/3B2Q1/1PP1N1PP/4RR1K w - - 0 1
+move e2g1 best c2a2 delta 60 accuracy 213,31
+227 r3k2r/5ppp/3pbb2/qp1Np3/2BnP3/N7/PP1Q1PPP/R3K2R w KQkq - 0 1
+move d2a5 best a3b5 delta 110 accuracy 212,86
+228 8/5p2/pk2p3/4P2p/2b1pP1P/P3P2B/8/7K w - - 0 1
+move h1g2 best h3g4 delta 390 accuracy 213,24
+229 r3k2r/ppp1bppp/2n5/3n4/3PB3/8/PP3PPP/RNB1R1K1 b kq - 0 1
+move d5f6 best e8c8 delta 347 accuracy 213,62
+230 3r2k1/p2r1p1p/1p2p1p1/q4n2/3P4/PQ5P/1P1RNPP1/3R2K1 b - - 0 1
+move d7c7 best d3h7 delta 1025 accuracy 214,00
+231 rnbq1rk1/pp2ppbp/2pp1np1/8/P2PP3/2N2N2/1PP1BPPP/R1BQK2R w KQ - 0 1
+move e4e5 best g1f3 delta 304 accuracy 214,37
+232 8/pp2r1k1/2p1p3/3pP2p/1P1P1P1P/P5KR/8/8 w - - 0 1
+move h3h2 best f4f5 delta 392 accuracy 214,74
+233 rn1qr1k1/pb3p2/1p5p/3n2P1/3p4/P4P2/1P1QNBP1/R3KB1R b KQ - 0 1
+move d8g5 best d8g5 delta 0 accuracy 213,82
+234 r1b2rk1/ppp3p1/4p2p/4Qpq1/3P4/2PB4/PPK2PPP/R6R b - - 0 1
+move g5g2 best f6f3 delta 32921 accuracy 214,18
+235 2r4k/pB4bp/1p4p1/6q1/1P1n4/2N5/P4PPP/2R1Q1K1 b - - 0 1
+move c8f8 best g5c1 delta 895 accuracy 214,55
+236 r1bqrbk1/1pp3pp/2n2p2/p2np3/8/PP1PPN2/1BQNBPPP/R3K2R w KQ - 0 1
+move d3d4 best d2e4 delta 33 accuracy 213,78
+237 rn1qkb1r/pb1p1ppp/1p2pn2/2p5/2PP4/5NP1/PP2PPBP/RNBQK2R w KQkq - 1 6
+move b1c3 best d4d5 delta 311 accuracy 214,14
+238 4r1k1/1r1np3/1pqp1ppB/p7/2b1P1PQ/2P2P2/P3B2R/3R2K1 w - - 0 1
+move e2d3 best h6g5 delta 312 accuracy 214,50
+239 r2q1rk1/1p2bpp1/p1b2n1p/8/5B2/2NB4/PP1Q1PPP/3R1RK1 w - - 0 1
+move f1e1 best f4h6 delta 134 accuracy 214,17
+240 r1bqnr2/pp1ppkbp/4N1p1/n3P3/8/2N1B3/PPP2PPP/R2QK2R b KQ - 2 11
+move f7e6 best c1d2 delta 641 accuracy 214,53
+241 r4rk1/q4bb1/p1R4p/3pN1p1/8/2N3P1/P4PP1/3QR1K1 w - - 0 1
+move c3d5 best e5g4 delta 194 accuracy 214,44
+242 r1b2rk1/ppq1bppp/2p1pn2/8/2NP4/2N1P3/PP2BPPP/2RQK2R w K - 0 1
+move c4e5 best e1g1 delta 411 accuracy 214,79
+243 5b2/p2k1p2/P3pP1p/n2pP1p1/1p1P2P1/1P1KBN2/7P/8 w - - 0 1
+move f3d2 best f3g5 delta 296 accuracy 215,13
+244 2k5/p7/Pp1p1b2/1P1P1p2/2P2P1p/3K3P/5B2/8 w - - 0 1
+move f2d4 best c4c5 delta 636 accuracy 215,48
+245 r2q1r1k/1b1nN2p/pp3pp1/8/Q7/PP5P/1BP2RPN/7K w - - 0 1
+move e7c6 best a4d7 delta 1290 accuracy 215,82
+246 r1bq1rk1/1p3ppp/p1np4/3Np1b1/2B1P3/P7/1PP2PPP/RN1QK2R w KQ - 0 1
+move b1d2 best a7a4 delta 92 accuracy 215,32
+247 2r3qk/p5p1/1n3p1p/4PQ2/8/3B4/5P1P/3R2K1 w - - 0 1
+move e5e6 best e5e6 delta 0 accuracy 214,45
+248 r1bqk2r/5ppp/p1np4/1p1Np1b1/4P3/2P5/PPN2PPP/R2QKB1R b KQkq - 0 1
+move c8e6 best a8b8 delta 42 accuracy 213,75
+249 r2qk2r/ppp1bppp/2n5/3p1b2/3P1Bn1/1QN1P3/PP3P1P/R3KBNR w KQkq - 0 1
+move b3b7 best c1e1 delta 321 accuracy 214,10
+250 rn2kb1r/pp2pppp/1qP2n2/8/6b1/1Q6/PP1PPPBP/RNB1K1NR b KQkq - 1 6
+move b6b3 best e1g1 delta 548 accuracy 214,44
+251 b4r1k/6bp/3q1ppN/1p2p3/3nP1Q1/3BB2P/1P3PP1/2R3K1 w - - 0 1
+move e3d2 best e5f3 delta 232 accuracy 214,51
+252 8/8/8/8/4kp2/1R6/P2q1PPK/8 w - - 0 1
+move h2g1 best b1d2 delta 938 accuracy 214,85
+253 r1b1k2r/ppppqppp/8/2bP4/3p4/6P1/PPQPPPBP/R1B2RK1 b kq - 0 1
+move d7d6 best e8g8 delta 362 accuracy 215,19
+254 8/p1ppk1p1/2n2p2/8/4B3/2P1KPP1/1P5P/8 w - - 0 1
+move e4c6 best e4c6 delta 0 accuracy 214,34
+255 r2r2k1/pq2bppp/1np1bN2/1p2B1P1/5Q2/P4P2/1PP4P/2KR1B1R b - - 0 1
+move g7f6 best g5d8 delta 1203 accuracy 214,67
+256 r1b2rk1/ppp1qppp/1b1n4/8/B2n4/3NN3/PPPP1PPP/R1BQK2R w KQ - 0 1
+move b2b3 best e1g1 delta 217 accuracy 214,68
+257 8/8/4p1Pk/1rp1K1p1/4P1P1/1nP2Q2/p2b1P2/8 w - - 0 1
+move f3h1 best e5f6 delta 1082 accuracy 215,02
+258 r1b1kb1r/1p1n1p2/p3pP1p/q7/3N3p/2N5/P1PQB1PP/1R3R1K b kq - 0 1
+move b7b5 best d1b3 delta 312 accuracy 215,34
+259 4rb1k/1bqn1pp1/p3rn1p/1p2pN2/1PP1p1N1/P1P2Q1P/1BB2PP1/3RR1K1 w - - 0 1
+move f3e2 best e1g1 delta 11 accuracy 214,56
+260 3rr3/2pq2pk/p2p1pnp/8/2QBPP2/1P6/P5PP/4RRK1 b - - 0 1
+move c7c5 best a6b5 delta 172 accuracy 214,39
+261 r4r1k/4bppb/2n1p2p/p1n1P3/1p1p1BNP/3P1NP1/qP2QPB1/2RR2K1 w - - 0 1
+move d1d2 best b1b2 delta 601 accuracy 214,72
+262 r3r1k1/pp3ppp/2ppqn2/5R2/2P5/2PQP1P1/P2P2BP/5RK1 w - - 0 1
+move f1b1 best g3f3 delta 182 accuracy 214,60
+263 8/8/3pp1k1/1p4p1/3P4/4R1K1/q7/1R6 w - - 0 42
+move b1b5 best d5d6 delta 869 accuracy 214,92
+264 r1b1r1k1/1ppn1p1p/3pnqp1/8/p1P1P3/5P2/PbNQNBPP/1R2RB1K w - - 0 1
+move e2d4 best b1b2 delta 790 accuracy 215,24
+265 rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2
+move d2d4 best a5a6 delta 110 accuracy 214,85
+266 r1b1kq1r/1p1n2bp/p2p2p1/3PppB1/Q1P1N3/8/PP2BPPP/R4RK1 w kq - 0 1
+move e4c3 best e5g6 delta 128 accuracy 214,52
+267 r3kb1r/3n1ppp/p3p3/1p1pP2P/P3PBP1/4P3/1q2B3/R2Q1K1R b kq - 0 1
+move f8a3 best f8c5 delta 521 accuracy 214,84
+268 6r1/6r1/2p1k1pp/p1pbP2q/Pp1p1PpP/1P1P2NR/1KPQ3R/8 b - - 0 1
+move g4h3 best h5f5 delta 403 accuracy 215,16
+269 r3kb1r/pp1n1ppp/1q2p3/n2p4/3P1Bb1/2PB1N2/PPQ2PPP/RN2K2R w KQkq - 3 11
+move b1d2 best e3d3 delta 329 accuracy 215,47
+270 2kr1bnr/pbpq4/2n1pp2/3p3p/3P1P1B/2N2N1Q/PPP3PP/2KR1B1R w - - 0 1
+move f1d3 best d1e1 delta 334 accuracy 215,79
+271 2b1r3/5pkp/6p1/4P3/QppqPP2/5RPP/6BK/8 b - - 0 1
+move e8d8 best c4c3 delta 382 accuracy 216,10
+272 r2q1rk1/2p1bppp/p2p1n2/1p2P3/4P1b1/1nP1BN2/PP3PPP/RN1QR1K1 w - - 1 12
+move a2b3 best e5f6 delta 307 accuracy 216,40
+273 rr1nb1k1/2q1b1pp/pn1p1p2/1p1PpNPP/4P3/1PP1BN2/2B2P2/R2QR1K1 w - - 0 1
+move f5e7 best g5g6 delta 473 accuracy 216,71
+274 r1b2r1k/ppp2ppp/8/4p3/2BPQ3/P3P1K1/1B3PPP/n3q1NR w - - 0 1
+move e4e5 best d4e5 delta 346 accuracy 217,01
+275 r1bqk2r/p2pppbp/2p3pn/2p5/4P3/2P2N2/PP1P1PPP/RNBQR1K1 b kq - 0 1
+move c8a6 best h4h5 delta 406 accuracy 217,32
+276 rnbqr1k1/1p3pbp/p2p1np1/2pP4/4P3/2N5/PP1NBPPP/R1BQ1RK1 w - - 1 11
+move d1c2 best a2a4 delta 405 accuracy 217,62
+277 r3k2r/pp2pp1p/8/q2Pb3/2P5/4p3/B1Q2PPP/2R2RK1 w kq - 0 1
+move f2e3 best c4c5 delta 619 accuracy 217,91
+278 r3kbnr/1b3ppp/pqn5/1pp1P3/3p4/1BN2N2/PP2QPPP/R1BR2K1 w kq - 0 1
+move c3d5 best b3f7 delta 679 accuracy 218,21
+279 8/2P1P3/b1B2p2/1pPRp3/2k3P1/P4pK1/nP3p1p/N7 w - - 0 1
+move b2b3 best d5d1 delta 4021 accuracy 218,50
+280 rn1qk2r/1b2bppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQR1K1 w kq - 5 10
+move e4e5 best b3c2 delta 286 accuracy 218,74
+281 1nr5/2rbkppp/p3p3/Np6/2PRPP2/8/PKP1B1PP/3R4 b - - 0 1
+move b5b4 best e6e5 delta 214 accuracy 218,73
+282 6k1/pp2rp1p/2p2bp1/1n1n4/1PN3P1/P2rP2P/R3NPK1/2B2R2 w - - 0 1
+move a2d2 best c1d2 delta 306 accuracy 219,01
+283 4n3/7r/2kp1R2/1p5p/7P/P1PK4/1P5B/8 w - - 0 52
+move f6e6 best f6f5 delta 968 accuracy 219,30
+284 2rq1rk1/pb1n1ppN/4p3/1pb5/3P1Pn1/P1N5/1PQ1B1PP/R1B2RK1 b - - 0 1
+move c5d4 best d7e5 delta 144 accuracy 219,04
+285 r1b2rk1/pp2ppbp/2n2np1/2q5/5B2/1BN1PN2/PP3PPP/2RQK2R w K - 0 1
+move d1d3 best e1g1 delta 552 accuracy 219,32
+286 6k1/5p2/3P2p1/7n/3QPP2/7q/r2N3P/6RK b - - 0 1
+move h5f4 best g5f4 delta 427 accuracy 219,60
+287 3q1rk1/3rbppp/ppbppn2/1N6/2P1P3/BP6/P1B1QPPP/R3R1K1 w - - 0 1
+move b5d4 best b5d4 delta 0 accuracy 218,84
+288 r4rk1/ppq3pp/2p1Pn2/4p1Q1/8/2N5/PP4PP/2KR1R2 w - - 0 1
+move c1b1 best f1f6 delta 632 accuracy 219,12
+289 r3rbk1/p2b1p2/5p1p/1q1p4/N7/6P1/PP1BPPBP/3Q1RK1 w - - 0 1
+move b2b3 best a4c3 delta 244 accuracy 219,20
+290 r3r1k1/1bq2ppp/p1p2n2/3ppPP1/4P3/1PbB4/PBP1Q2P/R4R1K w - - 0 1
+move b2c3 best c4d6 delta 383 accuracy 219,48
+291 6k1/pp1q1pp1/2nBp1bp/P2pP3/3P4/8/1P2BPPP/2Q3K1 w - - 0 1
+move c1c3 best c1d2 delta 682 accuracy 219,76
+292 rnb1k2r/1pq2ppp/p2ppn2/2b5/3NPP2/2P2B2/PP4PP/RNBQ1R1K b kq - 0 1
+move e6e5 best e2f1 delta 132 accuracy 219,46
+293 3rr1k1/1pq2ppp/p1n5/3p4/6b1/2P2N2/PP1QBPPP/3R1RK1 w - - 0 1
+move d2c2 best e1g1 delta 146 accuracy 219,21
+294 1r1bk2r/2R2ppp/p3p3/1b2P2q/4QP2/4N3/1B4PP/3R2K1 w k - 0 1
+move g2g4 best d1d8 delta 592 accuracy 219,48
+295 rnb2rk1/pp2q2p/3p4/2pP2p1/2P1Pp2/2N5/PP1QBRPP/R5K1 w - - 0 1
+move g2g3 best b1b2 delta 430 accuracy 219,76
+296 r1bq1rk1/pp2ppbp/2n3p1/2p5/2BPP3/2P1B3/P3NPPP/R2QK2R w KQ - 0 1
+move a1b1 best e1g1 delta 44 accuracy 219,16
+297 3b4/3k1pp1/p1pP2q1/1p2B2p/1P2P1P1/P2Q3P/4K3/8 w - - 0 1
+move e2f3 best g2g4 delta 110 accuracy 218,79
+298 8/8/p1p5/1p5p/1P5p/8/PPP2K1p/4R1rk w - - 0 1
+move c2c3 best e1f1 delta 1317 accuracy 219,07
+299 r2qkb1r/1b3ppp/p3pn2/1p6/1n1P4/1BN2N2/PP2QPPP/R1BR2K1 w kq - 0 1
+move c1f4 best d4d5 delta 910 accuracy 219,34
+300 r2r2k1/pp1b1ppp/8/3p2P1/3N4/P3P3/1P3P1P/3RK2R b K - 0 1
+move a8c8 best d8e8 delta 861 accuracy 219,61
+301 r6k/pp4p1/2p1b3/3pP3/7q/P2B3r/1PP2Q1P/2K1R1R1 w - - 0 1
+move g1g2 best f2c5 delta 339 accuracy 219,87
+302 1B1b4/7K/1p6/1k6/8/8/8/8 w - - 0 1
+move b8a7 best b8a7 delta 0 accuracy 219,15
+303 rq2rbk1/6p1/p2p2Pp/1p1Rn3/4PB2/6Q1/PPP1B3/2K3R1 w - - 0 1
+move g3b3 best f4h6 delta 1007 accuracy 219,41
+304 rn1qkbnr/pp1b1ppp/8/1Bpp4/3P4/8/PPPNQPPP/R1B1K1NR b KQkq - 0 1
+move f8e7 best f8e7 delta 0 accuracy 218,69
+305 r2qrnk1/pp3ppb/3b1n1p/1Pp1p3/2P1P2N/P5P1/1B1NQPBP/R4RK1 w - - 0 1
+move f1d1 best g2h3 delta 649 accuracy 218,96
+306 r3r1k1/ppqb1ppp/8/4p1NQ/8/2P5/PP3PPP/R3R1K1 b - - 0 1
+move d7f5 best b8b2 delta 62 accuracy 218,44
+307 5r2/pp1b1kpp/8/2pPp3/2P1p2P/4P1r1/PPRKB1P1/6R1 b - - 0 1
+move f7e7 best f7e7 delta 0 accuracy 217,73
+308 r1bqk2r/2ppbppp/p1n2n2/1p2p3/4P3/1B3N2/PPPPQPPP/RNB2RK1 b kq - 0 1
+move e7c5 best a2c4 delta 175 accuracy 217,59
+309 r3k2r/4qn2/p1p1b2p/6pB/P1p5/2P5/5PPP/RQ2R1K1 b kq - 0 1
+move e8c8 best e5f6 delta 791 accuracy 217,86
+310 r2qr1k1/pp1bbp2/n5p1/2pPp2p/8/P2PP1PP/1P2N1BK/R1BQ1R2 w - - 0 1
+move e3e4 best h3g4 delta 627 accuracy 218,13
+311 rnq1nrk1/pp3pbp/6p1/3p4/3P4/5N2/PP2BPPP/R1BQK2R w KQ - 0 1
+move c1f4 best e1g1 delta 39 accuracy 217,55
+312 rnbqkb1r/ppp1pppp/5n2/8/3PP3/2N5/PP3PPP/R1BQKBNR b KQkq - 3 5
+move g7g6 best f4f5 delta 205 accuracy 217,51
+313 r1bq1rk1/pp1pppbp/2n2np1/8/4P3/1NN5/PPP1BPPP/R1BQK2R w KQ - 0 1
+move c1f4 best e1g1 delta 22 accuracy 216,88
+314 r3r1kb/p2bp2p/1q1p1npB/5NQ1/2p1P1P1/2N2P2/PPP5/2KR3R w - - 0 1
+move d1d2 best h6g7 delta 308 accuracy 217,15
+315 8/3b4/5k2/2pPnp2/1pP4N/pP1B2P1/P3K3/8 b - - 0 1
+move e5d3 best f5f4 delta 477 accuracy 217,41
+316 r3kbnr/1pp3pp/p1p2p2/8/3qP3/5Q1P/PP3PP1/RNB2RK1 w kq - 0 1
+move f1d1 best f1d1 delta 0 accuracy 216,72
+317 r1b3k1/p2p1nP1/2pqr1Rp/1p2p2P/2B1PnQ1/1P6/P1PP4/1K4R1 w - - 0 1
+move c4e6 best g6h6 delta 229 accuracy 216,76
+318 2brr1k1/ppq2ppp/2pb1n2/8/3NP3/2P2P2/P1Q2BPP/1R1R1BK1 w - - 0 1
+move h2h3 best e8g8 delta 81 accuracy 216,34
+319 r3kb1r/ppnq2pp/2n5/4pp2/1P1PN3/P4N2/4QPPP/R1B1K2R w KQkq - 0 1
+move e4c5 best f3e5 delta 109 accuracy 216,00
+320 r1b1qrk1/pp4b1/2pRn1pp/5p2/2n2B2/2N2NPP/PPQ1PPB1/5RK1 w - - 0 1
+move f3d2 best h2h4 delta 300 accuracy 216,26
+321 3r4/2k5/p3N3/4p3/1p1p4/4r3/PPP3P1/1K1R4 b - - 0 1
+move c7d7 best c7d7 delta 0 accuracy 215,59
+322 8/3P4/1p3b1p/p7/P7/1P3NPP/4p1K1/3k4 w - - 0 1
+move g2f2 best g3g4 delta 705 accuracy 215,85
+323 1k6/bPN2pp1/Pp2p3/p1p5/2pn4/3P4/PPR5/1K6 w - - 0 1
+move c2f2 best d6d1 delta 32433 accuracy 216,11
+324 8/8/8/8/pK2k1N1/8/8/8 w - - 98 145
+move b4a4 best b4a4 delta 0 accuracy 215,44
+325 2r1k2r/1p1qbppp/p3pn2/3pBb2/3P4/1QN1P3/PP2BPPP/2R2RK1 b k - 0 1
+move e8g8 best e1g1 delta 117 accuracy 215,14
+326 6k1/1R5p/r2p2p1/2pN2B1/2bb4/P7/1P1K2PP/8 w - - 0 1
+move d5f6 best d8e7 delta 15 accuracy 214,53
+327 3rn2k/ppb2rpp/2ppqp2/5N2/2P1P3/1P5Q/PB3PPP/3RR1K1 w - - 0 1
+move f2f4 best f5h6 delta 321 accuracy 214,79
+328 8/2k5/N3p1p1/2KpP1P1/b2P4/8/8/8 b - - 0 1
+move c7d7 best c7b7 delta 1465 accuracy 215,05
+329 2r1r1k1/pbpp1npp/1p1b3q/3P4/4RN1P/1P4P1/PB1Q1PB1/2R3K1 w - - 0 1
+move d2e3 best c1e1 delta 377 accuracy 215,31
+330 r1b2r1k/pp2q1pp/2p2p2/2p1n2N/4P3/1PNP2QP/1PP2RP1/5RK1 w - - 0 1
+move f1a1 best h5f4 delta 11 accuracy 214,69
+331 3rk2r/1bq2pp1/2pb1n1p/p3pP2/P1B1P3/8/1P2QBPP/2RN1R1K b k - 0 1
+move d6b4 best d6b4 delta 0 accuracy 214,04
+332 r3k2r/3bbp1p/p1nppp2/5P2/1p1NP3/5NP1/PPPK3P/3R1B1R b kq - 0 1
+move c6d4 best c6e5 delta 488 accuracy 214,30
+333 r2r2k1/1p1n1pp1/4pnp1/8/PpBRqP2/1Q2B1P1/1P5P/R5K1 b - - 0 1
+move e4f3 best d7c5 delta 142 accuracy 214,08
+334 2r2r2/1p1qbkpp/p2ppn2/P1n1p3/4P3/2N1BB2/QPP2PPP/R4RK1 w - - 0 1
+move b2b4 best b2b4 delta 0 accuracy 213,44
+335 q2B2k1/pb4bp/4p1p1/2p1N3/2PnpP2/PP3B2/6PP/2RQ2K1 b - - 0 1
+move e4f3 best a8d8 delta 318 accuracy 213,70
+336 8/7p/5P1k/1p5P/5p2/2p1p3/P1P1P1P1/1K3Nb1 w - - 0 1
+move g2g4 best a2a3 delta 604 accuracy 213,96
+337 r4rk1/p2nbpp1/2p2np1/q7/Np1PPB2/8/PPQ1N1PP/1K1R3R w - - 0 1
+move e4e5 best h2h4 delta 532 accuracy 214,21
+338 rq6/5k2/p3pP1p/3p2p1/6PP/1PB1Q3/2P5/1K6 w - - 0 1
+move h4g5 best e3d3 delta 782 accuracy 214,46
+339 r1bq1rk1/p4ppp/3p2n1/1PpPp2n/4P2P/P1PB1PP1/2Q1N3/R1B1K2R b KQ - 0 1
+move c8d7 best d6b4 delta 275 accuracy 214,64
+340 r3r1k1/1pqn1pbp/p2p2p1/2nP2B1/P1P1P3/2NB3P/5PP1/R2QR1K1 w - - 0 1
+move a1a3 best g6h7 delta 7015 accuracy 214,89
+341 2b5/1p4k1/p2R2P1/4Np2/1P3Pp1/1r6/5K2/8 w - - 0 1
+move d6d8 best g1e2 delta 74 accuracy 214,48
+342 2q2rk1/2p2pb1/PpP1p1pp/2n5/5B1P/3Q2P1/4PPN1/2R3K1 w - - 0 1
+move d3d2 best f3e5 delta 316 accuracy 214,73
+343 rnbq1rk1/5ppp/p3pn2/1p6/2BP4/P1P2N2/5PPP/R1BQ1RK1 w - - 0 1
+move c4d3 best c4d3 delta 0 accuracy 214,10
+344 5rk1/p1p1rpb1/q1Pp2p1/3Pp2p/4Pn2/1R4N1/P1BQ1PPP/R5K1 w - - 0 1
+move a2a4 best g1h1 delta 89 accuracy 213,74
+345 2r1rbk1/1pqb1p1p/p2p1np1/P4p2/3NP1P1/2NP1R1Q/1P5P/R5BK w - - 0 1
+move g4f5 best d4f5 delta 529 accuracy 213,99
+346 r5k1/1bqp1rpp/p1n1p3/1p4p1/1b2PP2/2NBB1P1/PPPQ4/2KR3R w - - 0 1
+move e4e5 best a2a3 delta 524 accuracy 214,24
+347 4r1k1/3b1p2/5qp1/1BPpn2p/7n/r3P1N1/2Q1RPPP/1R3NK1 b - - 0 1
+move d7b5 best f6f3 delta 32635 accuracy 214,49
+348 r1rn2k1/pp1qppbp/6p1/3pP3/3P4/1P3N1P/PB1Q1PP1/R3R1K1 w - - 0 1
+move a1c1 best d5d1 delta 32733 accuracy 214,73
+349 r1bqkbnr/3p1ppp/p1p1p3/8/4P3/3B4/PPP2PPP/RNBQK2R w KQkq - 0 1
+move b1a3 best e1g1 delta 654 accuracy 214,98
+350 2b1r3/r2ppN2/8/1p1p1k2/pP1P4/2P3R1/PP3PP1/2K5 w - - 0 1
+move g3h3 best e8c8 delta 528 accuracy 215,22
+351 r2qk2r/3n1ppp/p3p3/3nP3/3R4/5N2/1P1N1PPP/3QR1K1 b kq - 0 1
+move a8c8 best b5d7 delta 1289 accuracy 215,46
+352 3r1k2/4npp1/1ppr3p/p6P/P2PPPP1/1NR5/5K2/2R5 w - - 0 1
+move c3h3 best d4d5 delta 209 accuracy 215,44
+353 Q5k1/5pp1/5n1p/2b2P2/8/5N1P/5PP1/2q1B1K1 b - - 0 1
+move g8h7 best g3g4 delta 454 accuracy 215,68
+354 2b1r1k1/r4ppp/p7/2pNP3/4Q3/q6P/2P2PP1/3RR1K1 w - - 0 1
+move d1d3 best d5f6 delta 6301 accuracy 215,92
+355 7k/5K2/5P1p/3p4/6P1/3p4/8/8 w - - 0 1
+move f7g6 best f7e7 delta 775 accuracy 216,16
+356 r2q1rk1/pb1nppbp/6p1/1p6/3PP3/3QBN1P/P3BPP1/R3K2R w KQ - 0 1
+move d3b5 best g3g4 delta 657 accuracy 216,39
+357 3q1r1k/4RPp1/p6p/2pn4/2P5/1P6/P3Q2P/6K1 w - - 0 1
+move c4d5 best e7e8 delta 469 accuracy 216,63
+358 r3k2r/p1q1nppp/1pn5/2P1p3/4P1Q1/P1P2P2/4N1PP/R1B2K1R b kq - 0 1
+move e8g8 best d6f6 delta 360 accuracy 216,86
+359 3r4/2R1np1p/1p1rpk2/p2b1p2/8/PP2P3/4BPPP/2R1NK2 w - - 0 1
+move b3b4 best c7c3 delta 8 accuracy 216,28
+360 1q1k4/2Rr4/8/2Q3K1/8/8/8/8 w - - 0 1
+move c7d7 best g5h6 delta 353 accuracy 216,51
+361 r1b1k2r/pp3ppp/1qn1p3/2bn4/8/6P1/PPN1PPBP/RNBQ1RK1 w kq - 0 1
+move g2d5 best a2a3 delta 701 accuracy 216,74
+362 N4rk1/pp1b1ppp/n3p1n1/3pP1Q1/1P1N4/8/1PP2PPP/q1B1KB1R b K - 0 1
+move h7h6 best a6b4 delta 624 accuracy 216,97
+363 8/6p1/3k4/3p1p1p/p2K1P1P/4P1P1/P7/8 b - - 0 1
+move g7g6 best g5f3 delta 9 accuracy 216,40
+364 2k2b1r/1pq3p1/2p1pp2/p1n1PnNp/2P2B2/2N4P/PP2QPP1/3R2K1 w - - 0 1
+move g5e4 best e5f6 delta 780 accuracy 216,63
+365 r1bqk2r/pp2bppp/2p5/3pP3/P2Q1P2/2N1B3/1PP3PP/R4RK1 b kq - 0 1
+move c8f5 best f7f6 delta 569 accuracy 216,86
+366 r3kb1r/3n1pp1/p6p/2pPp2q/Pp2N3/3B2PP/1PQ2P2/R3K2R w KQkq - 0 1
+move d5d6 best e5f6 delta 528 accuracy 217,08
+367 1r4k1/7p/5np1/3p3n/8/2NB4/7P/3N1RK1 w - - 0 1
+move d1e3 best c1c7 delta 194 accuracy 217,02
+368 r1b2rk1/1pqn1pp1/p2bpn1p/8/3P4/2NB1N2/PPQB1PPP/3R1RK1 w - - 0 1
+move d1c1 best c2c1 delta 8 accuracy 216,45
+369 r2qk2r/p1pn1ppp/b3pn2/3p4/Nb1P4/1P3NP1/P3PPBP/1RBQ1RK1 b kq - 0 1
+move f6e4 best d4b4 delta 154 accuracy 216,28
+370 r2q1r1k/3bppbp/pp1p4/2pPn1Bp/P1P1P2P/2N2P2/1P1Q2P1/R3KB1R w KQ - 0 1
+move b2b3 best f1e2 delta 749 accuracy 216,51
+finish

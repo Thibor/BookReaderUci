@@ -16,8 +16,11 @@ namespace NSProgram
 		public static short CHECKMATE_MAX = short.MaxValue;
 		public static short CHECKMATE_NEAR = 0x7000;
 		public static string accuracyGo = "go nodes 1000000";
+		public static string accuracyFen = "accuracy fen.txt";
 		public static string testGo = "go nodes 1000000";
+		public static string testFen = "test fen.txt";
 		public static string teacher = "teacher.exe";
 		public static string student = "student.exe";
+		public static string command = String.Empty;
 	}
 }
