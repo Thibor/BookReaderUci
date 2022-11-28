@@ -22,9 +22,9 @@ namespace NSProgram
 		public static string studentFile = String.Empty;
 
 		[DllImport("Kernel32")]
-		private static extern bool SetConsoleCtrlHandler(SetConsoleCtrlEventHandler handler, bool add);
-
-		private delegate bool SetConsoleCtrlEventHandler(CtrlType sig);
+		private static extern bool SetConsoleCtrlHandler(EventHandler handler, bool add);
+		private delegate bool EventHandler(CtrlType sig);
+		static EventHandler _handler;
 
 		private static bool Handler(CtrlType signal)
 		{
@@ -55,6 +55,8 @@ namespace NSProgram
 
 		static void Main(string[] args)
 		{
+			_handler += new EventHandler(Handler);
+			SetConsoleCtrlHandler(_handler, true);
 			if (args.Length == 0)
 			{
 				Constants.accuracyGo = ini.Read("accurac>go", Constants.accuracyGo);
@@ -67,7 +69,6 @@ namespace NSProgram
 			}
 			accuracy.LoadFen();
 			test.LoadFen();
-			SetConsoleCtrlHandler(Handler, true);
 			int missingIndex = 0;
 			bool isW = false;
 			bool bookRead = false;

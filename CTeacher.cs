@@ -66,6 +66,12 @@ namespace NSProgram
 			}
 		}
 
+		public void Quit()
+		{
+			TeacherWriteLine("quit");
+			StudentWriteLine("quit");
+		}
+
 		bool PrepareTeachers()
 		{
 			teachers.Clear();
