@@ -12,8 +12,8 @@ namespace NSProgram
 		public bool finished = true;
 		public bool stop = false;
 		public string moves = String.Empty;
-		public short score = 0;
-		public string best = String.Empty;
+		public short bestScore = 0;
+		public string bestMove = String.Empty;
 		public MSLine line = new MSLine();
 
 		public CTData(bool finished)
@@ -26,14 +26,16 @@ namespace NSProgram
 			finished = td.finished;
 			stop = td.stop;
 			moves = td.moves;
-			score = td.score;
-			best = td.best;
+			bestScore = td.bestScore;
+			bestMove = td.bestMove;
 			line.Assign(td.line);
 		}
 	}
 
 	internal class CTeacher
 	{
+		string student = String.Empty;
+		string teacher = String.Empty;
 		public bool teacherEnabled = false;
 		public bool studentEnabled = false;
 		public bool stoped = false;
@@ -153,7 +155,7 @@ namespace NSProgram
 					if (uci.command == "bestmove")
 					{
 						CTData td = GetTData();
-						uci.GetValue("bestmove", out td.best);
+						uci.GetValue("bestmove", out td.bestMove);
 						td.finished = true;
 						SetTData(td);
 						return;
@@ -166,7 +168,7 @@ namespace NSProgram
 							v = Constants.CHECKMATE_NEAR;
 						if (v < -Constants.CHECKMATE_NEAR)
 							v = -Constants.CHECKMATE_NEAR;
-						td.score = (short)v;
+						td.bestScore = (short)v;
 						SetTData(td);
 						return;
 					}
@@ -186,7 +188,7 @@ namespace NSProgram
 							if (v >= -Constants.CHECKMATE_NEAR)
 								v = -Constants.CHECKMATE_NEAR - 1;
 						}
-						td.score = (short)v;
+						td.bestScore = (short)v;
 						SetTData(td);
 						return;
 					};
@@ -263,9 +265,9 @@ namespace NSProgram
 				CTData tdg = GetTData();
 				if (!tdg.finished)
 					continue;
-				if (tdg.best == String.Empty)
+				if (tdg.bestMove == String.Empty)
 					return null;
-				line.AddRec(new MSRec(tdg.best, tdg.score));
+				line.AddRec(new MSRec(tdg.bestMove, tdg.bestScore));
 				int first = line.First().score;
 				int last = line.Last().score;
 				if (first - last < Constants.blunders)
@@ -312,6 +314,7 @@ namespace NSProgram
 			teacherEnabled = false;
 			if (File.Exists(teacherFile))
 			{
+				teacher = teacherFile;
 				teacherProcess = new Process();
 				teacherProcess.StartInfo.FileName = teacherFile;
 				teacherProcess.StartInfo.WorkingDirectory = Path.GetDirectoryName(teacherFile);
@@ -339,6 +342,7 @@ namespace NSProgram
 			studentEnabled = false;
 			if (File.Exists(studentFile))
 			{
+				student = studentFile;
 				studentProcess = new Process();
 				studentProcess.StartInfo.FileName = studentFile;
 				studentProcess.StartInfo.WorkingDirectory = Path.GetDirectoryName(studentFile);
@@ -381,9 +385,9 @@ namespace NSProgram
 				CTData tdg = GetTData();
 				if (!tdg.finished)
 					continue;
-				if (tdg.best != String.Empty)
+				if (tdg.bestMove != String.Empty)
 				{
-					tdg.line.AddRec(new MSRec(tdg.best, tdg.score));
+					tdg.line.AddRec(new MSRec(tdg.bestMove, tdg.bestScore));
 					SetTData(tdg);
 					if (tdg.line.GetLoss() < Constants.blunders)
 					{
@@ -454,9 +458,9 @@ namespace NSProgram
 				return;
 			}
 			StudentAccuracyStart();
-			int winChanceSou = Convert.ToInt32(Program.accuracy.WinningChances(Program.accuracy.bstSb)*100.0);
-			int winChanceDes = Convert.ToInt32(Program.accuracy.WinningChances(Program.accuracy.bstSc)*100.0);
-			accuracyReport.Add($"loss {Program.accuracy.GetAccuracy():N2} count {Program.accuracy.number} {name} blunders {Program.accuracy.blunders} mistakes {Program.accuracy.mistakes} inaccuracies {Program.accuracy.inaccuracies} {Program.accuracy.bstFen} {Program.accuracy.bstMsg} ({Program.accuracy.bstSb} => {Program.accuracy.bstSc}) ({winChanceSou} => {winChanceDes})");
+			int winChanceSou = Convert.ToInt32(Program.accuracy.WinningChances(Program.accuracy.bstSb) * 100.0);
+			int winChanceDes = Convert.ToInt32(Program.accuracy.WinningChances(Program.accuracy.bstSc) * 100.0);
+			accuracyReport.Add($"loss {Program.accuracy.GetAccuracy():N2} count {Program.accuracy.index} {name} blunders {Program.accuracy.blunders} mistakes {Program.accuracy.mistakes} inaccuracies {Program.accuracy.inaccuracies} {Program.accuracy.bstFen} {Program.accuracy.bstMsg} ({Program.accuracy.bstSb} => {Program.accuracy.bstSc}) ({winChanceSou} => {winChanceDes})");
 			StudentTerminate();
 		}
 
@@ -470,20 +474,24 @@ namespace NSProgram
 				CTData tdg = GetTData();
 				if (!tdg.finished)
 					continue;
-				if (tdg.best != String.Empty)
+				if (tdg.bestMove != String.Empty)
 				{
 					int best = tdg.line.First().score;
-					int score = tdg.line.GetScore(tdg.best);
+					int score = tdg.line.GetScore(tdg.bestMove);
 					int delta = best - score;
-					string msg = $"move {tdg.best} best {tdg.line.First().move} delta {delta}";
+					string msg = $"move {tdg.bestMove} best {tdg.line.First().move} delta {delta}";
 					Program.accuracy.Add(tdg.line.fen, msg, best, score);
 					WriteLine($"{msg} accuracy {Program.accuracy.GetAccuracy():N2}");
-					if (!Program.accuracy.Next())
-						return;
-					if ((Constants.maxTest > 0) && (Program.accuracy.number >= Constants.maxTest))
+					if ((Constants.teacher == Constants.student) && ((delta > Constants.mistakes)) || (tdg.line.GetLoss() < Constants.blunders))
+					{
+						Program.accuracy.fenList.DeleteFen(tdg.line.fen);
+						Program.accuracy.fenList.SaveToFile();
+					}
+					if ((Constants.maxTest > 0) && (Program.accuracy.index >= Constants.maxTest))
 						return;
 				}
-				MSLine line = Program.accuracy.fenList[Program.accuracy.number-1];
+				if (!Program.accuracy.NextLine(out MSLine line))
+					return;
 				if ((line.depth < Constants.minDepth) && teacherEnabled)
 					line = TeacherStart(line.fen);
 				tds = new CTData(false);
@@ -492,7 +500,7 @@ namespace NSProgram
 				StudentWriteLine("ucinewgame");
 				StudentWriteLine($"position fen {tds.line.fen}");
 				StudentWriteLine(Constants.accuracyGo);
-				WriteLine($"{Program.accuracy.number} {tds.line.fen}");
+				WriteLine($"{Program.accuracy.index} {tds.line.fen}");
 			}
 		}
 
@@ -538,9 +546,9 @@ namespace NSProgram
 				CTData tdg = GetTData();
 				if (!tdg.finished)
 					continue;
-				if (tdg.best != String.Empty)
+				if (tdg.bestMove != String.Empty)
 				{
-					bool r = Program.test.GetResult(tdg.best);
+					bool r = Program.test.GetResult(tdg.bestMove);
 					Program.test.SetResult(r);
 					string sr = r ? "ok" : "fail";
 					WriteLine($"{sr} ({Program.test.resultOk} : {Program.test.resultFail})");

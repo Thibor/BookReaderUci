@@ -8,8 +8,7 @@ namespace NSProgram
 {
 	internal class CAccuracy
 	{
-		int index = -1;
-		public int number = 1;
+		public int index = 0;
 		double centyPawns = 0;
 		int count = 0;
 		double bst = 0;
@@ -30,8 +29,7 @@ namespace NSProgram
 
 		public void Reset()
 		{
-			index = -1;
-			number = 1;
+			index = 0;
 			inaccuracies = 0;
 			mistakes = 0;
 			blunders = 0;
@@ -84,13 +82,14 @@ namespace NSProgram
 			return centyPawns / count;
 		}
 
-		public bool Next()
+		public bool NextLine(out MSLine line)
 		{
+			line = null;
 			if (index >= fenList.Count)
 				return false;
-			index++;
-			number++;
+			line = fenList[fenList.Count - ++index];
 			return true;
 		}
+
 	}
 }

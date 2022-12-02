@@ -213,26 +213,6 @@ namespace NSProgram
 			return result / Count;
 		}
 
-		public void ResetNoBlunders()
-		{
-			for (int n = 0; n < Count; n++)
-			{
-				MSLine msl = this[n];
-				if (msl.GetLoss() < Constants.blunders)
-					msl.depth = 0;
-			}
-		}
-
-		public void DeleteNoBlunders()
-		{
-			for (int n = Count - 1; n >= 0; n--)
-			{
-				MSLine msl = this[n];
-				if (msl.GetLoss() < Constants.blunders)
-					RemoveAt(n);
-			}
-		}
-
 		public void SaveToFile()
 		{
 			string last = String.Empty;

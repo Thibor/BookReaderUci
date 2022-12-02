@@ -208,9 +208,6 @@ namespace NSProgram
 							Constants.minDepth = uci.GetInt(2, Constants.minDepth);
 							teacher.AccuracyUpdate();
 							break;
-						case "delete":
-							accuracy.fenList.DeleteNoBlunders();
-							break;
 					}
 				}
 				if (uci.command == "test")
