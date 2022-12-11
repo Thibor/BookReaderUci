@@ -9,7 +9,7 @@ namespace NSProgram
 {
 	public class CBook
 	{
-		public int maxRecords = 0;
+		public int maxRecords = 10000;
 		public const string defExt = ".uci";
 		string path = $"Book{defExt}";
 		public readonly string name = "BookReaderUci";
@@ -36,7 +36,8 @@ namespace NSProgram
 		public void AddMate(List<string> uci)
 		{
 			AddUci(uci);
-			DeleteMate(moves.Count - maxRecords);
+			if (maxRecords > 0)
+				DeleteMate(moves.Count - maxRecords);
 			Save();
 		}
 
@@ -88,6 +89,7 @@ namespace NSProgram
 
 		public void Delete()
 		{
+			if(maxRecords>0)
 			Delete(moves.Count - maxRecords);
 		}
 
@@ -218,7 +220,18 @@ namespace NSProgram
 						sw.WriteLine(u);
 				}
 			}
+			if (Program.isLog)
+				SaveLog();
 			return true;
+		}
+
+		void SaveLog()
+		{
+			string last = moves.Last();
+			for (int n = 0; n < 10; n++)
+					if (moves[moves.Count - 2 - n].Length <= last.Length)
+						return;
+			Program.log.Add($"moves {last}");
 		}
 
 		public bool SavePgn(string p)
@@ -256,6 +269,28 @@ namespace NSProgram
 			}
 			File.WriteAllLines(path, listPgn);
 			return true;
+		}
+
+		public void ShowInfo()
+		{
+			int minL = int.MaxValue;
+			int maxL = int.MinValue;
+			int minM = 0;
+			int maxM = 0;
+			foreach(string l in moves)
+			{
+				if (minL > l.Length)
+				{
+					minL = l.Length;
+					minM = l.Split().Length;
+				}
+				if (maxL < l.Length)
+				{
+					maxL = l.Length;
+					maxM = l.Split().Length;
+				}
+			}
+			Console.WriteLine($"moves length ({minM} - {maxM})");
 		}
 
 	}

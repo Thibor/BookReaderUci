@@ -5,12 +5,13 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using RapIni;
+using RapLog;
 
 namespace NSProgram
 {
 	static class Program
 	{
-
+		public static bool isLog = false;
 		public static CChessExt chess = new CChessExt();
 		public static CAccuracy accuracy = new CAccuracy();
 		public static CTest test = new CTest();
@@ -18,6 +19,7 @@ namespace NSProgram
 		public static CBook book = new CBook();
 		public static CUci uci = new CUci();
 		public static CRapIni ini = new CRapIni();
+		public static CRapLog log = new CRapLog();
 		public static string teacherFile = String.Empty;
 		public static string studentFile = String.Empty;
 
@@ -71,6 +73,7 @@ namespace NSProgram
 			test.LoadFen();
 			int missingIndex = 0;
 			bool isW = false;
+			bool isInfo = false;
 			bool bookRead = false;
 			int bookLimitW = 0;
 			int bookLimitR = 0;
@@ -99,6 +102,14 @@ namespace NSProgram
 					case "-w":
 						ax = ac;
 						isW = true;
+						break;
+					case "-log"://add log
+						ax = ac;
+						isLog = true;
+						break;
+					case "-info":
+						ax = ac;
+						isInfo = true;
 						break;
 					default:
 						switch (ax)
@@ -176,6 +187,8 @@ namespace NSProgram
 				Console.WriteLine("info string student on");
 			if (book.moves.Count > 0)
 				Console.WriteLine($"info string book on {book.moves.Count:N0} lines");
+			if (isInfo)
+				book.ShowInfo();
 			do
 			{
 				string msg = String.IsNullOrEmpty(Constants.command) ? Console.ReadLine().Trim() : Constants.command;
@@ -256,6 +269,9 @@ namespace NSProgram
 						case "save":
 							book.Save(uci.GetValue(2, 0));
 							Console.WriteLine("The book has been saved");
+							break;
+						case "info":
+							book.ShowInfo();
 							break;
 						default:
 							Console.WriteLine($"Unknown command [{uci.tokens[1]}]");

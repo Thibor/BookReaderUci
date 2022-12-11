@@ -9,9 +9,11 @@ To use this program you need install  <a href="https://dotnet.microsoft.com/down
 **-bf** opening Book File name<br/>
 **-ef** chess Engine File name<br/>
 **-ea** chess Engine Arguments<br/>
-**-w** add moves to the book<br/>
+**-w** Write new moves to the book<br/>
 **-lr** Limit maximum ply depth when Read from book (default 0) 0 means no limit<br/>
 **-lw** Limit maximum ply depth when Write to book (default 0) 0 means no limit<br/>
+**-log** Create LOG file<br/>
+**-info** show additional INFOrmation<br/>
 **-tf** Teacher File name - teacher is a program used to update the accuracy.fen file<br/>
 **-sf** Student File name - student is a program used to be tested<br/>
 **-acd** Analysis Count Depth<br/>

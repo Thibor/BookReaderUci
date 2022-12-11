@@ -34,8 +34,6 @@ namespace NSProgram
 
 	internal class CTeacher
 	{
-		string student = String.Empty;
-		string teacher = String.Empty;
 		public bool teacherEnabled = false;
 		public bool studentEnabled = false;
 		public bool stoped = false;
@@ -314,7 +312,6 @@ namespace NSProgram
 			teacherEnabled = false;
 			if (File.Exists(teacherFile))
 			{
-				teacher = teacherFile;
 				teacherProcess = new Process();
 				teacherProcess.StartInfo.FileName = teacherFile;
 				teacherProcess.StartInfo.WorkingDirectory = Path.GetDirectoryName(teacherFile);
@@ -342,7 +339,6 @@ namespace NSProgram
 			studentEnabled = false;
 			if (File.Exists(studentFile))
 			{
-				student = studentFile;
 				studentProcess = new Process();
 				studentProcess.StartInfo.FileName = studentFile;
 				studentProcess.StartInfo.WorkingDirectory = Path.GetDirectoryName(studentFile);
@@ -440,11 +436,15 @@ namespace NSProgram
 		{
 			if (!PrepareStudents())
 				return;
+			int count = Program.accuracy.fenList.Count;
 			history.Clear();
 			Program.accuracy.fenList.SortRandom();
 			foreach (string student in students)
 				AccuracyStart(student);
+			int del = count - Program.accuracy.fenList.Count;
+			WriteLine($"deleted {del}");
 			WriteLine("finish");
+			Console.Beep();
 			File.WriteAllLines("accuracy history.txt", history);
 		}
 
@@ -482,8 +482,9 @@ namespace NSProgram
 					string msg = $"move {tdg.bestMove} best {tdg.line.First().move} delta {delta}";
 					Program.accuracy.Add(tdg.line.fen, msg, best, score);
 					WriteLine($"{msg} accuracy {Program.accuracy.GetAccuracy():N2}");
-					if ((Constants.teacher == Constants.student) && ((delta > Constants.mistakes)) || (tdg.line.GetLoss() < Constants.blunders))
+					if ((Constants.teacher == Constants.student) && ((delta > Constants.mistakes) || (tdg.line.GetLoss() < Constants.blunders)))
 					{
+						Program.accuracy.index--;
 						Program.accuracy.fenList.DeleteFen(tdg.line.fen);
 						Program.accuracy.fenList.SaveToFile();
 					}
@@ -516,6 +517,7 @@ namespace NSProgram
 			foreach (string student in students)
 				TestStart(student);
 			WriteLine("finish");
+			Console.Beep();
 			File.WriteAllLines("test history.txt", history);
 		}
 
