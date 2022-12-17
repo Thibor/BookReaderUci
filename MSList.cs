@@ -1,7 +1,7 @@
-﻿using System;
+﻿using NSChess;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using NSChess;
 
 namespace NSProgram
 {
@@ -196,11 +196,11 @@ namespace NSProgram
 			return (c * 100) / Count;
 		}
 
-		public int CountBlunders()
+		public int CountFail()
 		{
 			int result = 0;
 			foreach (MSLine msl in this)
-				if (msl.GetLoss() >= Constants.blunders)
+				if (msl.GetLoss() < Constants.blunders)
 					result++;
 			return result;
 		}

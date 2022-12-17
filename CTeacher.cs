@@ -4,27 +4,30 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using RapLog;
+using System.Globalization;
 
 namespace NSProgram
 {
 	class CTData
 	{
-		public bool finished = true;
+		public bool ready = false;
 		public bool stop = false;
-		public string moves = String.Empty;
+		public bool done = false;
+		public string moves = string.Empty;
 		public short bestScore = 0;
-		public string bestMove = String.Empty;
+		public string bestMove = string.Empty;
 		public MSLine line = new MSLine();
 
 		public CTData(bool finished)
 		{
-			this.finished = finished;
+			this.ready = finished;
 		}
 
 		public void Assign(CTData td)
 		{
-			finished = td.finished;
+			ready = td.ready;
 			stop = td.stop;
+			done = td.done;
 			moves = td.moves;
 			bestScore = td.bestScore;
 			bestMove = td.bestMove;
@@ -150,11 +153,24 @@ namespace NSProgram
 				if (!String.IsNullOrEmpty(e.Data))
 				{
 					uci.SetMsg(e.Data);
+					if (uci.command == "Final")
+					{
+						double d = 0;
+						CTData td = GetTData();
+						if (uci.GetValue("evaluation", out string eval))
+							d = Convert.ToDouble(eval, CultureInfo.InvariantCulture.NumberFormat) * 100.0;
+						td.done = true;
+						td.bestScore = (short)d;
+						SetTData(td);
+						return;
+					}
+
 					if (uci.command == "bestmove")
 					{
 						CTData td = GetTData();
 						uci.GetValue("bestmove", out td.bestMove);
-						td.finished = true;
+						td.ready = true;
+						td.done = true;
 						SetTData(td);
 						return;
 					}
@@ -261,7 +277,7 @@ namespace NSProgram
 			while (true)
 			{
 				CTData tdg = GetTData();
-				if (!tdg.finished)
+				if (!tdg.ready)
 					continue;
 				if (tdg.bestMove == String.Empty)
 					return null;
@@ -286,7 +302,7 @@ namespace NSProgram
 						string moves = String.Join(" ", listUci.ToArray());
 						if (!String.IsNullOrEmpty(moves))
 						{
-							tds.finished = false;
+							tds.ready = false;
 							tds.line.Assign(line);
 							SetTData(tds);
 							TeacherWriteLine($"position fen {line.fen}");
@@ -368,7 +384,49 @@ namespace NSProgram
 			return false;
 		}
 
-		#region update
+		#region evaluation
+
+		public void EvaluationUpdate()
+		{
+			if (!PrepareTeachers())
+				return;
+			SetTeacher();
+			Program.evaluation.Reset();
+			int index = 0;
+			while (true)
+			{
+				CTData tdg = GetTData();
+				if (!tdg.ready && !tdg.done)
+					continue;
+				if (tdg.done)
+				{
+					if (tdg.bestScore == 0)
+						Program.evaluation.DeleteFen(tdg.line.fen);
+					else
+						Program.evaluation.CurElement.eval = tdg.bestScore;
+					if (!Program.evaluation.Next())
+						break;
+				}
+				CElementE e = Program.evaluation.CurElement;
+				if (e == null)
+					break;
+				CTData tds = new CTData(false);
+				tds.line.fen = e.fen;
+				SetTData(tds);
+				TeacherWriteLine("ucinewgame");
+				TeacherWriteLine($"position fen {tds.line.fen}");
+				TeacherWriteLine(Constants.evalGo);
+				Console.WriteLine($"{++index} fen {tds.line.fen}");
+				if(index % 10000 == 0)
+					Program.evaluation.SaveToFile();
+			}
+			Program.evaluation.SaveToFile();
+			Console.WriteLine("finish");
+		}
+
+		#endregion evaluation
+
+		#region accuracy
 
 		public void AccuracyUpdate()
 		{
@@ -379,7 +437,7 @@ namespace NSProgram
 			while (true)
 			{
 				CTData tdg = GetTData();
-				if (!tdg.finished)
+				if (!tdg.ready)
 					continue;
 				if (tdg.bestMove != String.Empty)
 				{
@@ -428,10 +486,6 @@ namespace NSProgram
 			Console.WriteLine("finish");
 		}
 
-		#endregion update
-
-		#region accuracy
-
 		public void AccuracyStart()
 		{
 			if (!PrepareStudents())
@@ -472,7 +526,7 @@ namespace NSProgram
 			while (true)
 			{
 				CTData tdg = GetTData();
-				if (!tdg.finished)
+				if (!tdg.ready)
 					continue;
 				if (tdg.bestMove != String.Empty)
 				{
@@ -546,7 +600,7 @@ namespace NSProgram
 			while (true)
 			{
 				CTData tdg = GetTData();
-				if (!tdg.finished)
+				if (!tdg.ready)
 					continue;
 				if (tdg.bestMove != String.Empty)
 				{
@@ -560,7 +614,7 @@ namespace NSProgram
 						return;
 				}
 				tds = new CTData(false);
-				tds.line.fen = Program.test.Fen;
+				tds.line.fen = Program.test.CurElement.Fen;
 				SetTData(tds);
 				StudentWriteLine("ucinewgame");
 				StudentWriteLine($"position fen {tds.line.fen}");

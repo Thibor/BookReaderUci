@@ -14,7 +14,8 @@ namespace NSProgram
 		public static bool isLog = false;
 		public static CChessExt chess = new CChessExt();
 		public static CAccuracy accuracy = new CAccuracy();
-		public static CTest test = new CTest();
+		public static CEvaluationList evaluation = new CEvaluationList();
+		public static CTestList test = new CTestList();
 		public static CTeacher teacher = new CTeacher();
 		public static CBook book = new CBook();
 		public static CUci uci = new CUci();
@@ -63,6 +64,8 @@ namespace NSProgram
 			{
 				Constants.accuracyGo = ini.Read("accurac>go", Constants.accuracyGo);
 				Constants.accuracyFen = ini.Read("accuracy>fen", Constants.accuracyFen);
+				Constants.evalGo = ini.Read("test>go", Constants.evalGo);
+				Constants.evalFen = ini.Read("test>fen", Constants.evalFen);
 				Constants.testGo = ini.Read("test>go", Constants.testGo);
 				Constants.testFen = ini.Read("test>fen", Constants.testFen);
 				Constants.teacher = ini.Read("teacher", Constants.teacher);
@@ -70,7 +73,8 @@ namespace NSProgram
 				Constants.command = ini.Read("command", Constants.command);
 			}
 			accuracy.LoadFen();
-			test.LoadFen();
+			evaluation.LoadFromFile();
+			test.LoadFromFile();
 			int missingIndex = 0;
 			bool isW = false;
 			bool isInfo = false;
@@ -172,11 +176,13 @@ namespace NSProgram
 			{
 				int minD = accuracy.fenList.GetMinDepth();
 				int proD = accuracy.fenList.GetProDepth(minD);
-				int nb = accuracy.fenList.Count - accuracy.fenList.CountBlunders();
-				Console.WriteLine($"info string accuracy on {accuracy.fenList.Count} fens depth {minD} ({proD}%) delete {nb} moves {accuracy.fenList.CountMoves():N0}");
+				Console.WriteLine($"info string accuracy on fens {accuracy.fenList.Count} fail {accuracy.fenList.CountFail()} depth {minD} ({proD}%) avg moves {accuracy.fenList.CountMoves():N0}");
 			}
-			if (test.fenList.Count > 0)
-				Console.WriteLine($"info string test on {test.fenList.Count:N0} fens");
+
+			if (evaluation.Count > 0)
+				Console.WriteLine($"info string evaluation on fens {evaluation.Count:N0} fail {evaluation.CountFail()}");
+			if (test.Count > 0)
+				Console.WriteLine($"info string test on fens {test.Count:N0}");
 			if (!book.Load(bookFile))
 				if (!book.Load($"{bookFile}.uci"))
 					if (!book.Load($"{bookFile}.pgn"))
@@ -223,12 +229,24 @@ namespace NSProgram
 							break;
 					}
 				}
+				if (uci.command == "evaluation")
+				{
+					switch (uci.tokens[1])
+					{
+						case "reset":
+							evaluation.Fill();
+							break;
+						case "update":
+							teacher.EvaluationUpdate();
+							break;
+					}
+				}
 				if (uci.command == "test")
 				{
 					switch (uci.tokens[1])
 					{
 						case "start":
-							if (test.fenList.Count == 0)
+							if (test.Count == 0)
 							{
 								Console.WriteLine("file \"test fen.txt\" unavabile");
 								break;

@@ -61,7 +61,7 @@
     <LangVersion>7.3</LangVersion>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>Release\</OutputPath>
@@ -91,11 +91,12 @@
     <Compile Include="CBook.cs" />
     <Compile Include="CChess.cs" />
     <Compile Include="CChessExt.cs" />
+    <Compile Include="CEvaluationList.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="CRapIni.cs" />
     <Compile Include="CRapLog.cs" />
     <Compile Include="CTeacher.cs" />
-    <Compile Include="CTest.cs" />
+    <Compile Include="CTestList.cs" />
     <Compile Include="CUci.cs" />
     <Compile Include="MSList.cs" />
     <Compile Include="Program.cs" />

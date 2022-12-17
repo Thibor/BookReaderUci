@@ -277,8 +277,10 @@ namespace NSProgram
 			int maxL = int.MinValue;
 			int minM = 0;
 			int maxM = 0;
+			double sum = 0;
 			foreach(string l in moves)
 			{
+				sum += l.Length + 1;
 				if (minL > l.Length)
 				{
 					minL = l.Length;
@@ -290,7 +292,8 @@ namespace NSProgram
 					maxM = l.Split().Length;
 				}
 			}
-			Console.WriteLine($"moves length ({minM} - {maxM})");
+			sum = sum / (moves.Count * 5);
+			Console.WriteLine($"info string moves average length {sum:N2} ({minM} - {maxM})");
 		}
 
 	}
