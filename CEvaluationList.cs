@@ -36,13 +36,25 @@ namespace NSProgram
 
 	internal class CEvaluationList : List<CElementE>
 	{
-		int index = -1;
+		public int index = -1;
+		public double centyLoss = 0;
+		public int centyCount = 0;
 
 		public int CurIndex
 		{
 			get
 			{
 				return Count - 1 - index;
+			}
+		}
+
+		public int Limit
+		{
+			get
+			{
+				if ((Constants.limit > 0) && (Constants.limit < Count))
+					return Constants.limit;
+				return Count;
 			}
 		}
 
@@ -56,9 +68,23 @@ namespace NSProgram
 			}
 		}
 
+		public void AddScore(int best,int score)
+		{
+			int delta = Math.Abs(best - score);
+			centyCount++;
+			centyLoss += delta;
+		}
+
+		public double GetAccuracy()
+		{
+			return centyLoss / (centyCount +1);
+		}
+
 		public void Reset()
 		{
 			index = -1;
+			centyLoss = 0;
+			centyCount = 0;
 			Next();
 		}
 
@@ -102,7 +128,7 @@ namespace NSProgram
 
 		public void SaveToFile()
 		{
-			string last = String.Empty;
+			string lastFen = String.Empty;
 			using (FileStream fs = File.Open(Constants.evalFen, FileMode.Create, FileAccess.Write, FileShare.None))
 			using (StreamWriter sw = new StreamWriter(fs))
 			{
@@ -110,9 +136,10 @@ namespace NSProgram
 				{
 					string l = e.Line;
 					string[] tokens = l.Split(' ');
-					if (last == tokens[0])
+					string curFen = $"{tokens[0]} {tokens[1]}";
+					if (lastFen == curFen)
 						continue;
-					last = tokens[0];
+					lastFen = curFen;
 					sw.WriteLine(l);
 				}
 			}
@@ -122,7 +149,7 @@ namespace NSProgram
 		{
 			do
 			{
-				if (index >= Count - 1)
+				if (index >= Limit - 1)
 					return false;
 				index++;
 				if (CurElement.fen == String.Empty)
@@ -132,7 +159,7 @@ namespace NSProgram
 					SaveToFile();
 					continue;
 				}
-			} while (CurElement.eval != 0);
+			} while (CurElement.eval == 0);
 			return true;
 		}
 

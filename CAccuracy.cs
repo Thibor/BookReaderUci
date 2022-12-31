@@ -9,8 +9,8 @@ namespace NSProgram
 	internal class CAccuracy
 	{
 		public int index = 0;
-		double centyPawns = 0;
-		int count = 0;
+		double centyLoss = 0;
+		int centyCount = 0;
 		double bst = 0;
 		public int inaccuracies = 0;
 		public int mistakes = 0;
@@ -34,17 +34,17 @@ namespace NSProgram
 			mistakes = 0;
 			blunders = 0;
 			bst = 0;
-			count = 0;
-			centyPawns = 0;
+			centyLoss = 0;
+			centyCount = 0;
 			bstSb = 0;
 			bstSc = 0;
 			bstFen = String.Empty;
 			bstMsg = String.Empty;
 		}
 
-		public void Add(string fen, string msg, int sb, int sc)
+		public void AddScore(string fen, string msg, int best, int score)
 		{
-			int delta = sb - sc;
+			int delta = Math.Abs(best - score);
 			if (delta >= Constants.blunders)
 			{
 				delta = Constants.blunders;
@@ -54,14 +54,14 @@ namespace NSProgram
 				mistakes++;
 			else if (delta > Constants.inaccuracies)
 				inaccuracies++;
-			double val = (double)delta / Math.Abs(sb + sc);
-			count++;
-			centyPawns += delta;
+			double val = (double)delta / Math.Abs(best + score);
+			centyCount++;
+			centyLoss += delta;
 			if (bst < val)
 			{
 				bst = val;
-				bstSb = sb;
-				bstSc = sc;
+				bstSb = best;
+				bstSc = score;
 				bstFen = fen;
 				bstMsg = msg;
 			}
@@ -79,7 +79,7 @@ namespace NSProgram
 
 		public double GetAccuracy()
 		{
-			return centyPawns / count;
+			return centyLoss / (centyCount+1);
 		}
 
 		public bool NextLine(out MSLine line)

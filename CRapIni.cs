@@ -3,24 +3,39 @@ using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RapIni
 {
-	public class CRapIni:List<string>
+	public class CRapIni : List<string>
 	{
-		readonly string name = String.Empty;
-		readonly string path = String.Empty;
+		bool loaded = false;
+		string name = String.Empty;
+		string path = String.Empty;
+
+		bool Loaded
+		{
+			get
+			{
+				if (loaded)
+					return true;
+				Load();
+				return loaded;
+			}
+		}
 
 		public CRapIni()
 		{
 			name = Assembly.GetExecutingAssembly().GetName().Name;
 			path = new FileInfo(name + ".ini").FullName.ToString();
+			Load();
 		}
 
 		public CRapIni(string name)
 		{
 			this.name = name;
 			path = new FileInfo(name).FullName.ToString();
+			Load();
 		}
 
 		string ListToString(List<string> list)
@@ -35,52 +50,79 @@ namespace RapIni
 			return new List<string>(s.Split(','));
 		}
 
-		public void Write(string key, string value)
+		public void Write(string key, string value, bool save = true)
 		{
-			if (Load())
-			{
-				DeleteKey(key);
-				if (!String.IsNullOrEmpty(value))
-					Add($"{key}>{value}");
+			DeleteKey(key);
+			if (!String.IsNullOrEmpty(value))
+				Add($"{key}>{value}");
+			if (save)
 				Save();
-			}
-
 		}
 
-		public void Write(string key, bool value)
+		public void Write(string key, bool value, bool save = true)
 		{
-			Write(key, value.ToString());
+			Write(key, value.ToString(), save);
 		}
 
-		public void Write(string key, int value)
+		public void Write(string key, int value, bool save = true)
 		{
-			Write(key, value.ToString());
+			Write(key, value.ToString(), save);
 		}
 
-		public void Write(string key, decimal value)
+		public void Write(string key, decimal value, bool save = true)
 		{
-			Write(key, value.ToString());
+			Write(key, value.ToString(), save);
 		}
 
-		public void Write(string key, double value)
+		public void Write(string key, double value, bool save = true)
 		{
-			Write(key, value.ToString());
+			Write(key, value.ToString(), save);
 		}
 
-		public void Write(string key, Color value)
+		public void Write(string key, List<string> value, bool save = true)
 		{
-			Write(key, ColorTranslator.ToHtml(value));
+			Write(key, ListToString(value), save);
 		}
 
-		public void Write(string key, List<string> value)
+		public void Write(string key, int[] arr, bool save = true)
 		{
-			Write(key, ListToString(value));
+			Write(key, String.Join(",", arr), save);
+		}
+
+		public void Write(string key, List<int> list, bool save = true)
+		{
+			Write(key, list.ToArray(), save);
+		}
+
+		public void Write(string key, string[] arrStr, bool save = true)
+		{
+			Write(key, String.Join(",", arrStr), save);
+		}
+
+		public List<int> ReadListInt(string key)
+		{
+			List<int> list = new List<int>();
+			string[] arrStr = ReadArrStr(key);
+			foreach (string e in arrStr)
+				list.Add(Convert.ToInt32(e));
+			return list;
+		}
+
+		public List<string> ReadListStr(string key)
+		{
+			string[] arrStr = ReadArrStr(key);
+			return arrStr.ToList();
+		}
+
+		public string[] ReadArrStr(string key)
+		{
+			string s = Read(key);
+			char[] sepearator = { ',' };
+			return s.Split(sepearator, StringSplitOptions.RemoveEmptyEntries);
 		}
 
 		public string Read(string key, string def = "")
 		{
-			if (Load())
-			{
 				string[] ak = key.Split(new[] { '>' }, StringSplitOptions.RemoveEmptyEntries);
 				foreach (string e in this)
 				{
@@ -90,17 +132,10 @@ namespace RapIni
 						if (ae.Length > ak.Length)
 							return ae[ak.Length];
 						else
-							return "";
+							return string.Empty;
 					}
 				}
-			}
 			return def;
-		}
-
-		public Color ReadColor(string key, Color def)
-		{
-			string s = Read(key, ColorTranslator.ToHtml(def));
-			return ColorTranslator.FromHtml(s);
 		}
 
 		public decimal ReadDecimal(string key, decimal def = 0)
@@ -140,51 +175,38 @@ namespace RapIni
 		public List<string> ReadKeyList(string key)
 		{
 			List<string> result = new List<string>();
-			if (Load())
+			string[] ak = key.Split(new[] { '>' }, StringSplitOptions.RemoveEmptyEntries);
+			foreach (string e in this)
 			{
-				string[] ak = key.Split(new[] { '>' }, StringSplitOptions.RemoveEmptyEntries);
-				foreach (string e in this)
+				if (e.IndexOf($"{key}>") == 0)
 				{
-					if (e.IndexOf($"{key}>") == 0)
-					{
-						string[] ae = e.Split(new[] { '>' }, StringSplitOptions.RemoveEmptyEntries);
-						string s = "";
-						if (ae.Length > ak.Length)
-							s = ae[ak.Length];
-						if (!result.Contains(s))
-							result.Add(s);
-					}
+					string[] ae = e.Split(new[] { '>' }, StringSplitOptions.RemoveEmptyEntries);
+					string s = String.Empty;
+					if (ae.Length > ak.Length)
+						s = ae[ak.Length];
+					if (!result.Contains(s))
+						result.Add(s);
 				}
 			}
 			return result;
 		}
 
-
-		private void DeleteKeyFromFile(string key)
-		{
-			if (Load())
-			{
-				for (int n = Count - 1; n >= 0; n--)
-				{
-
-					if (this[n].IndexOf($"{key}>") == 0)
-						RemoveAt(n);
-				}
-				Save();
-			}
-		}
-
 		public void DeleteKey(string key)
 		{
-			DeleteKeyFromFile(key);
+			for (int n = Count - 1; n >= 0; n--)
+				if (this[n].IndexOf($"{key}>") == 0)
+					RemoveAt(n);
 		}
 
-		private bool Save()
+		public bool Save()
 		{
+			if (!Loaded)
+				return false;
 			Sort();
+			string pt = path + ".tmp";
 			try
 			{
-				using (FileStream fs = File.Open(path, FileMode.Create, FileAccess.Write, FileShare.None))
+				using (FileStream fs = File.Open(pt, FileMode.Create, FileAccess.Write, FileShare.None))
 				using (StreamWriter sw = new StreamWriter(fs))
 				{
 					foreach (String line in this)
@@ -199,13 +221,50 @@ namespace RapIni
 			{
 				return false;
 			}
+			try
+			{
+				if (File.Exists(path) && File.Exists(pt))
+					File.Delete(path);
+			}
+			catch
+			{
+				return false;
+			}
+			try
+			{
+				if (!File.Exists(path) && File.Exists(pt))
+					File.Move(pt, path);
+			}
+			catch
+			{
+				return false;
+			}
 			return true;
 		}
 
 
-		bool Load()
+		public bool Load()
 		{
+			loaded = Load(path);
+			return loaded;
+		}
+
+		public bool Load(string p)
+		{
+			path = p;
+			string pt = path + ".tmp";
+			try
+			{
+				if (!File.Exists(path) && File.Exists(pt))
+					File.Move(pt, path);
+			}
+			catch
+			{
+				return false;
+			}
 			Clear();
+			if (!File.Exists(path))
+				return true;
 			try
 			{
 				using (FileStream fs = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read))
@@ -230,6 +289,14 @@ namespace RapIni
 		public bool Exists()
 		{
 			return File.Exists(path);
+		}
+
+		public bool KeyExists(string key)
+		{
+			foreach (string e in this)
+				if (e.IndexOf($"{key}>") == 0)
+					return true;
+			return false;
 		}
 
 	}

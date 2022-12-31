@@ -176,24 +176,64 @@ namespace NSProgram
 					RemoveAt(n);
 		}
 
-		public int GetMinDepth()
+		public int DeleteMoves(int moves)
 		{
-			int result = int.MaxValue;
-			if (Count == 0)
-				return 0;
-			foreach (MSLine msl in this)
-				if (result > msl.depth)
-					result = msl.depth;
+			int result = 0;
+			for (int n = Count - 1; n >= 0; n--)
+				if (this[n].Count == moves)
+				{
+					result++;
+					RemoveAt(n);
+				}
+			SaveToFile();
 			return result;
 		}
 
-		public int GetProDepth(int d)
+		public void GetDepth(out int min, out int max)
 		{
-			int c = 0;
+			min = int.MaxValue;
+			max = 0;
 			foreach (MSLine msl in this)
-				if (msl.depth == d)
-					c++;
-			return (c * 100) / Count;
+			{
+				if (min > msl.depth)
+					min = msl.depth;
+				if (max < msl.depth)
+					max = msl.depth;
+			}
+			if (min > max)
+				min = 0;
+		}
+
+		public void GetMoves(out int min, out int max)
+		{
+			min = int.MaxValue;
+			max = 0;
+			foreach (MSLine msl in this)
+			{
+				if (min > msl.Count)
+					min = msl.Count;
+				if (max < msl.Count)
+					max = msl.Count;
+			}
+			if (min > max)
+				min = 0;
+		}
+
+		public int CountMoves(out int min)
+		{
+			int result = 0;
+			min = int.MaxValue;
+			foreach (MSLine msl in this)
+			{
+				if (min > msl.Count)
+				{
+					min = msl.Count;
+					result = 1;
+				}
+				else if (min == msl.Count)
+					result++;
+			}
+			return result;
 		}
 
 		public int CountFail()
@@ -203,14 +243,6 @@ namespace NSProgram
 				if (msl.GetLoss() < Constants.blunders)
 					result++;
 			return result;
-		}
-
-		public double CountMoves()
-		{
-			double result = 0;
-			foreach (MSLine msl in this)
-					result+=msl.Count;
-			return result / Count;
 		}
 
 		public void SaveToFile()
@@ -255,20 +287,6 @@ namespace NSProgram
 			Sort(delegate (MSLine l1, MSLine l2)
 			{
 				return String.Compare(l1.fen, l2.fen, StringComparison.Ordinal);
-			});
-		}
-
-		public void SortAccuracy()
-		{
-			Sort(delegate (MSLine l1, MSLine l2)
-			{
-				int d1 = l1.depth;
-				int d2 = l2.depth;
-				if (d1 > Constants.minDepth)
-					d1 = Constants.minDepth;
-				if (d2 > Constants.minDepth)
-					d2 = Constants.minDepth;
-				return d2 - d1;
 			});
 		}
 

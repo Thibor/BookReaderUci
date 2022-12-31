@@ -14,7 +14,7 @@ namespace NSProgram
 		public bool stop = false;
 		public bool done = false;
 		public string moves = string.Empty;
-		public short bestScore = 0;
+		public int bestScore = 0;
 		public string bestMove = string.Empty;
 		public MSLine line = new MSLine();
 
@@ -45,11 +45,13 @@ namespace NSProgram
 		Process teacherProcess = new Process();
 		Process studentProcess = new Process();
 		readonly CUci uci = new CUci();
+		readonly CMod mod = new CMod();
 		public List<string> students = new List<string>();
 		public List<string> teachers = new List<string>();
 		public List<string> history = new List<string>();
-		public CRapLog testReport = new CRapLog("test report.log");
 		public CRapLog accuracyReport = new CRapLog("accuracy report.log");
+		public CRapLog evaluationReport = new CRapLog("evaluation report.log");
+		public CRapLog testReport = new CRapLog("test report.log");
 
 		public CTData GetTData()
 		{
@@ -67,6 +69,16 @@ namespace NSProgram
 			{
 				tData.Assign(td);
 			}
+		}
+
+		void ConsoleWrite(string s)
+		{
+			Console.Write($"\r{s}{new string(' ', Console.WindowWidth - s.Length - 1)}");
+		}
+
+		void ConsoleWriteLine(string s)
+		{
+			Console.WriteLine($"\r{s}{new string(' ', Console.WindowWidth - s.Length - 1)}");
 		}
 
 		public void Quit()
@@ -160,7 +172,16 @@ namespace NSProgram
 						if (uci.GetValue("evaluation", out string eval))
 							d = Convert.ToDouble(eval, CultureInfo.InvariantCulture.NumberFormat) * 100.0;
 						td.done = true;
-						td.bestScore = (short)d;
+						td.bestScore = Convert.ToInt32(d);
+						SetTData(td);
+						return;
+					}
+
+					if (uci.command == "evaluation")
+					{
+						CTData td = GetTData();
+						td.done = true;
+						td.bestScore = uci.GetInt("evaluation");
 						SetTData(td);
 						return;
 					}
@@ -384,48 +405,6 @@ namespace NSProgram
 			return false;
 		}
 
-		#region evaluation
-
-		public void EvaluationUpdate()
-		{
-			if (!PrepareTeachers())
-				return;
-			SetTeacher();
-			Program.evaluation.Reset();
-			int index = 0;
-			while (true)
-			{
-				CTData tdg = GetTData();
-				if (!tdg.ready && !tdg.done)
-					continue;
-				if (tdg.done)
-				{
-					if (tdg.bestScore == 0)
-						Program.evaluation.DeleteFen(tdg.line.fen);
-					else
-						Program.evaluation.CurElement.eval = tdg.bestScore;
-					if (!Program.evaluation.Next())
-						break;
-				}
-				CElementE e = Program.evaluation.CurElement;
-				if (e == null)
-					break;
-				CTData tds = new CTData(false);
-				tds.line.fen = e.fen;
-				SetTData(tds);
-				TeacherWriteLine("ucinewgame");
-				TeacherWriteLine($"position fen {tds.line.fen}");
-				TeacherWriteLine(Constants.evalGo);
-				Console.WriteLine($"{++index} fen {tds.line.fen}");
-				if(index % 10000 == 0)
-					Program.evaluation.SaveToFile();
-			}
-			Program.evaluation.SaveToFile();
-			Console.WriteLine("finish");
-		}
-
-		#endregion evaluation
-
 		#region accuracy
 
 		public void AccuracyUpdate()
@@ -505,20 +484,20 @@ namespace NSProgram
 		void AccuracyStart(string student)
 		{
 			string name = Path.GetFileNameWithoutExtension(student);
-			WriteLine(student);
+			WriteLine(name);
 			if (!SetStudent(student))
 			{
 				WriteLine($"{student} not avabile");
 				return;
 			}
-			StudentAccuracyStart();
+			AccuracyStudent();
 			int winChanceSou = Convert.ToInt32(Program.accuracy.WinningChances(Program.accuracy.bstSb) * 100.0);
 			int winChanceDes = Convert.ToInt32(Program.accuracy.WinningChances(Program.accuracy.bstSc) * 100.0);
 			accuracyReport.Add($"loss {Program.accuracy.GetAccuracy():N2} count {Program.accuracy.index} {name} blunders {Program.accuracy.blunders} mistakes {Program.accuracy.mistakes} inaccuracies {Program.accuracy.inaccuracies} {Program.accuracy.bstFen} {Program.accuracy.bstMsg} ({Program.accuracy.bstSb} => {Program.accuracy.bstSc}) ({winChanceSou} => {winChanceDes})");
 			StudentTerminate();
 		}
 
-		public void StudentAccuracyStart()
+		public double AccuracyStudent()
 		{
 			CTData tds = new CTData(true);
 			SetTData(tds);
@@ -534,19 +513,18 @@ namespace NSProgram
 					int score = tdg.line.GetScore(tdg.bestMove);
 					int delta = best - score;
 					string msg = $"move {tdg.bestMove} best {tdg.line.First().move} delta {delta}";
-					Program.accuracy.Add(tdg.line.fen, msg, best, score);
-					WriteLine($"{msg} accuracy {Program.accuracy.GetAccuracy():N2}");
+					Program.accuracy.AddScore(tdg.line.fen, msg, best, score);
 					if ((Constants.teacher == Constants.student) && ((delta > Constants.mistakes) || (tdg.line.GetLoss() < Constants.blunders)))
 					{
 						Program.accuracy.index--;
 						Program.accuracy.fenList.DeleteFen(tdg.line.fen);
 						Program.accuracy.fenList.SaveToFile();
 					}
-					if ((Constants.maxTest > 0) && (Program.accuracy.index >= Constants.maxTest))
-						return;
+					if ((Constants.limit > 0) && (Program.accuracy.index >= Constants.limit))
+						break;
 				}
 				if (!Program.accuracy.NextLine(out MSLine line))
-					return;
+					break;
 				if ((line.depth < Constants.minDepth) && teacherEnabled)
 					line = TeacherStart(line.fen);
 				tds = new CTData(false);
@@ -555,11 +533,184 @@ namespace NSProgram
 				StudentWriteLine("ucinewgame");
 				StudentWriteLine($"position fen {tds.line.fen}");
 				StudentWriteLine(Constants.accuracyGo);
-				WriteLine($"{Program.accuracy.index} {tds.line.fen}");
+				ConsoleWrite($"\rprogress {Program.accuracy.index * 100.0 / Program.accuracy.fenList.Count:N2}% ({Program.accuracy.GetAccuracy():N2})");
 			}
+			return Program.accuracy.GetAccuracy();
+		}
+
+		public void AccuracyMod()
+		{
+			if (!PrepareStudents())
+				return;
+			string student = students[0];
+			if (!SetStudent(student))
+			{
+				WriteLine($"{student} not avabile");
+				return;
+			}
+			string mn = string.Empty;
+			string name = Path.GetFileNameWithoutExtension(student);
+			WriteLine($"{name} ready");
+			mod.SetMode("accuracy");
+			while (true)
+			{
+				mod.Start();
+				if (mn != mod.ModName)
+				{
+					mn = mod.ModName;
+					int lc = mod.CurList.Count;
+					ConsoleWriteLine($"{mn} {lc}");
+				}
+				double score = AccuracyStudent();
+				double result = mod.bstScore - score;
+				int del = mod.Del;
+				int index = mod.index + 1;
+				if (mod.bstScore == 0)
+					ConsoleWriteLine($"score {score:N2}");
+				else
+					ConsoleWriteLine($"score {score:N2} best {mod.bstScore:N2} index {index} delta {del} result {result:N2}");
+				if (!mod.SetScore(score))
+					break;
+			}
+			Console.Beep();
+			Console.WriteLine("finish");
 		}
 
 		#endregion accuracy
+
+		#region evaluation
+
+		public void EvaluationUpdate()
+		{
+			if (!PrepareTeachers())
+				return;
+			SetTeacher();
+			Program.evaluation.Reset();
+			int index = 0;
+			while (true)
+			{
+				CTData tdg = GetTData();
+				if (!tdg.ready && !tdg.done)
+					continue;
+				if (tdg.done)
+				{
+					if (tdg.bestScore == 0)
+						Program.evaluation.DeleteFen(tdg.line.fen);
+					else
+						Program.evaluation.CurElement.eval = tdg.bestScore;
+					if (!Program.evaluation.Next())
+						break;
+				}
+				CElementE e = Program.evaluation.CurElement;
+				if (e == null)
+					break;
+				CTData tds = new CTData(false);
+				tds.line.fen = e.fen;
+				SetTData(tds);
+				TeacherWriteLine("ucinewgame");
+				TeacherWriteLine($"position fen {tds.line.fen}");
+				TeacherWriteLine(Constants.evalGo);
+				Console.WriteLine($"{++index} fen {tds.line.fen}");
+				if (index % 10000 == 0)
+					Program.evaluation.SaveToFile();
+			}
+			Program.evaluation.SaveToFile();
+			Console.WriteLine("finish");
+		}
+
+		public void EvaluationStart()
+		{
+			if (!PrepareStudents())
+				return;
+			history.Clear();
+			foreach (string student in students)
+				EvaluationStart(student);
+			WriteLine("finish");
+			Console.Beep();
+			File.WriteAllLines("evaluation history.txt", history);
+		}
+
+		void EvaluationStart(string student)
+		{
+			string name = Path.GetFileNameWithoutExtension(student);
+			WriteLine(student);
+			if (!SetStudent(student))
+			{
+				WriteLine($"{student} not avabile");
+				return;
+			}
+			EvaluationStudent();
+			evaluationReport.Add($"loss {Program.evaluation.GetAccuracy():N2} count {Program.evaluation.centyCount} {name}");
+			StudentTerminate();
+		}
+
+		double EvaluationStudent()
+		{
+			CTData tds = new CTData(true);
+			SetTData(tds);
+			Program.evaluation.Reset();
+			while (true)
+			{
+				CTData tdg = GetTData();
+				if (!tdg.ready && !tdg.done)
+					continue;
+				if (tdg.done)
+				{
+					Program.evaluation.AddScore(Program.evaluation.CurElement.eval, tdg.bestScore);
+					if (!Program.evaluation.Next())
+						break;
+
+				}
+				tds = new CTData(false);
+				tds.line.fen = Program.evaluation.CurElement.fen;
+				SetTData(tds);
+				StudentWriteLine("ucinewgame");
+				StudentWriteLine($"position fen {tds.line.fen}");
+				StudentWriteLine(Constants.evalGo);
+				ConsoleWrite($"progress {Program.evaluation.index * 100.0 / Program.evaluation.Limit:N2}% {Program.evaluation.GetAccuracy():N2}");
+			}
+			return Program.evaluation.GetAccuracy();
+		}
+
+		public void EvaluationMod()
+		{
+			if (!PrepareStudents())
+				return;
+			string student = students[0];
+			if (!SetStudent(student))
+			{
+				WriteLine($"{student} not avabile");
+				return;
+			}
+			string mn = string.Empty;
+			string name = Path.GetFileNameWithoutExtension(student);
+			WriteLine($"{name} ready");
+			mod.SetMode("evaluation");
+			while (true)
+			{
+				mod.Start();
+				if (mn != mod.ModName)
+				{
+					mn = mod.ModName;
+					int lc = mod.CurList.Count;
+					ConsoleWriteLine($"{mn} {lc}");
+				}
+				double score = EvaluationStudent();
+				double result = mod.bstScore - score;
+				int del = mod.Del;
+				int index = mod.index + 1;
+				if (mod.bstScore == 0)
+					ConsoleWriteLine($"score {score:N2}");
+				else
+					ConsoleWriteLine($"score {score:N2} best {mod.bstScore:N2} index {index} delta {del} result {result:N2}");
+				if (!mod.SetScore(score))
+					break;
+			}
+			WriteLine("finish");
+			Console.Beep();
+		}
+
+		#endregion evaluation
 
 		#region test
 
@@ -584,7 +735,7 @@ namespace NSProgram
 				WriteLine($"{student} not avabile");
 				return;
 			}
-			StudentTestStart();
+			TestStudent();
 			int ok = Program.test.resultOk;
 			int fail = Program.test.resultFail;
 			double pro = (ok * 100.0) / (ok + fail);
@@ -592,7 +743,7 @@ namespace NSProgram
 			StudentTerminate();
 		}
 
-		public void StudentTestStart()
+		public void TestStudent()
 		{
 			CTData tds = new CTData(true);
 			SetTData(tds);
@@ -610,7 +761,7 @@ namespace NSProgram
 					WriteLine($"{sr} ({Program.test.resultOk} : {Program.test.resultFail})");
 					if (!Program.test.Next())
 						return;
-					if ((Constants.maxTest > 0) && (Program.test.number >= Constants.maxTest))
+					if ((Constants.limit > 0) && (Program.test.number >= Constants.limit))
 						return;
 				}
 				tds = new CTData(false);

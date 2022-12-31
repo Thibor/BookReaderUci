@@ -5,7 +5,7 @@ namespace NSProgram
 	internal class Constants
 	{
 		public static int minDepth = 16;
-		public static int maxTest = 0;
+		public static int limit = 0;
 		public static int inaccuracies = 50;
 		public static int mistakes = 100;
 		public static int blunders = 300;

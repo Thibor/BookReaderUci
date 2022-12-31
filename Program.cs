@@ -55,6 +55,21 @@ namespace NSProgram
 			CTRL_LOGOFF_EVENT = 5,
 			CTRL_SHUTDOWN_EVENT = 6
 		}
+		public static bool Confirm(string title)
+		{
+			ConsoleKey response;
+			do
+			{
+				Console.Write($"{ title } [y/n] ");
+				response = Console.ReadKey(false).Key;
+				if (response != ConsoleKey.Enter)
+				{
+					Console.WriteLine();
+				}
+			} while (response != ConsoleKey.Y && response != ConsoleKey.N);
+
+			return (response == ConsoleKey.Y);
+		}
 
 		static void Main(string[] args)
 		{
@@ -71,6 +86,7 @@ namespace NSProgram
 				Constants.teacher = ini.Read("teacher", Constants.teacher);
 				Constants.student = ini.Read("student", Constants.student);
 				Constants.command = ini.Read("command", Constants.command);
+				Constants.limit = ini.ReadInt("limit", Constants.limit);
 			}
 			accuracy.LoadFen();
 			evaluation.LoadFromFile();
@@ -174,9 +190,9 @@ namespace NSProgram
 			}
 			if (accuracy.fenList.Count > 0)
 			{
-				int minD = accuracy.fenList.GetMinDepth();
-				int proD = accuracy.fenList.GetProDepth(minD);
-				Console.WriteLine($"info string accuracy on fens {accuracy.fenList.Count} fail {accuracy.fenList.CountFail()} depth {minD} ({proD}%) avg moves {accuracy.fenList.CountMoves():N0}");
+				accuracy.fenList.GetDepth(out int minD,out int maxD);
+				accuracy.fenList.GetMoves(out int minM, out int maxM);
+				Console.WriteLine($"info string accuracy on fens {accuracy.fenList.Count} fail {accuracy.fenList.CountFail()} depth ({minD} - {maxD}) moves ({minM} - {maxM})");
 			}
 
 			if (evaluation.Count > 0)
@@ -214,18 +230,32 @@ namespace NSProgram
 				{
 					switch (uci.tokens[1])
 					{
+						case "update":
+							accuracy.fenList.GetDepth(out int minD, out _);
+							minD = uci.GetInt(2, ++minD);
+							if (Constants.minDepth < minD)
+								Constants.minDepth = minD;
+							teacher.AccuracyUpdate();
+							break;
+						case "delete":
+							int cm = accuracy.fenList.CountMoves(out int minM);
+							if (Confirm($"Delete {cm} fens"))
+							{
+								cm = accuracy.fenList.DeleteMoves(minM);
+								Console.WriteLine($"{cm} fens deleted");
+							}
+							break;
 						case "start":
 							if (accuracy.fenList.Count == 0)
 							{
 								Console.WriteLine("file \"accuracy fen.txt\" unavabile");
 								break;
 							}
-							Constants.maxTest = uci.GetInt(2, accuracy.fenList.Count);
+							Constants.limit = uci.GetInt(2, accuracy.fenList.Count);
 							teacher.AccuracyStart();
 							break;
-						case "update":
-							Constants.minDepth = uci.GetInt(2, Constants.minDepth);
-							teacher.AccuracyUpdate();
+						case "mod":
+							teacher.AccuracyMod();
 							break;
 					}
 				}
@@ -239,6 +269,12 @@ namespace NSProgram
 						case "update":
 							teacher.EvaluationUpdate();
 							break;
+						case "start":
+							teacher.EvaluationStart();
+							break;
+						case "mod":
+							teacher.EvaluationMod();
+							break;
 					}
 				}
 				if (uci.command == "test")
@@ -251,7 +287,7 @@ namespace NSProgram
 								Console.WriteLine("file \"test fen.txt\" unavabile");
 								break;
 							}
-							Constants.maxTest = uci.GetInt(2, accuracy.fenList.Count);
+							Constants.limit = uci.GetInt(2, accuracy.fenList.Count);
 							teacher.TestStart();
 							break;
 					}
