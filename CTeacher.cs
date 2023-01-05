@@ -165,7 +165,7 @@ namespace NSProgram
 				if (!String.IsNullOrEmpty(e.Data))
 				{
 					uci.SetMsg(e.Data);
-					if (uci.First() == "Final")
+					if (uci.command == "Final")
 					{
 						double d = 0;
 						CTData td = GetTData();
@@ -177,7 +177,7 @@ namespace NSProgram
 						return;
 					}
 
-					if (uci.First() == "evaluation")
+					if (uci.command == "evaluation")
 					{
 						CTData td = GetTData();
 						td.done = true;
@@ -186,7 +186,7 @@ namespace NSProgram
 						return;
 					}
 
-					if (uci.First() == "bestmove")
+					if (uci.command == "bestmove")
 					{
 						CTData td = GetTData();
 						uci.GetValue("bestmove", out td.bestMove);

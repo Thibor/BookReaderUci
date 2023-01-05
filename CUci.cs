@@ -4,6 +4,7 @@ namespace NSUci
 {
 	class CUci
 	{
+		public string command = string.Empty;
 		public string[] tokens;
 
 		public int GetIndex(string key, int def = -1)
@@ -66,19 +67,10 @@ namespace NSUci
 			return result.Trim();
 		}
 
-		public string First()
-		{
-			return tokens.Length == 0 ? String.Empty : tokens[0];
-		}
-
-		public string Last()
-		{
-			return tokens.Length == 0 ? String.Empty : tokens[tokens.Length - 1];
-		}
-
 		public void SetMsg(string msg)
 		{
 			tokens = msg.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+			command = tokens.Length == 0 ? String.Empty : tokens[0];
 		}
 
 	}

@@ -228,7 +228,7 @@ namespace NSProgram
 				}
 				uci.SetMsg(msg);
 				int count = book.moves.Count;
-				if (uci.First() == "accuracy")
+				if (uci.command == "accuracy")
 				{
 					switch (uci.tokens[1])
 					{
@@ -261,7 +261,7 @@ namespace NSProgram
 							break;
 					}
 				}
-				if (uci.First() == "evaluation")
+				if (uci.command == "evaluation")
 				{
 					switch (uci.tokens[1])
 					{
@@ -279,7 +279,7 @@ namespace NSProgram
 							break;
 					}
 				}
-				if (uci.First() == "test")
+				if (uci.command == "test")
 				{
 					switch (uci.tokens[1])
 					{
@@ -294,19 +294,19 @@ namespace NSProgram
 							break;
 					}
 				}
-				if (uci.First() == "book")
+				if (uci.command == "book")
 				{
 					switch (uci.tokens[1])
 					{
 						case "addfile":
-							if (!book.AddFile(uci.GetValue(2, 0)))
+							if (!book.AddFile(uci.GetValue("addfile")))
 								Console.WriteLine("File not found");
 							else
-								Console.WriteLine($"{(book.moves.Count - count):N0} lines have been added");
+								Console.WriteLine($"{book.moves.Count - count:N0} lines have been added");
 							break;
 						case "adduci":
-							book.moves.Add(uci.GetValue(2, 0));
-							Console.WriteLine($"{(book.moves.Count - count):N0} lines have been added");
+							book.moves.Add(uci.GetValue("adduci"));
+							Console.WriteLine($"{book.moves.Count - count:N0} lines have been added");
 							break;
 						case "clear":
 							book.Clear();
@@ -317,13 +317,13 @@ namespace NSProgram
 							Console.WriteLine($"{c:N0} moves was deleted");
 							break;
 						case "load":
-							if (!book.Load(uci.GetValue(2, 0)))
+							if (!book.Load(uci.GetValue("load")))
 								Console.WriteLine("File not found");
 							else
 								Console.WriteLine($"{book.moves.Count:N0} lines in the book");
 							break;
 						case "save":
-							book.Save(uci.GetValue(2, 0));
+							book.Save(uci.GetValue("save"));
 							Console.WriteLine("The book has been saved");
 							break;
 						case "info":
@@ -363,9 +363,9 @@ namespace NSProgram
 					}
 					continue;
 				}
-				if ((uci.First() != "go") && (engineFile != String.Empty))
+				if ((uci.command != "go") && (engineFile != String.Empty))
 					myProcess.StandardInput.WriteLine(msg);
-				switch (uci.First())
+				switch (uci.command)
 				{
 					case "position":
 						bookRead = false;
@@ -412,7 +412,7 @@ namespace NSProgram
 							myProcess.StandardInput.WriteLine(msg);
 						break;
 				}
-			} while (uci.First() != "quit");
+			} while (uci.command != "quit");
 			teacher.Terminate();
 		}
 
