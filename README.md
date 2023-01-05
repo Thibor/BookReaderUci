@@ -26,7 +26,7 @@ To use this program you need install  <a href="https://dotnet.microsoft.com/down
 **book delete** [number x] - delete x moves from the book<br/>
 **book clear** - clear all moves from the book<br/>
 **book getoption** - show options<br/>
-**book setoption name [option name] value [option value]** - set option
+**book setoption name [option name] value [option value]** - set option<br/>
 **accuracy start** - start test for the average centipawn loss, this command need file "accuracy fen.txt" and student file<br/>
 **accuracy update [depth]** - update file "accuracy.fen" this command need teacher file<br/>
 **accuracy delete** - delete positions from "accuracy.fen" where player cannot make blunder<br/>
