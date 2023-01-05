@@ -4,7 +4,6 @@ namespace NSUci
 {
 	class CUci
 	{
-		public string command;
 		public string[] tokens;
 
 		public int GetIndex(string key, int def = -1)
@@ -15,19 +14,19 @@ namespace NSUci
 			return def;
 		}
 
-		public int GetInt(int index,int def = 0)
+		public string GetStr(string key, string def = "")
 		{
-			if ((index < 0)||(index >= tokens.Length))
+			int index = GetIndex(key) + 1;
+			if ((index <= 0) || (index >= tokens.Length))
 				return def;
-			if (Int32.TryParse(tokens[index], out int result))
-				return result;
-			return def;
+			return tokens[index];
 		}
 
 		public int GetInt(string key, int def = 0)
 		{
-			int index = GetIndex(key);
-			return GetInt(index + 1,def);
+			if (Int32.TryParse(GetStr(key), out int result))
+				return result;
+			return def;
 		}
 
 		public bool GetValue(string name, out string value)
@@ -38,44 +37,49 @@ namespace NSUci
 				value = tokens[i];
 				return true;
 			}
-			value = "";
+			value = String.Empty;
 			return false;
+		}
+
+		public string GetValue(string start)
+		{
+			int istart = GetIndex(start, tokens.Length);
+			return GetValue(istart + 1);
 		}
 
 		public string GetValue(string start, string end)
 		{
 			int istart = GetIndex(start, tokens.Length);
 			int iend = GetIndex(end, tokens.Length);
-			return GetValue(istart+1,iend-1);
+			return GetValue(istart + 1, iend - 1);
 		}
 
-		public string GetValue(int start, int end)
+		public string GetValue(int start, int end = 0)
 		{
-			if (end < start)
+			string result = string.Empty;
+			if (start < 0)
+				start = 0;
+			if ((end < start) || (end >= tokens.Length))
 				end = tokens.Length - 1;
-			string value = String.Empty;
 			for (int n = start; n <= end; n++)
-			{
-				if (n >= tokens.Length)
-					break;
-				value += $" {tokens[n]}";
-			}
-			return value.Trim();
+				result += $" {tokens[n]}";
+			return result.Trim();
+		}
+
+		public string First()
+		{
+			return tokens.Length == 0 ? String.Empty : tokens[0];
 		}
 
 		public string Last()
 		{
-			if (tokens.Length > 0)
-				return tokens[tokens.Length - 1];
-			return String.Empty;
+			return tokens.Length == 0 ? String.Empty : tokens[tokens.Length - 1];
 		}
 
 		public void SetMsg(string msg)
 		{
-			if (String.IsNullOrEmpty(msg))
-				msg = String.Empty;
-			tokens = msg.Split(new[] { ' '}, StringSplitOptions.RemoveEmptyEntries);
-			command = tokens.Length > 0 ? tokens[0] : String.Empty;
+			tokens = msg.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
 		}
+
 	}
 }

@@ -273,6 +273,8 @@ namespace NSProgram
 
 		public void ShowInfo()
 		{
+			if (moves.Count == 0)
+				return;
 			int minL = int.MaxValue;
 			int maxL = int.MinValue;
 			int minM = 0;

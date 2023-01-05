@@ -18,9 +18,9 @@ namespace NSProgram
 		public string bestMove = string.Empty;
 		public MSLine line = new MSLine();
 
-		public CTData(bool finished)
+		public CTData(bool ready)
 		{
-			this.ready = finished;
+			this.ready = ready;
 		}
 
 		public void Assign(CTData td)
@@ -165,7 +165,7 @@ namespace NSProgram
 				if (!String.IsNullOrEmpty(e.Data))
 				{
 					uci.SetMsg(e.Data);
-					if (uci.command == "Final")
+					if (uci.First() == "Final")
 					{
 						double d = 0;
 						CTData td = GetTData();
@@ -177,7 +177,7 @@ namespace NSProgram
 						return;
 					}
 
-					if (uci.command == "evaluation")
+					if (uci.First() == "evaluation")
 					{
 						CTData td = GetTData();
 						td.done = true;
@@ -186,7 +186,7 @@ namespace NSProgram
 						return;
 					}
 
-					if (uci.command == "bestmove")
+					if (uci.First() == "bestmove")
 					{
 						CTData td = GetTData();
 						uci.GetValue("bestmove", out td.bestMove);

@@ -222,17 +222,19 @@ namespace NSProgram
 					Console.WriteLine("book addfile [filename].[umo|uci|png] - add moves to the book from file");
 					Console.WriteLine("book adduci [uci] - add moves in uci format to the book");
 					Console.WriteLine("book clear - clear all moves from the book");
+					Console.WriteLine("book getoption - show options");
+					Console.WriteLine("book setoption name [option name] value [option value] - set option");
 					continue;
 				}
 				uci.SetMsg(msg);
 				int count = book.moves.Count;
-				if (uci.command == "accuracy")
+				if (uci.First() == "accuracy")
 				{
 					switch (uci.tokens[1])
 					{
 						case "update":
 							accuracy.fenList.GetDepth(out int minD, out _);
-							minD = uci.GetInt(2, ++minD);
+							minD = uci.GetInt("update", ++minD);
 							if (Constants.minDepth < minD)
 								Constants.minDepth = minD;
 							teacher.AccuracyUpdate();
@@ -251,7 +253,7 @@ namespace NSProgram
 								Console.WriteLine("file \"accuracy fen.txt\" unavabile");
 								break;
 							}
-							Constants.limit = uci.GetInt(2, accuracy.fenList.Count);
+							Constants.limit = uci.GetInt("start", accuracy.fenList.Count);
 							teacher.AccuracyStart();
 							break;
 						case "mod":
@@ -259,7 +261,7 @@ namespace NSProgram
 							break;
 					}
 				}
-				if (uci.command == "evaluation")
+				if (uci.First() == "evaluation")
 				{
 					switch (uci.tokens[1])
 					{
@@ -277,7 +279,7 @@ namespace NSProgram
 							break;
 					}
 				}
-				if (uci.command == "test")
+				if (uci.First() == "test")
 				{
 					switch (uci.tokens[1])
 					{
@@ -287,12 +289,12 @@ namespace NSProgram
 								Console.WriteLine("file \"test fen.txt\" unavabile");
 								break;
 							}
-							Constants.limit = uci.GetInt(2, accuracy.fenList.Count);
+							Constants.limit = uci.GetInt("test", accuracy.fenList.Count);
 							teacher.TestStart();
 							break;
 					}
 				}
-				if (uci.command == "book")
+				if (uci.First() == "book")
 				{
 					switch (uci.tokens[1])
 					{
@@ -311,7 +313,7 @@ namespace NSProgram
 							Console.WriteLine("Book is empty");
 							break;
 						case "delete":
-							int c = book.Delete(uci.GetInt(2));
+							int c = book.Delete(uci.GetInt("delete"));
 							Console.WriteLine($"{c:N0} moves was deleted");
 							break;
 						case "load":
@@ -327,15 +329,43 @@ namespace NSProgram
 						case "info":
 							book.ShowInfo();
 							break;
+						case "getoption":
+							Console.WriteLine($"option name Book file type string default book{CBook.defExt}");
+							Console.WriteLine($"option name Write type check default false");
+							Console.WriteLine($"option name Log type check default false");
+							Console.WriteLine($"option name Limit read moves type spin default {bookLimitR} min 0 max 100");
+							Console.WriteLine($"option name Limit write moves type spin default {bookLimitW} min 0 max 100");
+							Console.WriteLine("optionok");
+							break;
+						case "setoption":
+							switch (uci.GetValue("name", "value").ToLower())
+							{
+								case "book file":
+									book.Load(uci.GetValue("value"));
+									break;
+								case "write":
+									isW = uci.GetValue("value") == "true";
+									break;
+								case "log":
+									isLog = uci.GetValue("value") == "true";
+									break;
+								case "limit read":
+									bookLimitR = uci.GetInt("value");
+									break;
+								case "limit write":
+									bookLimitW = uci.GetInt("value");
+									break;
+							}
+							break;
 						default:
 							Console.WriteLine($"Unknown command [{uci.tokens[1]}]");
 							break;
 					}
 					continue;
 				}
-				if ((uci.command != "go") && (engineFile != String.Empty))
+				if ((uci.First() != "go") && (engineFile != String.Empty))
 					myProcess.StandardInput.WriteLine(msg);
-				switch (uci.command)
+				switch (uci.First())
 				{
 					case "position":
 						bookRead = false;
@@ -382,8 +412,9 @@ namespace NSProgram
 							myProcess.StandardInput.WriteLine(msg);
 						break;
 				}
-			} while (uci.command != "quit");
+			} while (uci.First() != "quit");
 			teacher.Terminate();
 		}
+
 	}
 }
