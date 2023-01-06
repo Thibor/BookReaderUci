@@ -199,18 +199,11 @@ namespace NSProgram
 				Console.WriteLine($"info string evaluation on fens {evaluation.Count:N0} fail {evaluation.CountFail()}");
 			if (test.Count > 0)
 				Console.WriteLine($"info string test on fens {test.Count:N0}");
-			if (!book.Load(bookFile))
-				if (!book.Load($"{bookFile}.uci"))
-					if (!book.Load($"{bookFile}.pgn"))
-						book.Load($"{bookFile}{CBook.defExt}");
+			bool bookLoaded = SetBookFile(bookFile);
 			if (File.Exists(Constants.teacher))
 				Console.WriteLine("info string teacher on");
 			if (File.Exists(Constants.student))
 				Console.WriteLine("info string student on");
-			if (book.moves.Count > 0)
-				Console.WriteLine($"info string book on {book.moves.Count:N0} lines");
-			if (isInfo)
-				book.ShowInfo();
 			do
 			{
 				string msg = String.IsNullOrEmpty(Constants.command) ? Console.ReadLine().Trim() : Constants.command;
@@ -317,7 +310,7 @@ namespace NSProgram
 							Console.WriteLine($"{c:N0} moves was deleted");
 							break;
 						case "load":
-							if (!book.Load(uci.GetValue("load")))
+							if (!book.LoadFromFile(uci.GetValue("load")))
 								Console.WriteLine("File not found");
 							else
 								Console.WriteLine($"{book.moves.Count:N0} lines in the book");
@@ -341,7 +334,7 @@ namespace NSProgram
 							switch (uci.GetValue("name", "value").ToLower())
 							{
 								case "book file":
-									book.Load(uci.GetValue("value"));
+									SetBookFile(uci.GetValue("value"));
 									break;
 								case "write":
 									isW = uci.GetValue("value") == "true";
@@ -414,6 +407,28 @@ namespace NSProgram
 				}
 			} while (uci.command != "quit");
 			teacher.Terminate();
+
+			bool SetBookFile(string bn)
+			{
+				bookFile = bn;
+				bookLoaded = book.LoadFromFile(bookFile);
+				if (bookLoaded)
+				{
+					if ((book.moves.Count > 0) && File.Exists(book.path))
+					{
+						FileInfo fi = new FileInfo(book.path);
+						long mpl = (fi.Length / 5) / book.moves.Count;
+						Console.WriteLine($"info string book on {book.moves.Count:N0} lines {mpl} mpl");
+					}
+					if (isW)
+						Console.WriteLine($"info string write on");
+					if (isInfo)
+						book.ShowInfo();
+				}
+				else
+					isW = false;
+				return bookLoaded;
+			}
 		}
 
 	}

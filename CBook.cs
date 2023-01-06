@@ -11,7 +11,7 @@ namespace NSProgram
 	{
 		public int maxRecords = 10000;
 		public const string defExt = ".uci";
-		string path = $"Book{defExt}";
+		public string path = String.Empty;
 		public readonly string name = "BookReaderUci";
 		public readonly string version = "2022-03-19";
 		public List<string> moves = new List<string>();
@@ -123,9 +123,8 @@ namespace NSProgram
 			return bstM;
 		}
 
-		public bool Load(string p)
+		public bool LoadFromFile(string p)
 		{
-			path = p;
 			moves.Clear();
 			return AddFile(p);
 		}
@@ -146,6 +145,7 @@ namespace NSProgram
 
 		bool AddFileUci(string p)
 		{
+			path = p;
 			using (FileStream fs = File.Open(p, FileMode.Open, FileAccess.Read, FileShare.Read))
 			using (StreamReader reader = new StreamReader(fs))
 			{
