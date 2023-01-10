@@ -328,7 +328,7 @@ namespace NSProgram
 							Console.WriteLine($"option name Log type check default false");
 							Console.WriteLine($"option name Limit read moves type spin default {bookLimitR} min 0 max 100");
 							Console.WriteLine($"option name Limit write moves type spin default {bookLimitW} min 0 max 100");
-							Console.WriteLine("optionok");
+							Console.WriteLine("optionend");
 							break;
 						case "setoption":
 							switch (uci.GetValue("name", "value").ToLower())
@@ -418,7 +418,7 @@ namespace NSProgram
 					{
 						FileInfo fi = new FileInfo(book.path);
 						long mpl = (fi.Length / 5) / book.moves.Count;
-						Console.WriteLine($"info string book on {book.moves.Count:N0} lines {mpl} mpl");
+						Console.WriteLine($"info string book on {book.moves.Count:N0} games {mpl} mpg");
 					}
 					if (isW)
 						Console.WriteLine($"info string write on");

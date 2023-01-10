@@ -295,7 +295,7 @@ namespace NSProgram
 				}
 			}
 			sum = sum / (moves.Count * 5);
-			Console.WriteLine($"info string moves average length {sum:N2} ({minM} - {maxM})");
+			Console.WriteLine($"info string moves average moves per game {sum:N2} ({minM} - {maxM})");
 		}
 
 	}
