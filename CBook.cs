@@ -76,17 +76,6 @@ namespace NSProgram
 			return c - moves.Count;
 		}
 
-		void ShowCountLines()
-		{
-			Console.WriteLine($"info string book {moves.Count:N0} lines");
-		}
-
-		public void Clear()
-		{
-			moves.Clear();
-			ShowCountLines();
-		}
-
 		public void Delete()
 		{
 			if(maxRecords>0)
@@ -294,7 +283,7 @@ namespace NSProgram
 					maxM = l.Split().Length;
 				}
 			}
-			sum = sum / (moves.Count * 5);
+			sum /= (moves.Count * 5);
 			Console.WriteLine($"info string moves average moves per game {sum:N2} ({minM} - {maxM})");
 		}
 

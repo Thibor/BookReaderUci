@@ -199,11 +199,11 @@ namespace NSProgram
 				Console.WriteLine($"info string evaluation on fens {evaluation.Count:N0} fail {evaluation.CountFail()}");
 			if (test.Count > 0)
 				Console.WriteLine($"info string test on fens {test.Count:N0}");
-			bool bookLoaded = SetBookFile(bookFile);
 			if (File.Exists(Constants.teacher))
 				Console.WriteLine("info string teacher on");
 			if (File.Exists(Constants.student))
 				Console.WriteLine("info string student on");
+			bool bookLoaded = SetBookFile(bookFile);
 			do
 			{
 				string msg = String.IsNullOrEmpty(Constants.command) ? Console.ReadLine().Trim() : Constants.command;
@@ -302,7 +302,7 @@ namespace NSProgram
 							Console.WriteLine($"{book.moves.Count - count:N0} lines have been added");
 							break;
 						case "clear":
-							book.Clear();
+							book.moves.Clear();
 							Console.WriteLine("Book is empty");
 							break;
 						case "delete":
@@ -334,7 +334,7 @@ namespace NSProgram
 							switch (uci.GetValue("name", "value").ToLower())
 							{
 								case "book file":
-									SetBookFile(uci.GetValue("value"));
+									bookFile = uci.GetValue("value");
 									break;
 								case "write":
 									isW = uci.GetValue("value") == "true";
@@ -349,6 +349,9 @@ namespace NSProgram
 									bookLimitW = uci.GetInt("value");
 									break;
 							}
+							break;
+						case "optionend":
+							SetBookFile(bookFile);
 							break;
 						default:
 							Console.WriteLine($"Unknown command [{uci.tokens[1]}]");
@@ -417,8 +420,8 @@ namespace NSProgram
 					if ((book.moves.Count > 0) && File.Exists(book.path))
 					{
 						FileInfo fi = new FileInfo(book.path);
-						long mpl = (fi.Length / 5) / book.moves.Count;
-						Console.WriteLine($"info string book on {book.moves.Count:N0} games {mpl} mpg");
+						long mpg = (fi.Length / 5) / book.moves.Count;
+						Console.WriteLine($"info string book on {book.moves.Count:N0} games ({mpg} moves per game)");
 					}
 					if (isW)
 						Console.WriteLine($"info string write on");
