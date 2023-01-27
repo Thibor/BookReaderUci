@@ -16,6 +16,7 @@ namespace NSProgram
 		public readonly string version = "2022-03-19";
 		public List<string> moves = new List<string>();
 		readonly CChessExt chess = new CChessExt();
+		public static Random rnd = new Random();
 
 		public void AddUci(string uci)
 		{
@@ -106,7 +107,7 @@ namespace NSProgram
 				{
 					string[] mr = cm.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 					if (mr.Length > mo.Length)
-						if (CChess.rnd.Next(++bstC) == 0)
+						if (rnd.Next(++bstC) == 0)
 							bstM = mr[mo.Length];
 				}
 			return bstM;
