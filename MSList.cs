@@ -282,6 +282,7 @@ namespace NSProgram
 			}
 			return Count > 0;
 		}
+
 		void SortFen()
 		{
 			Sort(delegate (MSLine l1, MSLine l2)

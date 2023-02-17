@@ -36,6 +36,7 @@ namespace NSProgram
 
 	internal class CEvaluationList : List<CElementE>
 	{
+		bool loaded = false;
 		public int index = -1;
 		public double centyLoss = 0;
 		public int centyCount = 0;
@@ -108,6 +109,9 @@ namespace NSProgram
 
 		public void LoadFromFile()
 		{
+			if (loaded)
+				return;
+			loaded = true;
 			string fn = Constants.evalFen;
 			Clear();
 			if (!File.Exists(fn))
@@ -124,6 +128,7 @@ namespace NSProgram
 						Add(e);
 					}
 			}
+			Console.WriteLine($"info string evaluation on fens {Count:N0} fail {CountFail()}");
 		}
 
 		public void SaveToFile()

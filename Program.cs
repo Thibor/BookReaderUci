@@ -88,9 +88,6 @@ namespace NSProgram
 				Constants.command = ini.Read("command", Constants.command);
 				Constants.limit = ini.ReadInt("limit", Constants.limit);
 			}
-			accuracy.LoadFen();
-			evaluation.LoadFromFile();
-			test.LoadFromFile();
 			int missingIndex = 0;
 			bool isW = false;
 			bool isInfo = false;
@@ -188,17 +185,6 @@ namespace NSProgram
 					Console.WriteLine("info string missing engine");
 				engineFile = String.Empty;
 			}
-			if (accuracy.fenList.Count > 0)
-			{
-				accuracy.fenList.GetDepth(out int minD,out int maxD);
-				accuracy.fenList.GetMoves(out int minM, out int maxM);
-				Console.WriteLine($"info string accuracy on fens {accuracy.fenList.Count} fail {accuracy.fenList.CountFail()} depth ({minD} - {maxD}) moves ({minM} - {maxM})");
-			}
-
-			if (evaluation.Count > 0)
-				Console.WriteLine($"info string evaluation on fens {evaluation.Count:N0} fail {evaluation.CountFail()}");
-			if (test.Count > 0)
-				Console.WriteLine($"info string test on fens {test.Count:N0}");
 			if (File.Exists(Constants.teacher))
 				Console.WriteLine("info string teacher on");
 			if (File.Exists(Constants.student))
@@ -226,6 +212,7 @@ namespace NSProgram
 					switch (uci.tokens[1])
 					{
 						case "update":
+							accuracy.LoadFromFile();
 							accuracy.fenList.GetDepth(out int minD, out _);
 							minD = uci.GetInt("update", ++minD);
 							if (Constants.minDepth < minD)
@@ -233,6 +220,7 @@ namespace NSProgram
 							teacher.AccuracyUpdate();
 							break;
 						case "delete":
+							accuracy.LoadFromFile();
 							int cm = accuracy.fenList.CountMoves(out int minM);
 							if (Confirm($"Delete {cm} fens"))
 							{
@@ -241,6 +229,7 @@ namespace NSProgram
 							}
 							break;
 						case "start":
+							accuracy.LoadFromFile();
 							if (accuracy.fenList.Count == 0)
 							{
 								Console.WriteLine("file \"accuracy fen.txt\" unavabile");
@@ -250,6 +239,7 @@ namespace NSProgram
 							teacher.AccuracyStart();
 							break;
 						case "mod":
+							accuracy.LoadFromFile();
 							teacher.AccuracyMod();
 							break;
 					}
@@ -259,15 +249,19 @@ namespace NSProgram
 					switch (uci.tokens[1])
 					{
 						case "reset":
+							evaluation.LoadFromFile();
 							evaluation.Fill();
 							break;
 						case "update":
+							evaluation.LoadFromFile();
 							teacher.EvaluationUpdate();
 							break;
 						case "start":
+							evaluation.LoadFromFile();
 							teacher.EvaluationStart();
 							break;
 						case "mod":
+							evaluation.LoadFromFile();
 							teacher.EvaluationMod();
 							break;
 					}
@@ -277,6 +271,7 @@ namespace NSProgram
 					switch (uci.tokens[1])
 					{
 						case "start":
+							test.LoadFromFile();
 							if (test.Count == 0)
 							{
 								Console.WriteLine("file \"test fen.txt\" unavabile");
@@ -323,7 +318,7 @@ namespace NSProgram
 							book.ShowInfo();
 							break;
 						case "getoption":
-							Console.WriteLine($"option name Book file type string default book{CBook.defExt}");
+							Console.WriteLine($"option name book_file type string default book{CBook.defExt}");
 							Console.WriteLine($"option name Write type check default false");
 							Console.WriteLine($"option name Log type check default false");
 							Console.WriteLine($"option name Limit read moves type spin default {bookLimitR} min 0 max 100");
@@ -333,7 +328,7 @@ namespace NSProgram
 						case "setoption":
 							switch (uci.GetValue("name", "value").ToLower())
 							{
-								case "book file":
+								case "book_file":
 									bookFile = uci.GetValue("value");
 									break;
 								case "write":

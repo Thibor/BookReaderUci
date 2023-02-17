@@ -23,6 +23,7 @@ namespace NSProgram
 
 	internal class CTestList:List<CElementT>
 	{
+		bool loaded = false;
 		int index = -1;
 		public int number = 1;
 		public int resultOk = 0;
@@ -59,6 +60,9 @@ namespace NSProgram
 
 		public void LoadFromFile()
 		{
+			if (loaded)
+				return;
+			loaded = true;
 			string fn = Constants.testFen;
 			Clear();
 			if (!File.Exists(fn))
@@ -75,6 +79,7 @@ namespace NSProgram
 						Add(t);
 					}
 			}
+			Console.WriteLine($"info string test on fens {Count:N0}");
 		}
 
 		public bool Next()

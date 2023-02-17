@@ -8,6 +8,7 @@ namespace NSProgram
 {
 	internal class CAccuracy
 	{
+		bool loaded = false;
 		public int index = 0;
 		double centyLoss = 0;
 		int centyCount = 0;
@@ -22,9 +23,15 @@ namespace NSProgram
 		public MSList fenList = new MSList();
 
 
-		public void LoadFen()
+		public void LoadFromFile()
 		{
+			if (loaded)
+				return;
+			loaded = true;
 			fenList.LoadFen();
+			fenList.GetDepth(out int minD, out int maxD);
+			fenList.GetMoves(out int minM, out int maxM);
+			Console.WriteLine($"info string accuracy on fens {fenList.Count} fail {fenList.CountFail()} depth ({minD} - {maxD}) moves ({minM} - {maxM})");
 		}
 
 		public void Reset()
