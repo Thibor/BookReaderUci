@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ namespace RapIni
 	public class CRapIni : List<string>
 	{
 		bool loaded = false;
-		string name = String.Empty;
+		readonly string name = String.Empty;
 		string path = String.Empty;
 
 		bool Loaded
@@ -50,53 +50,51 @@ namespace RapIni
 			return new List<string>(s.Split(','));
 		}
 
-		public void Write(string key, string value, bool save = true)
+		public void Write(string key, string value)
 		{
 			DeleteKey(key);
 			if (!String.IsNullOrEmpty(value))
 				Add($"{key}>{value}");
-			if (save)
-				Save();
 		}
 
-		public void Write(string key, bool value, bool save = true)
+		public void Write(string key, bool value)
 		{
-			Write(key, value.ToString(), save);
+			Write(key, value.ToString());
 		}
 
-		public void Write(string key, int value, bool save = true)
+		public void Write(string key, int value)
 		{
-			Write(key, value.ToString(), save);
+			Write(key, value.ToString());
 		}
 
-		public void Write(string key, decimal value, bool save = true)
+		public void Write(string key, decimal value)
 		{
-			Write(key, value.ToString(), save);
+			Write(key, value.ToString());
 		}
 
-		public void Write(string key, double value, bool save = true)
+		public void Write(string key, double value)
 		{
-			Write(key, value.ToString(), save);
+			Write(key, Convert.ToString(value, CultureInfo.InvariantCulture.NumberFormat));
 		}
 
-		public void Write(string key, List<string> value, bool save = true)
+		public void Write(string key, List<string> value)
 		{
-			Write(key, ListToString(value), save);
+			Write(key, ListToString(value));
 		}
 
-		public void Write(string key, int[] arr, bool save = true)
+		public void Write(string key, int[] arr)
 		{
-			Write(key, String.Join(",", arr), save);
+			Write(key, String.Join(",", arr));
 		}
 
-		public void Write(string key, List<int> list, bool save = true)
+		public void Write(string key, List<int> list)
 		{
-			Write(key, list.ToArray(), save);
+			Write(key, list.ToArray());
 		}
 
-		public void Write(string key, string[] arrStr, bool save = true)
+		public void Write(string key, string[] arrStr)
 		{
-			Write(key, String.Join(",", arrStr), save);
+			Write(key, String.Join(",", arrStr));
 		}
 
 		public List<int> ReadListInt(string key)
@@ -121,14 +119,16 @@ namespace RapIni
 			return s.Split(sepearator, StringSplitOptions.RemoveEmptyEntries);
 		}
 
-		public string Read(string key, string def = "")
+		public string Read(string key, string def = "",bool restore = false)
 		{
-				string[] ak = key.Split(new[] { '>' }, StringSplitOptions.RemoveEmptyEntries);
+			if (restore)
+				return def;
+				string[] ak = key.Split('>');
 				foreach (string e in this)
 				{
 					if (e.IndexOf($"{key}>") == 0)
 					{
-						string[] ae = e.Split(new[] { '>' }, StringSplitOptions.RemoveEmptyEntries);
+						string[] ae = e.Split('>');
 						if (ae.Length > ak.Length)
 							return ae[ak.Length];
 						else
@@ -138,29 +138,37 @@ namespace RapIni
 			return def;
 		}
 
-		public decimal ReadDecimal(string key, decimal def = 0)
+		public decimal ReadDecimal(string key, decimal def = 0,bool restore = false)
 		{
+			if (restore)
+				return def;
 			string s = Read(key, Convert.ToString(def));
 			decimal.TryParse(s, out decimal result);
 			return result;
 		}
 
-		public double ReadDouble(string key, double def = 0)
+		public double ReadDouble(string key, double def = 0,bool restore = false)
 		{
-			string s = Read(key, Convert.ToString(def));
-			double.TryParse(s, out double result);
+			if (restore)
+				return def;
+			string s = Read(key, Convert.ToString(def, CultureInfo.InvariantCulture.NumberFormat));
+			double.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture.NumberFormat, out double result);
 			return result;
 		}
 
-		public int ReadInt(string key, int def = 0)
+		public int ReadInt(string key, int def = 0,bool restore = false)
 		{
+			if (restore)
+				return def;
 			string s = Read(key, Convert.ToString(def));
 			int.TryParse(s, out int result);
 			return result;
 		}
 
-		public bool ReadBool(string key, bool def = false)
+		public bool ReadBool(string key, bool def = false,bool restore = false)
 		{
+			if (restore)
+				return def;
 			string s = Read(key, Convert.ToString(def));
 			bool.TryParse(s, out bool result);
 			return result;
@@ -175,12 +183,12 @@ namespace RapIni
 		public List<string> ReadKeyList(string key)
 		{
 			List<string> result = new List<string>();
-			string[] ak = key.Split(new[] { '>' }, StringSplitOptions.RemoveEmptyEntries);
+			string[] ak = key.Split('>');
 			foreach (string e in this)
 			{
 				if (e.IndexOf($"{key}>") == 0)
 				{
-					string[] ae = e.Split(new[] { '>' }, StringSplitOptions.RemoveEmptyEntries);
+					string[] ae = e.Split('>');
 					string s = String.Empty;
 					if (ae.Length > ak.Length)
 						s = ae[ak.Length];

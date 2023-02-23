@@ -240,7 +240,7 @@ namespace NSProgram
 		{
 			int result = 0;
 			foreach (MSLine msl in this)
-				if (msl.GetLoss() < Constants.blunders)
+				if (msl.GetLoss() < Constants.blunder)
 					result++;
 			return result;
 		}

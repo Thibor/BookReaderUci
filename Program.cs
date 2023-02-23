@@ -76,18 +76,7 @@ namespace NSProgram
 			_handler += new EventHandler(Handler);
 			SetConsoleCtrlHandler(_handler, true);
 			if (args.Length == 0)
-			{
-				Constants.accuracyGo = ini.Read("accurac>go", Constants.accuracyGo);
-				Constants.accuracyFen = ini.Read("accuracy>fen", Constants.accuracyFen);
-				Constants.evalGo = ini.Read("test>go", Constants.evalGo);
-				Constants.evalFen = ini.Read("test>fen", Constants.evalFen);
-				Constants.testGo = ini.Read("test>go", Constants.testGo);
-				Constants.testFen = ini.Read("test>fen", Constants.testFen);
-				Constants.teacher = ini.Read("teacher", Constants.teacher);
-				Constants.student = ini.Read("student", Constants.student);
-				Constants.command = ini.Read("command", Constants.command);
-				Constants.limit = ini.ReadInt("limit", Constants.limit);
-			}
+				LoadFromIni();
 			int missingIndex = 0;
 			bool isW = false;
 			bool isInfo = false;
@@ -209,79 +198,80 @@ namespace NSProgram
 				int count = book.moves.Count;
 				if (uci.command == "accuracy")
 				{
+					accuracy.LoadFromFile();
+					if (accuracy.Count == 0)
+					{
+						Console.WriteLine("file \"accuracy.fen\" unavabile");
+						break;
+					}
 					switch (uci.tokens[1])
 					{
 						case "update":
-							accuracy.LoadFromFile();
-							accuracy.fenList.GetDepth(out int minD, out _);
+							accuracy.GetDepth(out int minD, out _);
 							minD = uci.GetInt("update", ++minD);
 							if (Constants.minDepth < minD)
 								Constants.minDepth = minD;
 							teacher.AccuracyUpdate();
 							break;
 						case "delete":
-							accuracy.LoadFromFile();
-							int cm = accuracy.fenList.CountMoves(out int minM);
+							int cm = accuracy.CountMoves(out int minM);
 							if (Confirm($"Delete {cm} fens"))
 							{
-								cm = accuracy.fenList.DeleteMoves(minM);
+								cm = accuracy.DeleteMoves(minM);
 								Console.WriteLine($"{cm} fens deleted");
 							}
 							break;
 						case "start":
-							accuracy.LoadFromFile();
-							if (accuracy.fenList.Count == 0)
-							{
-								Console.WriteLine("file \"accuracy fen.txt\" unavabile");
-								break;
-							}
-							Constants.limit = uci.GetInt("start", accuracy.fenList.Count);
+							Constants.limit = uci.GetInt("start", accuracy.Count);
 							teacher.AccuracyStart();
 							break;
 						case "mod":
-							accuracy.LoadFromFile();
 							teacher.AccuracyMod();
 							break;
 					}
 				}
 				if (uci.command == "evaluation")
 				{
+					evaluation.LoadFromFile();
+					if (evaluation.Count == 0)
+					{
+						Console.WriteLine("file \"evaluation.fen\" unavabile");
+						break;
+					}
 					switch (uci.tokens[1])
 					{
 						case "reset":
-							evaluation.LoadFromFile();
 							evaluation.Fill();
 							break;
 						case "update":
-							evaluation.LoadFromFile();
 							teacher.EvaluationUpdate();
 							break;
 						case "start":
-							evaluation.LoadFromFile();
 							teacher.EvaluationStart();
 							break;
 						case "mod":
-							evaluation.LoadFromFile();
 							teacher.EvaluationMod();
 							break;
 					}
 				}
 				if (uci.command == "test")
 				{
+					test.LoadFromFile();
+					if (test.Count == 0)
+					{
+						Console.WriteLine("file \"test.fen\" unavabile");
+						break;
+					}
 					switch (uci.tokens[1])
 					{
 						case "start":
-							test.LoadFromFile();
-							if (test.Count == 0)
-							{
-								Console.WriteLine("file \"test fen.txt\" unavabile");
-								break;
-							}
-							Constants.limit = uci.GetInt("test", accuracy.fenList.Count);
+							Constants.limit = uci.GetInt("test", accuracy.Count);
 							teacher.TestStart();
 							break;
 					}
 				}
+				if (uci.command == "ini")
+					SavetoIni();
 				if (uci.command == "book")
 				{
 					switch (uci.tokens[1])
@@ -405,6 +395,25 @@ namespace NSProgram
 				}
 			} while (uci.command != "quit");
 			teacher.Terminate();
+
+			void LoadFromIni()
+			{
+				Constants.accuracyGo = ini.Read("accurac>go", Constants.accuracyGo);
+				Constants.accuracyFen = ini.Read("accuracy>fen", Constants.accuracyFen);
+				Constants.evalGo = ini.Read("test>go", Constants.evalGo);
+				Constants.evalFen = ini.Read("test>fen", Constants.evalFen);
+				Constants.testGo = ini.Read("test>go", Constants.testGo);
+				Constants.testFen = ini.Read("test>fen", Constants.testFen);
+				Constants.teacher = ini.Read("teacher", Constants.teacher);
+				Constants.student = ini.Read("student", Constants.student);
+				Constants.command = ini.Read("command", Constants.command);
+				Constants.limit = ini.ReadInt("limit", Constants.limit);
+			}
+
+			void SavetoIni()
+			{
+				ini.Write("accurac>go", Constants.accuracyGo);
+			}
 
 			bool SetBookFile(string bn)
 			{

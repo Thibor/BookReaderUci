@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace NSProgram
 {
-	internal class CAccuracy
+	internal class CAccuracy : MSList
 	{
 		bool loaded = false;
 		public int index = 0;
-		double centyLoss = 0;
-		int centyCount = 0;
+		long centyLoss = 0;
+		long centyCount = 0;
 		double bst = 0;
 		public int inaccuracies = 0;
 		public int mistakes = 0;
@@ -20,7 +20,6 @@ namespace NSProgram
 		public int bstSc = 0;
 		public string bstFen = String.Empty;
 		public string bstMsg = String.Empty;
-		public MSList fenList = new MSList();
 
 
 		public void LoadFromFile()
@@ -28,10 +27,10 @@ namespace NSProgram
 			if (loaded)
 				return;
 			loaded = true;
-			fenList.LoadFen();
-			fenList.GetDepth(out int minD, out int maxD);
-			fenList.GetMoves(out int minM, out int maxM);
-			Console.WriteLine($"info string accuracy on fens {fenList.Count} fail {fenList.CountFail()} depth ({minD} - {maxD}) moves ({minM} - {maxM})");
+			LoadFen();
+			GetDepth(out int minD, out int maxD);
+			GetMoves(out int minM, out int maxM);
+			Console.WriteLine($"info string accuracy on fens {Count} fail {CountFail()} depth ({minD} - {maxD}) moves ({minM} - {maxM})");
 		}
 
 		public void Reset()
@@ -52,14 +51,14 @@ namespace NSProgram
 		public void AddScore(string fen, string msg, int best, int score)
 		{
 			int delta = Math.Abs(best - score);
-			if (delta >= Constants.blunders)
+			if (delta >= Constants.blunder)
 			{
-				delta = Constants.blunders;
+				delta = Constants.blunder;
 				blunders++;
 			}
-			else if (delta > Constants.mistakes)
+			else if (delta > Constants.mistake)
 				mistakes++;
-			else if (delta > Constants.inaccuracies)
+			else if (delta > Constants.inaccuracy)
 				inaccuracies++;
 			double val = (double)delta / Math.Abs(best + score);
 			centyCount++;
@@ -84,17 +83,40 @@ namespace NSProgram
 			return result;
 		}
 
+		public double GetAccuracy(long cc,long cl)
+		{
+			if (cc == 0)
+				return 0;
+			double max = cc * Constants.blunder;
+			return ((max - cl) * 100.0) / max;
+		}
+
 		public double GetAccuracy()
 		{
-			return centyLoss / (centyCount+1);
+			return GetAccuracy(centyCount,centyLoss);
+		}
+
+		public int GetElo(double accuracy)
+		{
+			double ratio = (Constants.maxElo - Constants.minElo) / (Constants.maxAcc - Constants.minAcc);
+			double result = Constants.minElo + (accuracy - Constants.minAcc) * ratio;
+			return Convert.ToInt32(result);
+		}
+
+		public int GetElo(double accuracy, out int del)
+		{
+			double minAcc = GetAccuracy(centyCount + 1, centyLoss + Constants.blunder);
+			double maxAcc = GetAccuracy(centyCount + 1, centyLoss);
+			del = GetElo(maxAcc) - GetElo(minAcc);
+			return GetElo(accuracy);
 		}
 
 		public bool NextLine(out MSLine line)
 		{
 			line = null;
-			if (index >= fenList.Count)
+			if (index >= Count)
 				return false;
-			line = fenList[fenList.Count - ++index];
+			line = this[Count - ++index];
 			return true;
 		}
 

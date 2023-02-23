@@ -31,7 +31,7 @@ namespace NSProgram
 				if (!ini.KeyExists($"bst>{key}"))
 				{
 					string s = ini.Read($"cur>{key}");
-					ini.Write($"bst>{key}", s,false);
+					ini.Write($"bst>{key}", s);
 				}
 			modList = ini.ReadKeyList("bst");
 			BstToCur();
@@ -71,7 +71,7 @@ namespace NSProgram
 				List<int> list = CurList;
 				if (list.Count > 0)
 					list[index % list.Count] = value;
-				ini.Write($"cur>{ModName}",list, false);
+				ini.Write($"cur>{ModName}",list);
 			}
 		}
 
@@ -107,7 +107,7 @@ namespace NSProgram
 			foreach (string key in modList)
 			{
 				string s = ini.Read($"bst>{key}");
-				ini.Write($"cur>{key}", s, false);
+				ini.Write($"cur>{key}", s);
 			}
 		}
 
@@ -116,8 +116,8 @@ namespace NSProgram
 			string m = ini.Read("mode");
 			if (m != mode)
 			{
-				ini.Write("reset", true,false);
-				ini.Write("mode", mode,false);
+				ini.Write("reset", true);
+				ini.Write("mode", mode);
 				ini.Save();
 			}
 		}
@@ -138,15 +138,15 @@ namespace NSProgram
 
 		void SaveToIni()
 		{
-			ini.Write("modified", modified, false);
-			ini.Write("plus", plus, false);
-			ini.Write("reset", reset, false);
-			ini.Write("second", second, false);
-			ini.Write("auto", modAuto, false);
-			ini.Write("index", index, false);
-			ini.Write("shift", shift, false);
-			ini.Write("modIndex", modIndex, false);
-			ini.Write("score", bstScore, false);
+			ini.Write("modified", modified);
+			ini.Write("plus", plus);
+			ini.Write("reset", reset);
+			ini.Write("second", second);
+			ini.Write("auto", modAuto);
+			ini.Write("index", index);
+			ini.Write("shift", shift);
+			ini.Write("modIndex", modIndex);
+			ini.Write("score", bstScore);
 			ini.Save();
 		}
 
@@ -168,7 +168,7 @@ namespace NSProgram
 				bonShift++;
 				ini.Load();
 				List<int> list = CurList;
-				ini.Write("bst>" + ModName, list,false);
+				ini.Write("bst>" + ModName, list);
 				string mod = String.Join(",", list.ToArray());
 				Program.log.Add($"({s:N2}) {mod}");
 			}
