@@ -397,8 +397,8 @@ namespace NSProgram
 					if (tdg.line.GetLoss() < Constants.blunder)
 						if (AccuracyUpdatePrepare(tdg))
 							continue;
-					Program.accuracy.AddLine(tdg.line);
-					Program.accuracy.SaveToFile();
+					Program.accuracy.ReplaceLine(tdg.line);
+					Program.accuracy.SaveToEpd();
 				}
 				Program.accuracy.SortDepth();
 				MSLine msl = Program.accuracy.GetShallowLine();
@@ -468,7 +468,7 @@ namespace NSProgram
 					{
 						Program.accuracy.index--;
 						Program.accuracy.DeleteFen(tdg.line.fen);
-						Program.accuracy.SaveToFile();
+						Program.accuracy.SaveToEpd();
 					}
 					if ((Constants.limit > 0) && (Program.accuracy.index >= Constants.limit))
 						break;

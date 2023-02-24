@@ -185,13 +185,13 @@ namespace NSProgram
 					result++;
 					RemoveAt(n);
 				}
-			SaveToFile();
+			SaveToEpd();
 			return result;
 		}
 
-		public void GetDepth(out int min, out int max)
+		public int GetDepth(out int max)
 		{
-			min = int.MaxValue;
+			int min = int.MaxValue;
 			max = 0;
 			foreach (MSLine msl in this)
 			{
@@ -202,11 +202,12 @@ namespace NSProgram
 			}
 			if (min > max)
 				min = 0;
+			return min;
 		}
 
-		public void GetMoves(out int min, out int max)
+		public int GetMoves(out int max)
 		{
-			min = int.MaxValue;
+			int min = int.MaxValue;
 			max = 0;
 			foreach (MSLine msl in this)
 			{
@@ -217,6 +218,7 @@ namespace NSProgram
 			}
 			if (min > max)
 				min = 0;
+			return min;
 		}
 
 		public int CountMoves(out int min)
@@ -245,11 +247,23 @@ namespace NSProgram
 			return result;
 		}
 
-		public void SaveToFile()
+		public int DeleteFail()
+		{
+			int c = Count;
+			for(int n=Count-1;n>=0; n--)
+			{
+				MSLine msl = this[n];
+				if (msl.GetLoss() < Constants.blunder)
+					RemoveAt(n);
+			}
+			return c - Count;
+		}
+
+		public void SaveToEpd()
 		{
 			string last = String.Empty;
 			SortFen();
-			using (FileStream fs = File.Open(Constants.accuracyFen, FileMode.Create, FileAccess.Write, FileShare.None))
+			using (FileStream fs = File.Open(Constants.accuracyEpd, FileMode.Create, FileAccess.Write, FileShare.None))
 			using (StreamWriter sw = new StreamWriter(fs))
 			{
 				foreach (MSLine msl in this)
@@ -264,12 +278,12 @@ namespace NSProgram
 			}
 		}
 
-		public bool LoadFen()
+		public bool LoadFromEpd()
 		{
 			Clear();
-			if (!File.Exists(Constants.accuracyFen))
+			if (!File.Exists(Constants.accuracyEpd))
 				return false;
-			using (FileStream fs = File.Open(Constants.accuracyFen, FileMode.Open, FileAccess.Read, FileShare.Read))
+			using (FileStream fs = File.Open(Constants.accuracyEpd, FileMode.Open, FileAccess.Read, FileShare.Read))
 			using (StreamReader reader = new StreamReader(fs))
 			{
 				string line = String.Empty;
@@ -318,7 +332,23 @@ namespace NSProgram
 			return -1;
 		}
 
-		public void AddLine(MSLine line)
+		public bool AddLine(MSLine line)
+		{
+			int index = GetFenIndex(line.fen);
+			if (index < 0)
+				Add(line);
+			return index < 0;
+		}
+
+		public bool AddLine(string line)
+		{
+			MSLine msl = new MSLine();
+			if (msl.LoadFromStr(line))
+				return AddLine(msl);
+			return false;
+		}
+
+		public void ReplaceLine(MSLine line)
 		{
 			int index = GetFenIndex(line.fen);
 			if (index >= 0)

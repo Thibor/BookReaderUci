@@ -195,6 +195,8 @@ namespace NSProgram
 				return SaveToUci(p);
 			if (ext == ".pgn")
 				return SavePgn();
+			if (ext == ".fen")
+				return SaveToFen(p);
 			return false;
 		}
 
@@ -203,15 +205,35 @@ namespace NSProgram
 			using (FileStream fs = File.Open(p, FileMode.Create, FileAccess.Write, FileShare.None))
 			using (StreamWriter sw = new StreamWriter(fs))
 			{
-				foreach (String uci in moves)
+				foreach (string uci in moves)
 				{
 					string u = uci.Trim();
-					if (!String.IsNullOrEmpty(u))
+					if (!string.IsNullOrEmpty(u))
 						sw.WriteLine(u);
 				}
 			}
 			if (Program.isLog)
 				SaveLog();
+			return true;
+		}
+
+		public bool SaveToFen(string p)
+		{
+			CChessExt chess = new CChessExt();
+			using (FileStream fs = File.Open(p, FileMode.Create, FileAccess.Write, FileShare.None))
+			using (StreamWriter sw = new StreamWriter(fs))
+			{
+				foreach (string uci in moves)
+				{
+					string u = uci.Trim();
+					if (!string.IsNullOrEmpty(u))
+					{
+						chess.SetFen();
+						chess.MakeMoves(u);
+						sw.WriteLine(chess.GetFen());
+					}
+				}
+			}
 			return true;
 		}
 

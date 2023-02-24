@@ -21,7 +21,7 @@ To use this program you need install  <a href="https://dotnet.microsoft.com/down
 ## Console commands
 
 **book load** [filename].[uci|pgn] - clear and add<br/>
-**book save** [filename].[uci|png] - save book to the file<br/>
+**book save** [filename].[uci|png|fen] - save book to the file<br/>
 **book addfile** [filename].[uci|pgn] - adds moves from another book<br/>
 **book delete** [number x] - delete x moves from the book<br/>
 **book clear** - clear all moves from the book<br/>

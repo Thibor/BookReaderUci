@@ -66,12 +66,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <PlatformTarget>x64</PlatformTarget>
     <LangVersion>7.3</LangVersion>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
     <NoWarn>IDE0017</NoWarn>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

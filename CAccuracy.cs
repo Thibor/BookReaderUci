@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,17 +21,55 @@ namespace NSProgram
 		public int bstSc = 0;
 		public string bstFen = String.Empty;
 		public string bstMsg = String.Empty;
-
+		readonly static Random rnd = new Random();
 
 		public void LoadFromFile()
 		{
 			if (loaded)
 				return;
 			loaded = true;
-			LoadFen();
-			GetDepth(out int minD, out int maxD);
-			GetMoves(out int minM, out int maxM);
+			LoadFromEpd();
+			int minD = GetDepth(out int maxD);
+			int minM = GetMoves(out int maxM);
 			Console.WriteLine($"info string accuracy on fens {Count} fail {CountFail()} depth ({minD} - {maxD}) moves ({minM} - {maxM})");
+		}
+
+		public void Info()
+		{
+			int minD = GetDepth(out _);
+			int minM = GetMoves(out _);
+			int fail = CountFail();
+			Console.WriteLine($"fens {Count} moves {minM} depth {minD} fail {fail}");
+		}
+
+		public void Fens(int fens)
+		{
+			if (Count > fens)
+				Console.WriteLine("To reduce fens use command \"accuracy delete\"");
+			if (Count >= fens)
+				return;
+			if (!File.Exists("accuracy.fen"))
+			{
+				Console.WriteLine("File \"accuracy.fen\" is missing.");
+				return;
+			}
+			string[] fa = File.ReadAllLines("accuracy.fen");
+			List<string> fl = new List<string>(fa);
+			while ((Count < fens) && (fl.Count > 0))
+			{
+				int i = rnd.Next(fl.Count);
+				string fen = fl[i].Trim();
+				fl.RemoveAt(i);
+				if (string.IsNullOrEmpty(fen))
+					continue;
+				if (AddLine(fen))
+					Info();
+				else
+					Console.WriteLine("Wrong fen");
+			}
+			File.WriteAllLines("accuracy.fen", fl);
+			if (Count < fens)
+				Console.WriteLine("No more fens.");
 		}
 
 		public void Reset()
@@ -83,7 +122,7 @@ namespace NSProgram
 			return result;
 		}
 
-		public double GetAccuracy(long cc,long cl)
+		public double GetAccuracy(long cc, long cl)
 		{
 			if (cc == 0)
 				return 0;
@@ -93,14 +132,30 @@ namespace NSProgram
 
 		public double GetAccuracy()
 		{
-			return GetAccuracy(centyCount,centyLoss);
+			return GetAccuracy(centyCount, centyLoss);
 		}
 
 		public int GetElo(double accuracy)
 		{
-			double ratio = (Constants.maxElo - Constants.minElo) / (Constants.maxAcc - Constants.minAcc);
-			double result = Constants.minElo + (accuracy - Constants.minAcc) * ratio;
-			return Convert.ToInt32(result);
+			double proRatio = accuracy / 100;
+			double x = 0.8;
+			double y = 0.5;
+			double p, r,l;
+			double result = y;
+			if (proRatio < x)
+			{
+				p = proRatio / x;
+				r = p * y;
+				result = p * y + (1-p)*r*y;
+			}
+			if (proRatio > x)
+			{
+				l = 1 - y;
+				p = (proRatio - x) / (1 - x);
+				r = p * (1 - y);
+				result = y + p * l + (1-p) * r *l;
+			}
+			return Convert.ToInt32(result * Constants.maxElo);
 		}
 
 		public int GetElo(double accuracy, out int del)
