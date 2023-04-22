@@ -25,6 +25,7 @@ namespace NSProgram
 
 	internal class MSLine : List<MSRec>
 	{
+		public bool fail = false;
 		public string fen = String.Empty;
 		public int depth = 0;
 
@@ -189,9 +190,9 @@ namespace NSProgram
 			return result;
 		}
 
-		public int GetDepth(out int max)
+		public void GetDepth(out int min, out int max)
 		{
-			int min = int.MaxValue;
+			min = int.MaxValue;
 			max = 0;
 			foreach (MSLine msl in this)
 			{
@@ -202,12 +203,11 @@ namespace NSProgram
 			}
 			if (min > max)
 				min = 0;
-			return min;
 		}
 
-		public int GetMoves(out int max)
+		public void GetMoves(out int min, out int max)
 		{
-			int min = int.MaxValue;
+			min = int.MaxValue;
 			max = 0;
 			foreach (MSLine msl in this)
 			{
@@ -218,7 +218,6 @@ namespace NSProgram
 			}
 			if (min > max)
 				min = 0;
-			return min;
 		}
 
 		public int CountMoves(out int min)
@@ -238,11 +237,29 @@ namespace NSProgram
 			return result;
 		}
 
+		public void Check()
+		{
+			SortFen();
+			MSLine last = null;
+			for (int n = 0; n < this.Count; n++)
+			{
+				MSLine msl = this[n];
+				if (((msl.Count > 0) && msl.GetLoss() < Constants.blunder))
+					msl.fail = true;
+				if ((n > 0) && (msl.fen == last.fen))
+					if (msl.depth < last.depth)
+						msl.fail = true;
+					else
+						last.fail = true;
+				last = msl;
+			}
+		}
+
 		public int CountFail()
 		{
 			int result = 0;
 			foreach (MSLine msl in this)
-				if (msl.GetLoss() < Constants.blunder)
+				if (msl.fail)
 					result++;
 			return result;
 		}
@@ -250,10 +267,10 @@ namespace NSProgram
 		public int DeleteFail()
 		{
 			int c = Count;
-			for(int n=Count-1;n>=0; n--)
+			for (int n = Count - 1; n >= 0; n--)
 			{
 				MSLine msl = this[n];
-				if (msl.GetLoss() < Constants.blunder)
+				if (msl.fail)
 					RemoveAt(n);
 			}
 			return c - Count;
@@ -356,13 +373,24 @@ namespace NSProgram
 			else
 				Add(line);
 		}
+		public int CountShallowLine()
+		{
+			int result = 0;
+			foreach (MSLine line in this)
+				if (line.depth < Constants.minDepth)
+					result++;
+			return result;
+		}
 
 		public MSLine GetShallowLine()
 		{
+			if (Count == 0)
+				return null;
+			MSLine bst = this[0];
 			foreach (MSLine line in this)
-				if (line.depth < Constants.minDepth)
-					return line;
-			return null;
+				if (bst.depth > line.depth)
+					bst = line;
+			return bst.depth < Constants.minDepth ? bst : null;
 		}
 
 		public MSLine GetRandomLine()

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using RapLog;
 
 namespace NSProgram
 {
@@ -21,6 +19,7 @@ namespace NSProgram
 		public int bstSc = 0;
 		public string bstFen = String.Empty;
 		public string bstMsg = String.Empty;
+		public CRapLog log = new CRapLog("accuracy.log");
 		readonly static Random rnd = new Random();
 
 		public void LoadFromFile()
@@ -29,15 +28,16 @@ namespace NSProgram
 				return;
 			loaded = true;
 			LoadFromEpd();
-			int minD = GetDepth(out int maxD);
-			int minM = GetMoves(out int maxM);
+			Check();
+			GetDepth(out int minD,out int maxD);
+			GetMoves(out int minM,out int maxM);
 			Console.WriteLine($"info string accuracy on fens {Count} fail {CountFail()} depth ({minD} - {maxD}) moves ({minM} - {maxM})");
 		}
 
 		public void Info()
 		{
-			int minD = GetDepth(out _);
-			int minM = GetMoves(out _);
+			GetDepth(out int minD,out _);
+			GetMoves(out int minM,out _);
 			int fail = CountFail();
 			Console.WriteLine($"fens {Count} moves {minM} depth {minD} fail {fail}");
 		}

@@ -200,15 +200,13 @@ namespace NSProgram
 				{
 					accuracy.LoadFromFile();
 					Console.WriteLine($"{accuracy.GetElo(100)}");
-					for (int i = 0; i <= 100; i++)
-						Console.WriteLine($"{i} {accuracy.GetElo(i)}");
 					if (accuracy.Count == 0)
 						Console.WriteLine($"file \"{Constants.accuracyEpd}\" unavabile");
 					if (uci.tokens.Length > 1)
 						switch (uci.tokens[1])
 						{
 							case "update":
-								int minD = accuracy.GetDepth(out _);
+								accuracy.GetDepth(out int minD,out _);
 								minD = uci.GetInt("update", ++minD);
 								if (Constants.minDepth < minD)
 									Constants.minDepth = minD;

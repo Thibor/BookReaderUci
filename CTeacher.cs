@@ -44,7 +44,6 @@ namespace NSProgram
 		public List<string> students = new List<string>();
 		public List<string> teachers = new List<string>();
 		public List<string> history = new List<string>();
-		public CRapLog accuracyReport = new CRapLog("accuracy.log");
 		public CRapLog evaluationReport = new CRapLog("evaluation.log");
 		public CRapLog testReport = new CRapLog("test.log");
 
@@ -383,7 +382,6 @@ namespace NSProgram
 			if (!PrepareTeachers())
 				return;
 			SetTeacher();
-			int index = 0;
 			while (true)
 			{
 				CTData tdg = GetTData();
@@ -407,7 +405,7 @@ namespace NSProgram
 				CTData tds = new CTData() { prepared = true };
 				tds.line.fen = msl.fen;
 				tds.line.depth = Constants.minDepth;
-				Console.WriteLine($"{++index} depth {msl.depth} fen {msl.fen}");
+				Console.WriteLine($"{Program.accuracy.CountShallowLine()} depth {msl.depth} >> {Constants.minDepth} fen {msl.fen}");
 				if (!AccuracyUpdatePrepare(tds))
 					continue;
 			}
@@ -425,6 +423,15 @@ namespace NSProgram
 				AccuracyStart(student);
 			int del = count - Program.accuracy.Count;
 			WriteLine($"deleted {del}");
+			List<string> list = Program.accuracy.log.List();
+			count = 0;
+			foreach (string l in list)
+			{
+				uci.SetMsg(l);
+				Console.WriteLine(uci.GetValue(0,9));
+				if (++count > 4)
+					break;
+			}
 			WriteLine("finish");
 			Console.Beep();
 			File.WriteAllLines("accuracy.his", history);
@@ -444,7 +451,7 @@ namespace NSProgram
 			int winChanceDes = Convert.ToInt32(Program.accuracy.WinningChances(Program.accuracy.bstSc) * 100.0);
 			double accuracy = Program.accuracy.GetAccuracy();
 			int elo = Program.accuracy.GetElo(accuracy,out int del);
-			accuracyReport.Add($"accuracy {accuracy:N2}% elo {elo} (±{del}) count {Program.accuracy.index} {name} blunders {Program.accuracy.blunders} mistakes {Program.accuracy.mistakes} inaccuracies {Program.accuracy.inaccuracies} {Program.accuracy.bstFen} {Program.accuracy.bstMsg} ({Program.accuracy.bstSb} => {Program.accuracy.bstSc}) ({winChanceSou} => {winChanceDes})");
+			Program.accuracy.log.Add($"accuracy {accuracy:N2}% elo {elo} (±{del}) count {Program.accuracy.index} {name} blunders {Program.accuracy.blunders} mistakes {Program.accuracy.mistakes} inaccuracies {Program.accuracy.inaccuracies} {Program.accuracy.bstFen} {Program.accuracy.bstMsg} ({Program.accuracy.bstSb} => {Program.accuracy.bstSc}) ({winChanceSou} => {winChanceDes})");
 			StudentTerminate();
 		}
 
