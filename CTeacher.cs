@@ -43,7 +43,6 @@ namespace NSProgram
 		readonly CMod mod = new CMod();
 		public List<string> students = new List<string>();
 		public List<string> teachers = new List<string>();
-		public List<string> history = new List<string>();
 		public CRapLog evaluationReport = new CRapLog("evaluation.log");
 		public CRapLog testReport = new CRapLog("test.log");
 
@@ -272,12 +271,6 @@ namespace NSProgram
 			TeacherTerminate();
 		}
 
-		void WriteLine(string msg)
-		{
-			Console.WriteLine(msg);
-			history.Add(msg);
-		}
-
 		public void Stop()
 		{
 			stoped = true;
@@ -417,12 +410,11 @@ namespace NSProgram
 			if (!PrepareStudents())
 				return;
 			int count = Program.accuracy.Count;
-			history.Clear();
 			Program.accuracy.SortRandom();
 			foreach (string student in students)
 				AccuracyStart(student);
 			int del = count - Program.accuracy.Count;
-			WriteLine($"deleted {del}");
+			Console.WriteLine($"deleted {del}");
 			List<string> list = Program.accuracy.log.List();
 			count = 0;
 			foreach (string l in list)
@@ -432,26 +424,25 @@ namespace NSProgram
 				if (++count > 4)
 					break;
 			}
-			WriteLine("finish");
+			Console.WriteLine("finish");
 			Console.Beep();
-			File.WriteAllLines("accuracy.his", history);
 		}
 
 		void AccuracyStart(string student)
 		{
 			string name = Path.GetFileNameWithoutExtension(student);
-			WriteLine(name);
+			Console.WriteLine(name);
 			if (!SetStudent(student))
 			{
-				WriteLine($"{student} not avabile");
+				Console.WriteLine($"{student} not avabile");
 				return;
 			}
 			AccuracyStudent();
-			int winChanceSou = Convert.ToInt32(Program.accuracy.WinningChances(Program.accuracy.bstSb) * 100.0);
-			int winChanceDes = Convert.ToInt32(Program.accuracy.WinningChances(Program.accuracy.bstSc) * 100.0);
+			int winChanceSou = Convert.ToInt32(Program.accuracy.WinningChances(Program.accuracy.badFen.bstScore) * 100.0);
+			int winChanceDes = Convert.ToInt32(Program.accuracy.WinningChances(Program.accuracy.badFen.badScore) * 100.0);
 			double accuracy = Program.accuracy.GetAccuracy();
 			int elo = Program.accuracy.GetElo(accuracy,out int del);
-			Program.accuracy.log.Add($"accuracy {accuracy:N2}% elo {elo} (±{del}) count {Program.accuracy.index} {name} blunders {Program.accuracy.blunders} mistakes {Program.accuracy.mistakes} inaccuracies {Program.accuracy.inaccuracies} {Program.accuracy.bstFen} {Program.accuracy.bstMsg} ({Program.accuracy.bstSb} => {Program.accuracy.bstSc}) ({winChanceSou} => {winChanceDes})");
+			Program.accuracy.log.Add($"accuracy {accuracy:N2}% elo {elo} (±{del}) count {Program.accuracy.index} {name} blunders {Program.accuracy.blunders} mistakes {Program.accuracy.mistakes} inaccuracies {Program.accuracy.inaccuracies} {Program.accuracy.badFen.fen} ({Program.accuracy.badFen.bstMove} => {Program.accuracy.badFen.badMove}) ({Program.accuracy.badFen.bstScore} => {Program.accuracy.badFen.badScore}) ({winChanceSou} => {winChanceDes})");
 			StudentTerminate();
 		}
 
@@ -469,8 +460,7 @@ namespace NSProgram
 					int best = tdg.line.First().score;
 					int score = tdg.line.GetScore(tdg.bestMove);
 					int delta = best - score;
-					string msg = $"move {tdg.bestMove} best {tdg.line.First().move} delta {delta}";
-					Program.accuracy.AddScore(tdg.line.fen, msg, best, score);
+					Program.accuracy.AddScore(tdg.line.fen, tdg.line.First().move, tdg.bestMove, tdg.line.First().score, score);
 					if ((Constants.teacher == Constants.student) && ((delta > Constants.mistake) || (tdg.line.GetLoss() < Constants.blunder)))
 					{
 						Program.accuracy.index--;
@@ -486,6 +476,7 @@ namespace NSProgram
 					continue;
 				CTData tds = new CTData() { prepared = true };
 				tds.line.Assign(line);
+				Program.accuracy.his.Add(line.fen);
 				SetTData(tds);
 				StudentWriteLine("ucinewgame");
 				StudentWriteLine($"position fen {line.fen}");
@@ -505,12 +496,12 @@ namespace NSProgram
 			string student = students[0];
 			if (!SetStudent(student))
 			{
-				WriteLine($"{student} not avabile");
+				Console.WriteLine($"{student} not avabile");
 				return;
 			}
 			string mn = string.Empty;
 			string name = Path.GetFileNameWithoutExtension(student);
-			WriteLine($"{name} ready");
+			Console.WriteLine($"{name} ready");
 			mod.SetMode("accuracy");
 			while (true)
 			{
@@ -582,21 +573,19 @@ namespace NSProgram
 		{
 			if (!PrepareStudents())
 				return;
-			history.Clear();
 			foreach (string student in students)
 				EvaluationStart(student);
-			WriteLine("finish");
+			Console.WriteLine("finish");
 			Console.Beep();
-			File.WriteAllLines("evaluation history.txt", history);
 		}
 
 		void EvaluationStart(string student)
 		{
 			string name = Path.GetFileNameWithoutExtension(student);
-			WriteLine(student);
+			Console.WriteLine(student);
 			if (!SetStudent(student))
 			{
-				WriteLine($"{student} not avabile");
+				Console.WriteLine($"{student} not avabile");
 				return;
 			}
 			EvaluationStudent();
@@ -637,12 +626,12 @@ namespace NSProgram
 			string student = students[0];
 			if (!SetStudent(student))
 			{
-				WriteLine($"{student} not avabile");
+				Console.WriteLine($"{student} not avabile");
 				return;
 			}
 			string mn = string.Empty;
 			string name = Path.GetFileNameWithoutExtension(student);
-			WriteLine($"{name} ready");
+			Console.WriteLine($"{name} ready");
 			mod.SetMode("evaluation");
 			while (true)
 			{
@@ -664,7 +653,7 @@ namespace NSProgram
 				if (!mod.SetScore(score))
 					break;
 			}
-			WriteLine("finish");
+			Console.WriteLine("finish");
 			Console.Beep();
 		}
 
@@ -676,21 +665,19 @@ namespace NSProgram
 		{
 			if (!PrepareStudents())
 				return;
-			history.Clear();
 			foreach (string student in students)
 				TestStart(student);
-			WriteLine("finish");
+			Console.WriteLine("finish");
 			Console.Beep();
-			File.WriteAllLines("test history.txt", history);
 		}
 
 		void TestStart(string student)
 		{
 			string name = Path.GetFileNameWithoutExtension(student);
-			WriteLine(student);
+			Console.WriteLine(student);
 			if (!SetStudent(student))
 			{
-				WriteLine($"{student} not avabile");
+				Console.WriteLine($"{student} not avabile");
 				return;
 			}
 			TestStudent();
@@ -714,7 +701,7 @@ namespace NSProgram
 					bool r = Program.test.GetResult(tdg.bestMove);
 					Program.test.SetResult(r);
 					string sr = r ? "ok" : "fail";
-					WriteLine($"{sr} ({Program.test.resultOk} : {Program.test.resultFail})");
+					Console.WriteLine($"{sr} ({Program.test.resultOk} : {Program.test.resultFail})");
 					if (!Program.test.Next())
 						return;
 					if ((Constants.limit > 0) && (Program.test.number >= Constants.limit))
@@ -726,7 +713,7 @@ namespace NSProgram
 				StudentWriteLine("ucinewgame");
 				StudentWriteLine($"position fen {tds.line.fen}");
 				StudentWriteLine(Constants.testGo);
-				WriteLine($"{Program.test.number} {tds.line.fen}");
+				Console.WriteLine($"{Program.test.number} {tds.line.fen}");
 			}
 		}
 

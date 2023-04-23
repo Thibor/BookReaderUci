@@ -5,21 +5,28 @@ using RapLog;
 
 namespace NSProgram
 {
+	struct BadFen
+	{
+		public int bstScore;
+		public int badScore;
+		public int worstDelta;
+		public string fen;
+		public string bstMove;
+		public string badMove;
+	}
+
 	internal class CAccuracy : MSList
 	{
 		bool loaded = false;
 		public int index = 0;
 		long centyLoss = 0;
 		long centyCount = 0;
-		double bst = 0;
 		public int inaccuracies = 0;
 		public int mistakes = 0;
 		public int blunders = 0;
-		public int bstSb = 0;
-		public int bstSc = 0;
-		public string bstFen = String.Empty;
-		public string bstMsg = String.Empty;
+		public BadFen badFen;
 		public CRapLog log = new CRapLog("accuracy.log");
+		public CRapLog his = new CRapLog("accuracy.his");
 		readonly static Random rnd = new Random();
 
 		public void LoadFromFile()
@@ -78,18 +85,14 @@ namespace NSProgram
 			inaccuracies = 0;
 			mistakes = 0;
 			blunders = 0;
-			bst = 0;
 			centyLoss = 0;
 			centyCount = 0;
-			bstSb = 0;
-			bstSc = 0;
-			bstFen = String.Empty;
-			bstMsg = String.Empty;
+			badFen = default;
 		}
 
-		public void AddScore(string fen, string msg, int best, int score)
+		public void AddScore(string fen, string bstMove, string curMove,int bstScore, int curScore)
 		{
-			int delta = Math.Abs(best - score);
+			int delta = Math.Abs(bstScore - curScore);
 			if (delta >= Constants.blunder)
 			{
 				delta = Constants.blunder;
@@ -99,16 +102,16 @@ namespace NSProgram
 				mistakes++;
 			else if (delta > Constants.inaccuracy)
 				inaccuracies++;
-			double val = (double)delta / Math.Abs(best + score);
 			centyCount++;
 			centyLoss += delta;
-			if (bst < val)
+			if (badFen.worstDelta < delta)
 			{
-				bst = val;
-				bstSb = best;
-				bstSc = score;
-				bstFen = fen;
-				bstMsg = msg;
+				badFen.worstDelta = delta;
+				badFen.fen = fen;
+				badFen.bstMove = bstMove;
+				badFen.badMove = curMove;
+				badFen.bstScore = bstScore;
+				badFen.badScore = curScore;
 			}
 		}
 
