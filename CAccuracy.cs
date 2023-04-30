@@ -172,9 +172,11 @@ namespace NSProgram
 		public bool NextLine(out MSLine line)
 		{
 			line = null;
-			if (index >= Count)
+			if (index > Count)
 				return false;
-			line = this[Count - ++index];
+			if (++index > Count)
+				return false;
+			line = this[Count - index];
 			return true;
 		}
 

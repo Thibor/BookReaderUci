@@ -437,6 +437,7 @@ namespace NSProgram
 				Console.WriteLine($"{student} not avabile");
 				return;
 			}
+			Program.accuracy.his.Add($"start {name}");
 			AccuracyStudent();
 			int winChanceSou = Convert.ToInt32(Program.accuracy.WinningChances(Program.accuracy.badFen.bstScore) * 100.0);
 			int winChanceDes = Convert.ToInt32(Program.accuracy.WinningChances(Program.accuracy.badFen.badScore) * 100.0);
@@ -444,6 +445,13 @@ namespace NSProgram
 			int elo = Program.accuracy.GetElo(accuracy,out int del);
 			Program.accuracy.log.Add($"accuracy {accuracy:N2}% elo {elo} (±{del}) count {Program.accuracy.index} {name} blunders {Program.accuracy.blunders} mistakes {Program.accuracy.mistakes} inaccuracies {Program.accuracy.inaccuracies} {Program.accuracy.badFen.fen} ({Program.accuracy.badFen.bstMove} => {Program.accuracy.badFen.badMove}) ({Program.accuracy.badFen.bstScore} => {Program.accuracy.badFen.badScore}) ({winChanceSou} => {winChanceDes})");
 			StudentTerminate();
+		}
+
+		void AccuracyLine()
+		{
+			double accuracy = Program.accuracy.GetAccuracy();
+			int elo = Program.accuracy.GetElo(accuracy, out int del);
+			ConsoleWrite($"\rprogress {Program.accuracy.index * 100.0 / Program.accuracy.Count:N2}% accuracy {accuracy:N2}% elo {elo} (±{del})");
 		}
 
 		public double AccuracyStudent()
@@ -481,10 +489,9 @@ namespace NSProgram
 				StudentWriteLine("ucinewgame");
 				StudentWriteLine($"position fen {line.fen}");
 				StudentWriteLine(Constants.accuracyGo);
-				double accuracy = Program.accuracy.GetAccuracy();
-				int elo = Program.accuracy.GetElo(accuracy, out int del);
-				ConsoleWrite($"\rprogress {Program.accuracy.index * 100.0 / Program.accuracy.Count:N2}% accuracy {accuracy:N2}% elo {elo} (±{del})");
+				AccuracyLine();
 			}
+			AccuracyLine();
 			Console.WriteLine();
 			return Program.accuracy.GetAccuracy();
 		}
