@@ -170,26 +170,6 @@ namespace NSProgram
 	internal class MSList : List<MSLine>
 	{
 
-		public void DeleteFen(string fen)
-		{
-			for (int n = Count - 1; n >= 0; n--)
-				if (this[n].fen == fen)
-					RemoveAt(n);
-		}
-
-		public int DeleteMoves(int moves)
-		{
-			int result = 0;
-			for (int n = Count - 1; n >= 0; n--)
-				if (this[n].Count == moves)
-				{
-					result++;
-					RemoveAt(n);
-				}
-			SaveToEpd();
-			return result;
-		}
-
 		public void GetDepth(out int min, out int max)
 		{
 			min = int.MaxValue;
@@ -266,14 +246,40 @@ namespace NSProgram
 
 		public int DeleteFail()
 		{
-			int c = Count;
+			int result = 0;
 			for (int n = Count - 1; n >= 0; n--)
 			{
 				MSLine msl = this[n];
 				if (msl.fail)
+				{
+					result++;
 					RemoveAt(n);
+				}
 			}
-			return c - Count;
+			if (result > 0)
+				SaveToEpd();
+			return result;
+		}
+
+		public void DeleteFen(string fen)
+		{
+			for (int n = Count - 1; n >= 0; n--)
+				if (this[n].fen == fen)
+					RemoveAt(n);
+		}
+
+		public int DeleteMoves(int moves)
+		{
+			int result = 0;
+			for (int n = Count - 1; n >= 0; n--)
+				if (this[n].Count == moves)
+				{
+					result++;
+					RemoveAt(n);
+				}
+			if (result > 0)
+				SaveToEpd();
+			return result;
 		}
 
 		public void SaveToEpd()

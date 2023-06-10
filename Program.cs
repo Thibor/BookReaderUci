@@ -1,11 +1,11 @@
 ﻿using NSUci;
+using RapIni;
+using RapLog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
-using RapIni;
-using RapLog;
 
 namespace NSProgram
 {
