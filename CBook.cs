@@ -9,7 +9,6 @@ namespace NSProgram
 {
     public class CBook
     {
-        public int maxRecords = 10000;
         public const string defExt = ".uci";
         public string path = String.Empty;
         public readonly string name = "BookReaderUci";
@@ -22,24 +21,13 @@ namespace NSProgram
         {
             for (int n = moves.Count - 1; n >= 0; n--)
                 if (uci.IndexOf(moves[n]) == 0)
-                {
                     moves.RemoveRange(n, 1);
-                    break;
-                }
             moves.Add(uci);
         }
 
         public void AddUci(List<string> moves)
         {
             AddUci(String.Join(" ", moves));
-        }
-
-        public void AddMate(List<string> uci)
-        {
-            AddUci(uci);
-            if (maxRecords > 0)
-                DeleteMate(moves.Count - maxRecords);
-            Save();
         }
 
         int SelectDel()
@@ -61,8 +49,9 @@ namespace NSProgram
             return bi;
         }
 
-        public int DeleteMate(int count)
+        public int DeleteMate(int lg)
         {
+            int count = moves.Count - lg;
             if (count <= 0)
                 return 0;
             int c = moves.Count;
@@ -75,12 +64,6 @@ namespace NSProgram
                     moves.RemoveRange(0, count);
             }
             return c - moves.Count;
-        }
-
-        public void Delete()
-        {
-            if (maxRecords > 0)
-                Delete(moves.Count - maxRecords);
         }
 
         public int Delete(int count)
@@ -134,6 +117,8 @@ namespace NSProgram
                 if (ext == ".uci")
                     result = AddFileUci(p);
             }
+            else
+                return true;
             return result;
         }
 
@@ -244,9 +229,6 @@ namespace NSProgram
         void SaveLog()
         {
             string last = moves.Last();
-            for (int n = 0; n < 10; n++)
-                if (moves[moves.Count - 2 - n].Length <= last.Length)
-                    return;
             Program.log.Add($"moves {last}");
         }
 

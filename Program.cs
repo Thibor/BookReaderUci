@@ -1,4 +1,5 @@
-﻿using NSUci;
+﻿using NSChess;
+using NSUci;
 using RapIni;
 using RapLog;
 using System;
@@ -83,8 +84,11 @@ namespace NSProgram
             bool bookRead = false;
             int bookLimitW = 0;
             int bookLimitR = 0;
+            int limitGames = 1000;
+            int random = 0;
+            string lastFen = String.Empty;
+            string lastMoves = String.Empty;
             string ax = "-bf";
-            List<string> movesUci = new List<string>();
             List<string> listBf = new List<string>();
             List<string> listEf = new List<string>();
             List<string> listEa = new List<string>();
@@ -100,9 +104,11 @@ namespace NSProgram
                     case "-ea"://engine arguments
                     case "-lr"://limit ply read
                     case "-lw"://limit ply write
+                    case "-lg"://limit games
                     case "-tf"://teacher file
                     case "-sf"://student file
                     case "-acd"://analysis count depth
+                    case "-rnd"://random moves
                         ax = ac;
                         break;
                     case "-w":
@@ -144,9 +150,12 @@ namespace NSProgram
                             case "-lw":
                                 bookLimitW = int.TryParse(ac, out int lw) ? lw : 0;
                                 break;
-                            case "-w":
+                            case "-lg":
                                 ac = ac.Replace("K", "000").Replace("M", "000000");
-                                book.maxRecords = int.TryParse(ac, out int m) ? m : 0;
+                                limitGames = int.TryParse(ac, out int lg) ? lg : 0;
+                                break;
+                            case "-rnd":
+                                random = int.TryParse(ac, out int rnd) ? rnd : 0;
                                 break;
                         }
                         break;
@@ -158,6 +167,7 @@ namespace NSProgram
             teacherFile = String.Join(" ", listTf);
             studentFile = String.Join(" ", listSf);
             Console.WriteLine($"info string {book.name} ver {book.version}");
+            Console.WriteLine($"info string extension {CBook.defExt}");
             Process myProcess = new Process();
             if (File.Exists(engineFile))
             {
@@ -325,6 +335,8 @@ namespace NSProgram
                             Console.WriteLine($"option name Log type check default false");
                             Console.WriteLine($"option name Limit read moves type spin default {bookLimitR} min 0 max 100");
                             Console.WriteLine($"option name Limit write moves type spin default {bookLimitW} min 0 max 100");
+                            Console.WriteLine($"option name Limit games type string default 1k");
+                            Console.WriteLine($"option name Random type spin default {random} min 0 max 10");
                             Console.WriteLine("optionend");
                             break;
                         case "setoption":
@@ -345,6 +357,14 @@ namespace NSProgram
                                 case "limit write":
                                     bookLimitW = uci.GetInt("value");
                                     break;
+                                case "limit games":
+                                    string limit = uci.GetValue("value");
+                                    limit = limit.Replace("k", "000").Replace("m", "000000");
+                                    limitGames = int.TryParse(limit, out int lg) ? lg : 0;
+                                    break;
+                                case "random":
+                                    random = uci.GetInt("value");
+                                    break;
                             }
                             break;
                         case "optionend":
@@ -361,41 +381,47 @@ namespace NSProgram
                 switch (uci.command)
                 {
                     case "position":
+                        lastFen = uci.GetValue("fen", "moves");
+                        lastMoves = uci.GetValue("moves", "fen");
+                        chess.SetFen(lastFen);
+                        chess.MakeMoves(lastMoves);
                         bookRead = false;
-                        movesUci.Clear();
-                        chess.SetFen();
-                        if (uci.GetIndex("fen") < 0)
+                        if (String.IsNullOrEmpty(lastFen))
                         {
                             bookRead = true;
-                            int m = uci.GetIndex("moves", uci.tokens.Length);
-                            for (int n = m + 1; n < uci.tokens.Length; n++)
-                            {
-                                string umo = uci.tokens[n];
-                                movesUci.Add(umo);
-                                int emo = chess.UmoToEmo(umo);
-                                chess.MakeMove(emo);
-                            }
                             if (chess.halfMove < 2)
                                 missingIndex = 0;
-                            if (isW && chess.Is2ToEnd(out string mm, out string em))
+                            if (isW && chess.Is2ToEnd(out string myMove, out string enMove))
                             {
-                                movesUci.Add(mm);
-                                movesUci.Add(em);
+                                string moves = $"{lastMoves} {myMove} {enMove}";
+                                string[] am = moves.Trim().Split();
+                                List<string> movesUci = new List<string>(am);
                                 int c = bookLimitW > 0 ? bookLimitW : movesUci.Count;
                                 if ((movesUci.Count & 1) != (missingIndex & 1))
-                                    missingIndex++;
+                                    if ((missingIndex & 1) == 1)
+                                        missingIndex++;
+                                    else
+                                        missingIndex--;
                                 if (missingIndex <= c)
-                                    book.AddMate(movesUci.GetRange(0, missingIndex));
-                                book.Delete();
+                                {
+                                    book.AddUci(movesUci.GetRange(0, missingIndex));
+                                    book.DeleteMate(limitGames);
+                                    book.Save(bookFile);
+                                }
                             }
                         }
                         break;
                     case "go":
                         string move = String.Empty;
-                        if (bookRead && ((chess.halfMove < bookLimitR) || (bookLimitR == 0)))
+                        if ((random - 1) >= (chess.halfMove >> 1))
                         {
-                            string moves = String.Join(" ", movesUci);
-                            move = book.GetMove(moves);
+                            List<int> lm = chess.GenerateValidMoves(out _);
+                            int m = lm[CChess.rnd.Next(lm.Count)];
+                            move = chess.EmoToUmo(m);
+                        }
+                        else if (bookRead && ((chess.halfMove < bookLimitR) || (bookLimitR == 0)))
+                        {
+                            move = book.GetMove(lastMoves);
                             if ((String.IsNullOrEmpty(move)) && (missingIndex == 0))
                                 missingIndex = chess.halfMove + 1;
                         }
