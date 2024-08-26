@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using RapLog;
 using System.Globalization;
+using System.Threading;
 
 namespace NSProgram
 {
@@ -228,13 +229,19 @@ namespace NSProgram
 		void TeacherWriteLine(string c)
 		{
 			if (teacherProcess.StartInfo.FileName != String.Empty)
+			{
 				teacherProcess.StandardInput.WriteLine(c);
-		}
+				Thread.Sleep(10);
+			}
+        }
 
 		void StudentWriteLine(string c)
 		{
 			if (studentProcess.StartInfo.FileName != String.Empty)
+			{
 				studentProcess.StandardInput.WriteLine(c);
+				Thread.Sleep(10);
+			}
 		}
 
 		public void TeacherTerminate()
@@ -398,10 +405,11 @@ namespace NSProgram
 				CTData tds = new CTData() { prepared = true };
 				tds.line.fen = msl.fen;
 				tds.line.depth = Constants.minDepth;
-				Console.WriteLine($"{Program.accuracy.CountShallowLine()} depth {msl.depth} >> {Constants.minDepth} fen {msl.fen}");
+                Console.WriteLine($"{Program.accuracy.CountShallowLine()} depth {msl.depth} >> {Constants.minDepth} fen {msl.fen}");
 				if (!AccuracyUpdatePrepare(tds))
 					continue;
 			}
+			Console.Beep();
 			Console.WriteLine("finish");
 		}
 

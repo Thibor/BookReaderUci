@@ -60,23 +60,27 @@ namespace NSProgram
 				Console.WriteLine("File \"accuracy.fen\" is missing.");
 				return;
 			}
+			string fen;
 			string[] fa = File.ReadAllLines("accuracy.fen");
 			List<string> fl = new List<string>(fa);
 			while ((Count < fens) && (fl.Count > 0))
 			{
 				int i = rnd.Next(fl.Count);
-				string fen = fl[i].Trim();
-				fl.RemoveAt(i);
+				fen = fl[i].Trim();
 				if (string.IsNullOrEmpty(fen))
 					continue;
-				if (AddLine(fen))
-					Info();
-				else
-					Console.WriteLine("Wrong fen");
+				AddLine(fen);
 			}
-			File.WriteAllLines("accuracy.fen", fl);
-			if (Count < fens)
-				Console.WriteLine("No more fens.");
+			for(int n = fl.Count - 1; n >= 0; n--)
+			{
+                fen = fl[n].Trim();
+				if(string.IsNullOrEmpty(fen))
+                    fl.RemoveAt(n);
+            }
+            File.WriteAllLines("accuracy.fen", fl);
+            SaveToEpd();
+            Info();
+            Console.WriteLine($"{fl.Count} fens left.");
 		}
 
 		public void Reset()
@@ -140,25 +144,11 @@ namespace NSProgram
 
 		public int GetElo(double accuracy)
 		{
-			double proRatio = accuracy / 100;
-			double x = 0.8;
-			double y = 0.5;
-			double p, r,l;
-			double result = y;
-			if (proRatio < x)
-			{
-				p = proRatio / x;
-				r = p * y;
-				result = p * y + (1-p)*r*y;
-			}
-			if (proRatio > x)
-			{
-				l = 1 - y;
-				p = (proRatio - x) / (1 - x);
-				r = p * (1 - y);
-				result = y + p * l + (1-p) * r *l;
-			}
-			return Convert.ToInt32(result * Constants.maxElo);
+            accuracy /= 100.0;
+            accuracy = (accuracy - 0.4) / 0.6;
+            if (accuracy < 0)
+                accuracy = 0;
+            return Convert.ToInt32(accuracy * Constants.maxElo);
 		}
 
 		public int GetElo(double accuracy, out int del)
