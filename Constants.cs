@@ -23,6 +23,7 @@ namespace NSProgram
 		public static string testFen = "test.fen";
 		public static string teacher = "teacher.exe";
 		public static string student = "student.exe";
-		public static string command = String.Empty;
+        public static string studentArg = String.Empty;
+        public static string command = String.Empty;
 	}
 }

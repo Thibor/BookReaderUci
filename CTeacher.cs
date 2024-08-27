@@ -319,7 +319,8 @@ namespace NSProgram
 			{
 				studentProcess = new Process();
 				studentProcess.StartInfo.FileName = studentFile;
-				studentProcess.StartInfo.WorkingDirectory = Path.GetDirectoryName(studentFile);
+                studentProcess.StartInfo.Arguments = Constants.studentArg;
+                studentProcess.StartInfo.WorkingDirectory = Path.GetDirectoryName(studentFile);
 				studentProcess.StartInfo.CreateNoWindow = true;
 				studentProcess.StartInfo.RedirectStandardInput = true;
 				studentProcess.StartInfo.RedirectStandardOutput = true;
@@ -330,8 +331,6 @@ namespace NSProgram
 				studentProcess.Start();
 				studentProcess.BeginOutputReadLine();
 				StudentWriteLine("uci");
-				StudentWriteLine("isready");
-				StudentWriteLine("ucinewgame");
 				studentEnabled = true;
 				stoped = false;
 			}

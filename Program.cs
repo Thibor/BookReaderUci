@@ -440,14 +440,17 @@ namespace NSProgram
             {
                 Constants.accuracyGo = ini.Read("accurac>go", Constants.accuracyGo);
                 Constants.accuracyEpd = ini.Read("accuracy>fen", Constants.accuracyEpd);
+                Constants.student = ini.Read("accuracy>student", Constants.student);
+                Constants.studentArg = ini.Read("accuracy>student>arg", Constants.studentArg);
+                Constants.teacher = ini.Read("accuracy>teacher", Constants.teacher);
                 Constants.evalGo = ini.Read("test>go", Constants.evalGo);
                 Constants.evalFen = ini.Read("test>fen", Constants.evalFen);
                 Constants.testGo = ini.Read("test>go", Constants.testGo);
                 Constants.testFen = ini.Read("test>fen", Constants.testFen);
-                Constants.teacher = ini.Read("teacher", Constants.teacher);
-                Constants.student = ini.Read("student", Constants.student);
                 Constants.command = ini.Read("command", Constants.command);
                 Constants.limit = ini.ReadInt("limit", Constants.limit);
+                if (!File.Exists(Constants.student))
+                    Constants.studentArg=string.Empty;
             }
 
             void SavetoIni()
