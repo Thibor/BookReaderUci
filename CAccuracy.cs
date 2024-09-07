@@ -24,6 +24,7 @@ namespace NSProgram
 		public int inaccuracies = 0;
 		public int mistakes = 0;
 		public int blunders = 0;
+		public int lastLoss = 0;
 		public BadFen badFen;
 		public CRapLog log = new CRapLog("accuracy.log");
 		public CRapLog his = new CRapLog("accuracy.his");
@@ -91,26 +92,27 @@ namespace NSProgram
 			blunders = 0;
 			centyLoss = 0;
 			centyCount = 0;
+			lastLoss = 0;
 			badFen = default;
 		}
 
 		public void AddScore(string fen, string bstMove, string curMove,int bstScore, int curScore)
 		{
-			int delta = Math.Abs(bstScore - curScore);
-			if (delta >= Constants.blunder)
+			lastLoss = Math.Abs(bstScore - curScore);
+			if (lastLoss >= Constants.blunder)
 			{
-				delta = Constants.blunder;
+                lastLoss = Constants.blunder;
 				blunders++;
 			}
-			else if (delta > Constants.mistake)
+			else if (lastLoss > Constants.mistake)
 				mistakes++;
-			else if (delta > Constants.inaccuracy)
+			else if (lastLoss > Constants.inaccuracy)
 				inaccuracies++;
 			centyCount++;
-			centyLoss += delta;
-			if (badFen.worstDelta < delta)
+			centyLoss += lastLoss;
+			if (badFen.worstDelta < lastLoss)
 			{
-				badFen.worstDelta = delta;
+				badFen.worstDelta = lastLoss;
 				badFen.fen = fen;
 				badFen.bstMove = bstMove;
 				badFen.badMove = curMove;
@@ -145,7 +147,7 @@ namespace NSProgram
 		public int GetElo(double accuracy)
 		{
             accuracy /= 100.0;
-            accuracy = (accuracy - 0.4) / 0.6;
+            accuracy = (accuracy - 0.6) / 0.4;
             if (accuracy < 0)
                 accuracy = 0;
             return Convert.ToInt32(accuracy * Constants.maxElo);
@@ -162,11 +164,9 @@ namespace NSProgram
 		public bool NextLine(out MSLine line)
 		{
 			line = null;
-			if (index > Count)
+			if (index >= Count)
 				return false;
-			if (++index > Count)
-				return false;
-			line = this[Count - index];
+			line = this[index++];
 			return true;
 		}
 

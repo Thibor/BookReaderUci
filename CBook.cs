@@ -19,10 +19,16 @@ namespace NSProgram
 
         public void AddUci(string uci)
         {
+            int del = 0;
             for (int n = moves.Count - 1; n >= 0; n--)
                 if (uci.IndexOf(moves[n]) == 0)
+                {
+                    del++;
                     moves.RemoveRange(n, 1);
+                }
             moves.Add(uci);
+            if ((del > 0) && Program.isLog)
+                Program.log.Add($"delted {del} ({uci})");
         }
 
         public void AddUci(List<string> moves)
@@ -201,8 +207,6 @@ namespace NSProgram
                         sw.WriteLine(u);
                 }
             }
-            if (Program.isLog)
-                SaveLog();
             return true;
         }
 
@@ -226,11 +230,12 @@ namespace NSProgram
             return true;
         }
 
+        /*
         void SaveLog()
         {
             string last = moves.Last();
             Program.log.Add($"moves {last}");
-        }
+        }*/
 
         public bool SavePgn(string p)
         {

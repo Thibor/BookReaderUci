@@ -1,231 +1,140 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 using RapIni;
+using RapLog;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace NSProgram
 {
-	internal class CMod
-	{
-		public readonly CRapIni ini;
-		public double bstScore = 0;
-		bool modified = false;
-		bool plus = false;
-		bool second = false;
-		bool modAuto = false;
-		bool reset = false;
-		int modIndex = 0;
-		public int index = 0;
-		public int shift = 0;
-		int bonShift = 0;
-		readonly List<string> modList = new List<string>();
 
-		public CMod()
-		{
-			ini = new CRapIni(@"Students\mod.ini");
-			LoadFromIni();
-			modList = ini.ReadKeyList("cur");
-			foreach (string key in modList)
-				if (!ini.KeyExists($"bst>{key}"))
-				{
-					string s = ini.Read($"cur>{key}");
-					ini.Write($"bst>{key}", s);
-				}
-			modList = ini.ReadKeyList("bst");
-			BstToCur();
-			ini.Save();
-		}
+    class COption
+    {
+        public int cur = 0;
+        public int min = 0;
+        public int max = 0;
+        public int bst = 0;
+        public string name = string.Empty;
 
-		public int Del
-		{
-			get
-			{
-				int d = 1 << (shift + bonShift);
-				return plus ? d : -d;
-			}
-		}
+        public COption(string s)
+        {
+            name = s;
+        }
 
-		public int ValBst
-		{
-			get
-			{
-				if (BstList.Count == 0)
-					return 0;
-				return BstList[index % BstList.Count];
-			}
-		}
+        public void LoadFromIni(CRapIni ini)
+        {
+            bst = ini.ReadInt($"option>{name}>bst");
+            min = ini.ReadInt($"option>{name}>min");
+            max = ini.ReadInt($"option>{name}>max");
+            cur = ini.ReadInt($"option>{name}>cur", bst);
+        }
 
-		public int ValCur
-		{
-			get
-			{
-				List<int> list = CurList;
-				if (list.Count == 0)
-					return 0;
-				return list[index % list.Count];
-			}
-			set
-			{
-				List<int> list = CurList;
-				if (list.Count > 0)
-					list[index % list.Count] = value;
-				ini.Write($"cur>{ModName}",list);
-			}
-		}
+        public void SaveToIni(CRapIni ini)
+        {
+            ini.Write($"option>{name}>bst", bst);
+            ini.Write($"option>{name}>min", min);
+            ini.Write($"option>{name}>max", max);
+            ini.Write($"option>{name}>cur", cur);
+        }
 
-		public string ModName
-		{
-			get
-			{
-				if (modList.Count == 0)
-					return string.Empty;
-				return modList[modIndex % modList.Count];
-			}
-		}
+    }
+
+    internal class CMod
+    {
+        public double bstScore = 0;
+        int start = 0;
+        int fail = 0;
+        public readonly List<COption> optionList = new List<COption>();
+        static Random rnd = new Random();
+        CRapLog log = new CRapLog("mod.log");
+        readonly CRapIni ini = new CRapIni(@"mod.ini");
 
 
-		public List<int> BstList
-		{
-			get
-			{
-				return ini.ReadListInt("bst>" + ModName);
-			}
-		}
+        public CMod()
+        {
+            LoadFromIni();
+            Modify(0);
+        }
 
-		public List<int> CurList
-		{
-			get
-			{
-				return ini.ReadListInt("cur>" + ModName);
-			}
-		}
+        void LoadFromIni()
+        {
+            ini.Load();
+            List<string> ol = new List<string>();
+            ol = ini.ReadKeyList("option");
+            optionList.Clear();
+            foreach (string o in ol)
+            {
+                COption option = new COption(o);
+                option.LoadFromIni(ini);
+                optionList.Add(option);
+            }
+            start = rnd.Next(100);
+            start = ini.ReadInt("start", start);
+            fail = ini.ReadInt("fail");
+            bstScore = ini.ReadDouble("score");
+        }
 
-		public void BstToCur()
-		{
-			foreach (string key in modList)
-			{
-				string s = ini.Read($"bst>{key}");
-				ini.Write($"cur>{key}", s);
-			}
-		}
+        void SaveToIni()
+        {
+            foreach (COption opt in optionList)
+                opt.SaveToIni(ini);
+            ini.Write("start", start);
+            ini.Write("fail", fail);
+            ini.Write("score", bstScore);
+            ini.Save();
+        }
 
-		public void SetMode(string mode)
-		{
-			string m = ini.Read("mode");
-			if (m != mode)
-			{
-				ini.Write("reset", true);
-				ini.Write("mode", mode);
-				ini.Save();
-			}
-		}
+        public string OptionsCur()
+        {
+            string mod = string.Empty;
+            foreach (COption opt in optionList)
+                mod += $" {opt.name} {opt.cur}";
+            return mod;
+        }
 
-		void LoadFromIni()
-		{
-			ini.Load();
-			modified = ini.ReadBool("modified");
-			plus = ini.ReadBool("plus");
-			reset = ini.ReadBool("reset");
-			second = ini.ReadBool("second");
-			modAuto = ini.ReadBool("auto", true);
-			index = ini.ReadInt("index");
-			shift = ini.ReadInt("shift");
-			modIndex = ini.ReadInt("modIndex");
-			bstScore = ini.ReadDouble("score");
-		}
+        bool Modify(int probe)
+        {
+            foreach (COption o in optionList)
+                o.cur = o.bst;
+            SaveToIni();
+            int index = (fail + start) % optionList.Count;
+            int multi = fail / (optionList.Count * 2);
+            int up = 1 << multi;
+            if (((fail / optionList.Count) & 1) == (start & 1))
+                up = -up;
+            COption opt = optionList[index];
+            int cur = opt.bst + up;
+            if ((cur >= opt.min) && (cur <= opt.max))
+            {
+                opt.cur = cur;
+                SaveToIni();
+                return true;
+            }
+            fail++;
+            if (++probe < optionList.Count * 2)
+                return Modify(probe);
+            return false;
+        }
 
-		void SaveToIni()
-		{
-			ini.Write("modified", modified);
-			ini.Write("plus", plus);
-			ini.Write("reset", reset);
-			ini.Write("second", second);
-			ini.Write("auto", modAuto);
-			ini.Write("index", index);
-			ini.Write("shift", shift);
-			ini.Write("modIndex", modIndex);
-			ini.Write("score", bstScore);
-			ini.Save();
-		}
+        public bool SetScore(double s)
+        {
+            if (bstScore < s)
+            {
+                fail = 0;
+                bstScore = s;
+                start = rnd.Next(100);
+                foreach (COption opt in optionList)
+                    opt.bst = opt.cur;
+                ini.Save();
+                log.Add($"accuracy ({s:N2}){OptionsCur()}");
+            }
+            else
+                fail++;
+            return Modify(0);
+        }
 
-		void ModCur()
-		{
-			ValCur += Del;
-			ini.Write("cur>" + ModName, CurList);
-		}
-
-		public bool SetScore(double s)
-		{
-			if (bstScore == 0)
-				bstScore = s;
-			else if (bstScore > s)
-			{
-				bstScore = s;
-				modified = true;
-				second = false;
-				bonShift++;
-				ini.Load();
-				List<int> list = CurList;
-				ini.Write("bst>" + ModName, list);
-				string mod = String.Join(",", list.ToArray());
-				Program.log.Add($"({s:N2}) {mod}");
-			}
-			else
-			{
-				bonShift = 0;
-				bool stop = false;
-				do
-				{
-					if (++index >= CurList.Count)
-					{
-						index = 0;
-						if (modAuto && (modIndex < modList.Count - 1))
-							modIndex++;
-						else
-						{
-							if (stop)
-								return false;
-							stop = true;
-							plus = !plus;
-							if (second)
-								shift++;
-							second = !second;
-							if (modified)
-							{
-								modified = false;
-								second = false;
-								shift = 0;
-							}
-							if (modAuto)
-								modIndex = 0;
-						}
-					}
-				} while (Math.Abs(Del) >> 1 > Math.Abs(ValBst));
-			}
-			SaveToIni();
-			return true;
-		}
-
-		public void Start()
-		{
-			LoadFromIni();
-			if (reset)
-			{
-				reset = false;
-				plus = false;
-				second = false;
-				bstScore = 0;
-				index = 0;
-				shift = 0;
-			}
-			else
-			{
-				BstToCur();
-				ModCur();
-			}
-		}
-
-	}
+    }
 }

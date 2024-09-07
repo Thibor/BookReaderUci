@@ -166,8 +166,8 @@ namespace NSProgram
             string engineArguments = String.Join(" ", listEa);
             teacherFile = String.Join(" ", listTf);
             studentFile = String.Join(" ", listSf);
-            Console.WriteLine($"info string {book.name} ver {book.version}");
-            Console.WriteLine($"info string extension {CBook.defExt}");
+            Console.WriteLine($"idbook name {book.name} ver {book.version}");
+            Console.WriteLine($"idbook extension {CBook.defExt}");
             Process myProcess = new Process();
             if (File.Exists(engineFile))
             {
@@ -209,7 +209,6 @@ namespace NSProgram
                 if (uci.command == "accuracy")
                 {
                     accuracy.LoadFromFile();
-                    Console.WriteLine($"{accuracy.GetElo(100)}");
                     if (accuracy.Count == 0)
                         Console.WriteLine($"file \"{Constants.accuracyEpd}\" unavabile");
                     if (uci.tokens.Length > 1)
@@ -251,11 +250,11 @@ namespace NSProgram
                                 accuracy.Fens(fens);
                                 break;
                             case "mod":
-                                teacher.AccuracyMod();
+                                teacher.ModStart();
                                 break;
                         }
                     accuracy.Info();
-                }
+                }   
                 if (uci.command == "evaluation")
                 {
                     evaluation.LoadFromFile();
@@ -272,9 +271,6 @@ namespace NSProgram
                                 break;
                             case "start":
                                 teacher.EvaluationStart();
-                                break;
-                            case "mod":
-                                teacher.EvaluationMod();
                                 break;
                         }
                 }
