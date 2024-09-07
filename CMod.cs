@@ -97,6 +97,8 @@ namespace NSProgram
 
         bool Modify(int probe)
         {
+            if (optionList.Count == 0)
+                return false;
             foreach (COption o in optionList)
                 o.cur = o.bst;
             SaveToIni();
