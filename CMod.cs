@@ -56,7 +56,6 @@ namespace NSProgram
         public CMod()
         {
             LoadFromIni();
-            Modify(0);
         }
 
         void LoadFromIni()
@@ -95,7 +94,7 @@ namespace NSProgram
             return mod;
         }
 
-        bool Modify(int probe)
+        public bool Modify(int probe = 0)
         {
             if (optionList.Count == 0)
                 return false;
@@ -135,7 +134,7 @@ namespace NSProgram
             }
             else
                 fail++;
-            return Modify(0);
+            return Modify();
         }
 
     }
