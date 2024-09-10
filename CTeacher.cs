@@ -510,7 +510,6 @@ namespace NSProgram
             }
             string name = Path.GetFileNameWithoutExtension(student);
             Console.WriteLine($"{name} ready");
-            mod.Modify();
             while (true)
             {
                 SetStudent(student);

@@ -188,6 +188,8 @@ namespace NSProgram
                 Console.WriteLine("info string teacher on");
             if (File.Exists(Constants.student))
                 Console.WriteLine("info string student on");
+            if (File.Exists("accuracy.epd"))
+                Console.WriteLine("info string accuracy on");
             bool bookLoaded = SetBookFile(bookFile);
             do
             {
