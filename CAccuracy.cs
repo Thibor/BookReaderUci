@@ -104,9 +104,9 @@ namespace NSProgram
                 lastLoss = Constants.blunder;
 				blunders++;
 			}
-			else if (lastLoss > Constants.mistake)
+			else if (lastLoss >= Constants.mistake)
 				mistakes++;
-			else if (lastLoss > Constants.inaccuracy)
+			else if (lastLoss >= Constants.inaccuracy)
 				inaccuracies++;
 			centyCount++;
 			centyLoss += lastLoss;

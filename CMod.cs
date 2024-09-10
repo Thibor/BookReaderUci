@@ -90,7 +90,10 @@ namespace NSProgram
         {
             string mod = string.Empty;
             foreach (COption opt in optionList)
-                mod += $" {opt.name} {opt.cur}";
+                if ((opt.min == 0) && (opt.max == 1))
+                    mod += $" {opt.name} {opt.cur == 1}";
+                else
+                    mod += $" {opt.name} {opt.cur}";
             return mod;
         }
 
