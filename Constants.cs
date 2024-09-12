@@ -15,8 +15,8 @@ namespace NSProgram
 		public static double maxElo = 3500;
 		public static short CHECKMATE_MAX = short.MaxValue;
 		public static short CHECKMATE_NEAR = 0x7000;
-		public static string accuracyGo = "go movetime 2000";
-		public static string accuracyEpd = "accuracy.epd";
+		public static string go = "go movetime 1000";
+		public static string epd = "accuracy.epd";
 		public static string evalGo = "eval";
 		public static string evalFen = "evaluation.fen";
 		public static string testGo = "go movetime 1000";

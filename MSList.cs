@@ -200,7 +200,7 @@ namespace NSProgram
 				min = 0;
 		}
 
-		public int CountMoves(out int min)
+		public int CountMovesMin(out int min)
 		{
 			int result = 0;
 			min = int.MaxValue;
@@ -217,7 +217,24 @@ namespace NSProgram
 			return result;
 		}
 
-		public void Check()
+        public int CountMovesMax(out int max)
+        {
+            int result = 0;
+            max = 0;
+            foreach (MSLine msl in this)
+            {
+                if (max < msl.Count)
+                {
+                    max = msl.Count;
+                    result = 1;
+                }
+                else if (max == msl.Count)
+                    result++;
+            }
+            return result;
+        }
+
+        public void Check()
 		{
 			SortFen();
 			MSLine last = null;
@@ -286,7 +303,7 @@ namespace NSProgram
 		{
 			string last = String.Empty;
 			SortFen();
-			using (FileStream fs = File.Open(Constants.accuracyEpd, FileMode.Create, FileAccess.Write, FileShare.None))
+			using (FileStream fs = File.Open(Constants.epd, FileMode.Create, FileAccess.Write, FileShare.None))
 			using (StreamWriter sw = new StreamWriter(fs))
 			{
 				foreach (MSLine msl in this)
@@ -304,9 +321,9 @@ namespace NSProgram
 		public bool LoadFromEpd()
 		{
 			Clear();
-			if (!File.Exists(Constants.accuracyEpd))
+			if (!File.Exists(Constants.epd))
 				return false;
-			using (FileStream fs = File.Open(Constants.accuracyEpd, FileMode.Open, FileAccess.Read, FileShare.Read))
+			using (FileStream fs = File.Open(Constants.epd, FileMode.Open, FileAccess.Read, FileShare.Read))
 			using (StreamReader reader = new StreamReader(fs))
 			{
 				string line = String.Empty;

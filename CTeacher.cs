@@ -492,7 +492,7 @@ namespace NSProgram
                 Program.accuracy.his.Add(line.fen);
                 StudentWriteLine("ucinewgame");
                 StudentWriteLine($"position fen {line.fen}");
-                StudentWriteLine(Constants.accuracyGo);
+                StudentWriteLine(Constants.go);
             }
             Console.WriteLine();
             return Program.accuracy.GetAccuracy();

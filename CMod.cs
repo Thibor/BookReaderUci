@@ -47,6 +47,7 @@ namespace NSProgram
         public double bstScore = 0;
         int start = 0;
         int fail = 0;
+        int success = 0;
         public readonly List<COption> optionList = new List<COption>();
         static Random rnd = new Random();
         CRapLog log = new CRapLog("mod.log");
@@ -70,9 +71,10 @@ namespace NSProgram
                 option.LoadFromIni(ini);
                 optionList.Add(option);
             }
-            start = rnd.Next(100);
+            start = rnd.Next(optionList.Count * 2);
             start = ini.ReadInt("start", start);
             fail = ini.ReadInt("fail");
+            success = ini.ReadInt("success", success);
             bstScore = ini.ReadDouble("score");
         }
 
@@ -82,6 +84,7 @@ namespace NSProgram
                 opt.SaveToIni(ini);
             ini.Write("start", start);
             ini.Write("fail", fail);
+            ini.Write("success", success);
             ini.Write("score", bstScore);
             ini.Save();
         }
@@ -97,7 +100,7 @@ namespace NSProgram
             return mod;
         }
 
-        public bool Modify(int probe = 0)
+        bool Modify(int probe = 0)
         {
             if (optionList.Count == 0)
                 return false;
@@ -106,7 +109,7 @@ namespace NSProgram
             SaveToIni();
             int index = (fail + start) % optionList.Count;
             int multi = fail / (optionList.Count * 2);
-            int up = 1 << multi;
+            int up = (1 << multi) + success;
             if (((fail / optionList.Count) & 1) == (start & 1))
                 up = -up;
             COption opt = optionList[index];
@@ -127,17 +130,24 @@ namespace NSProgram
         {
             if (bstScore < s)
             {
-                fail = 0;
+                success++;
                 bstScore = s;
-                start = rnd.Next(100);
                 foreach (COption opt in optionList)
                     opt.bst = opt.cur;
-                ini.Save();
+                SaveToIni();
                 log.Add($"accuracy ({s:N2}){OptionsCur()}");
             }
             else
+            {
                 fail++;
-            return Modify();
+                if (success > 0)
+                {
+                    fail = 0;
+                    start = rnd.Next(optionList.Count * 2);
+                }
+                success = 0;
+            }
+            return Modify(0);
         }
 
     }

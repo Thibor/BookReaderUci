@@ -50,12 +50,8 @@ namespace NSProgram
 			Console.WriteLine($"fens {Count} moves {minM} depth {minD} fail {fail}");
 		}
 
-		public void Fens(int fens)
+		public void Add(int val)
 		{
-			if (Count > fens)
-				Console.WriteLine("To reduce fens use command \"accuracy delete\"");
-			if (Count >= fens)
-				return;
 			if (!File.Exists("accuracy.fen"))
 			{
 				Console.WriteLine("File \"accuracy.fen\" is missing.");
@@ -64,13 +60,14 @@ namespace NSProgram
 			string fen;
 			string[] fa = File.ReadAllLines("accuracy.fen");
 			List<string> fl = new List<string>(fa);
-			while ((Count < fens) && (fl.Count > 0))
+			while ((val>0) && (fl.Count > 0))
 			{
 				int i = rnd.Next(fl.Count);
 				fen = fl[i].Trim();
 				if (string.IsNullOrEmpty(fen))
 					continue;
-				AddLine(fen);
+				if (AddLine(fen))
+					val--;
 			}
 			for(int n = fl.Count - 1; n >= 0; n--)
 			{
@@ -80,7 +77,6 @@ namespace NSProgram
             }
             File.WriteAllLines("accuracy.fen", fl);
             SaveToEpd();
-            Info();
             Console.WriteLine($"{fl.Count} fens left.");
 		}
 

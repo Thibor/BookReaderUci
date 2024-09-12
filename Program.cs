@@ -189,7 +189,9 @@ namespace NSProgram
             if (File.Exists(Constants.student))
                 Console.WriteLine("info string student on");
             if (File.Exists("accuracy.epd"))
-                Console.WriteLine("info string accuracy on");
+                Console.WriteLine("info string epd on");
+            if (File.Exists("accuracy.fen"))
+                Console.WriteLine("info string fen on");
             bool bookLoaded = SetBookFile(bookFile);
             do
             {
@@ -212,7 +214,7 @@ namespace NSProgram
                 {
                     accuracy.LoadFromFile();
                     if (accuracy.Count == 0)
-                        Console.WriteLine($"file \"{Constants.accuracyEpd}\" unavabile");
+                        Console.WriteLine($"file \"{Constants.epd}\" unavabile");
                     if (uci.tokens.Length > 1)
                         switch (uci.tokens[1])
                         {
@@ -232,13 +234,23 @@ namespace NSProgram
                                         cf = accuracy.DeleteFail();
                                         Console.WriteLine($"{cf} fens deleted");
                                     }
+                                    break;
                                 }
-                                else
+                                if(uci.GetValue("delete")=="min")
                                 {
-                                    int cm = accuracy.CountMoves(out int minM);
+                                    int cm = accuracy.CountMovesMin(out int minM);
                                     if (Confirm($"Delete {cm} fens"))
                                     {
                                         cm = accuracy.DeleteMoves(minM);
+                                        Console.WriteLine($"{cm} fens deleted");
+                                    }
+                                }
+                                if (uci.GetValue("delete") == "max")
+                                {
+                                    int cm = accuracy.CountMovesMax(out int maxM);
+                                    if (Confirm($"Delete {cm} fens"))
+                                    {
+                                        cm = accuracy.DeleteMoves(maxM);
                                         Console.WriteLine($"{cm} fens deleted");
                                     }
                                 }
@@ -247,12 +259,15 @@ namespace NSProgram
                                 Constants.limit = uci.GetInt("start", accuracy.Count);
                                 teacher.AccuracyStart();
                                 break;
-                            case "fens":
-                                int fens = uci.GetInt("fens", accuracy.Count);
-                                accuracy.Fens(fens);
+                            case "add":
+                                int i = uci.GetInt("add");
+                                accuracy.Add(i);
                                 break;
                             case "mod":
                                 teacher.ModStart();
+                                break;
+                            default:
+                                Console.WriteLine($"Unknown command [{uci.tokens[1]}]");
                                 break;
                         }
                     accuracy.Info();
@@ -436,11 +451,12 @@ namespace NSProgram
 
             void LoadFromIni()
             {
-                Constants.accuracyGo = ini.Read("accurac>go", Constants.accuracyGo);
-                Constants.accuracyEpd = ini.Read("accuracy>fen", Constants.accuracyEpd);
-                Constants.student = ini.Read("accuracy>student", Constants.student);
-                Constants.studentArg = ini.Read("accuracy>student>arg", Constants.studentArg);
-                Constants.teacher = ini.Read("accuracy>teacher", Constants.teacher);
+                ini.Load();
+                Constants.go = ini.Read("go", Constants.go);
+                Constants.epd = ini.Read("fen", Constants.epd);
+                Constants.student = ini.Read("student", Constants.student);
+                Constants.studentArg = ini.Read("student>arg", Constants.studentArg);
+                Constants.teacher = ini.Read("teacher", Constants.teacher);
                 Constants.evalGo = ini.Read("test>go", Constants.evalGo);
                 Constants.evalFen = ini.Read("test>fen", Constants.evalFen);
                 Constants.testGo = ini.Read("test>go", Constants.testGo);
@@ -453,7 +469,8 @@ namespace NSProgram
 
             void SavetoIni()
             {
-                ini.Write("accurac>go", Constants.accuracyGo);
+                ini.Write("go", Constants.go);
+                ini.Save();
             }
 
             bool SetBookFile(string bn)
