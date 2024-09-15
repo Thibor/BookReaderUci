@@ -270,7 +270,7 @@ namespace NSProgram
                                 Console.WriteLine($"Unknown command [{uci.tokens[1]}]");
                                 break;
                         }
-                    accuracy.Info();
+                    accuracy.PrintInfo();
                 }   
                 if (uci.command == "evaluation")
                 {

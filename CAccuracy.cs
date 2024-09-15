@@ -9,7 +9,7 @@ namespace NSProgram
 	{
 		public int bstScore;
 		public int badScore;
-		public int worstDelta;
+		public double worstAccuracy;
 		public string fen;
 		public string bstMove;
 		public string badMove;
@@ -19,8 +19,8 @@ namespace NSProgram
 	{
 		bool loaded = false;
 		public int index = 0;
-		long centyLoss = 0;
-		long centyCount = 0;
+		long totalCount = 0;
+		double totalAccuracy = 0;
 		public int inaccuracies = 0;
 		public int mistakes = 0;
 		public int blunders = 0;
@@ -37,18 +37,19 @@ namespace NSProgram
 			loaded = true;
 			LoadFromEpd();
 			Check();
-			GetDepth(out int minD,out int maxD);
-			GetMoves(out int minM,out int maxM);
-			Console.WriteLine($"info string accuracy on fens {Count} fail {CountFail()} depth ({minD} - {maxD}) moves ({minM} - {maxM})");
 		}
 
-		public void Info()
+		public void PrintInfo()
 		{
-			GetDepth(out int minD,out _);
-			GetMoves(out int minM,out _);
-			int fail = CountFail();
-			Console.WriteLine($"fens {Count} moves {minM} depth {minD} fail {fail}");
+            Console.WriteLine(GetInfo());
 		}
+
+		string GetInfo()
+		{
+            GetDepth(out int minD, out int maxD);
+            GetMoves(out int minM, out int maxM);
+			return $"fens {Count} fail {CountFail()} depth ({minD} - {maxD}) moves ({minM} - {maxM})";
+        }
 
 		public void Add(int val)
 		{
@@ -86,15 +87,15 @@ namespace NSProgram
 			inaccuracies = 0;
 			mistakes = 0;
 			blunders = 0;
-			centyLoss = 0;
-			centyCount = 0;
-			lastLoss = 0;
+			totalCount = 0;
+            totalAccuracy = 0;
 			badFen = default;
+			badFen.worstAccuracy = 100;
 		}
 
 		public void AddScore(string fen, string bstMove, string curMove,int bstScore, int curScore)
 		{
-			lastLoss = Math.Abs(bstScore - curScore);
+			int lastLoss = Math.Abs(bstScore - curScore);
 			if (lastLoss >= Constants.blunder)
 			{
                 lastLoss = Constants.blunder;
@@ -104,11 +105,12 @@ namespace NSProgram
 				mistakes++;
 			else if (lastLoss >= Constants.inaccuracy)
 				inaccuracies++;
-			centyCount++;
-			centyLoss += lastLoss;
-			if (badFen.worstDelta < lastLoss)
+			double accuracy = GetAccuracy(bstScore, curScore);
+            totalCount++;
+			totalAccuracy += accuracy;
+            if (badFen.worstAccuracy > accuracy)
 			{
-				badFen.worstDelta = lastLoss;
+				badFen.worstAccuracy = accuracy;
 				badFen.fen = fen;
 				badFen.bstMove = bstMove;
 				badFen.badMove = curMove;
@@ -117,27 +119,21 @@ namespace NSProgram
 			}
 		}
 
-		public double WinningChances(int eval)
+		public double WiningChances(int centipawns)
 		{
-			double result = 2.0 / (1 + Math.Exp(-0.00368208 * eval)) - 1;
-			if (result > 1)
-				return 1;
-			if (result < -1)
-				return -1;
-			return result;
-		}
+			return 50 + 50 * (2 / (1 + Math.Exp(-0.00368208 * centipawns)) - 1);
+        }
 
-		public double GetAccuracy(long cc, long cl)
+		public double GetAccuracy(int scoreBefore,int scoreAfter)
 		{
-			if (cc == 0)
-				return 0;
-			double max = cc * Constants.blunder;
-			return ((max - cl) * 100.0) / max;
-		}
+            double winPercentBefore = WiningChances(scoreBefore);
+            double winPercentAfter=WiningChances(scoreAfter);
+            return 103.1668 * Math.Exp(-0.04354 * (winPercentBefore - winPercentAfter)) - 3.1669;
+        }
 
 		public double GetAccuracy()
 		{
-			return GetAccuracy(centyCount, centyLoss);
+			return totalAccuracy / totalCount;
 		}
 
 		public int GetElo(double accuracy)
@@ -151,10 +147,10 @@ namespace NSProgram
 
 		public int GetElo(double accuracy, out int del)
 		{
-			double minAcc = GetAccuracy(centyCount + 1, centyLoss + Constants.blunder);
-			double maxAcc = GetAccuracy(centyCount + 1, centyLoss);
-			del = GetElo(maxAcc) - GetElo(minAcc);
-			return GetElo(accuracy);
+            int eloMax = GetElo(accuracy);
+            int eloMin = GetElo(totalAccuracy / (totalCount + 1));
+            del = eloMax-eloMin;
+			return eloMax;
 		}
 
 		public bool NextLine(out MSLine line)

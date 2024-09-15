@@ -49,8 +49,8 @@ namespace NSProgram
         int fail = 0;
         int success = 0;
         public readonly List<COption> optionList = new List<COption>();
-        static Random rnd = new Random();
-        CRapLog log = new CRapLog("mod.log");
+        readonly static Random rnd = new Random();
+        readonly CRapLog log = new CRapLog("mod.log");
         readonly CRapIni ini = new CRapIni(@"mod.ini");
 
 
@@ -62,8 +62,7 @@ namespace NSProgram
         void LoadFromIni()
         {
             ini.Load();
-            List<string> ol = new List<string>();
-            ol = ini.ReadKeyList("option");
+            List<string> ol = ini.ReadKeyList("option");
             optionList.Clear();
             foreach (string o in ol)
             {
@@ -72,20 +71,20 @@ namespace NSProgram
                 optionList.Add(option);
             }
             start = rnd.Next(optionList.Count * 2);
-            start = ini.ReadInt("start", start);
-            fail = ini.ReadInt("fail");
-            success = ini.ReadInt("success", success);
-            bstScore = ini.ReadDouble("score");
+            start = ini.ReadInt("mod>start", start);
+            fail = ini.ReadInt("mod>fail");
+            success = ini.ReadInt("mod>success", success);
+            bstScore = ini.ReadDouble("mod>score");
         }
 
         void SaveToIni()
         {
             foreach (COption opt in optionList)
                 opt.SaveToIni(ini);
-            ini.Write("start", start);
-            ini.Write("fail", fail);
-            ini.Write("success", success);
-            ini.Write("score", bstScore);
+            ini.Write("mod>start", start);
+            ini.Write("mod>fail", fail);
+            ini.Write("mod>success", success);
+            ini.Write("mod>score", bstScore);
             ini.Save();
         }
 

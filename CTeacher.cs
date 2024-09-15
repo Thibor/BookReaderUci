@@ -445,8 +445,8 @@ namespace NSProgram
             }
             Program.accuracy.his.Add($"start {name}");
             AccuracyStudent();
-            int winChanceSou = Convert.ToInt32(Program.accuracy.WinningChances(Program.accuracy.badFen.bstScore) * 100.0);
-            int winChanceDes = Convert.ToInt32(Program.accuracy.WinningChances(Program.accuracy.badFen.badScore) * 100.0);
+            int winChanceSou = Convert.ToInt32(Program.accuracy.WiningChances(Program.accuracy.badFen.bstScore) * 100.0);
+            int winChanceDes = Convert.ToInt32(Program.accuracy.WiningChances(Program.accuracy.badFen.badScore) * 100.0);
             double accuracy = Program.accuracy.GetAccuracy();
             int elo = Program.accuracy.GetElo(accuracy, out int del);
             Program.accuracy.log.Add($"accuracy {accuracy:N2}% elo {elo} (±{del}) count {Program.accuracy.index} {name} blunders {Program.accuracy.blunders} mistakes {Program.accuracy.mistakes} inaccuracies {Program.accuracy.inaccuracies} {Program.accuracy.badFen.fen} ({Program.accuracy.badFen.bstMove} => {Program.accuracy.badFen.badMove}) ({Program.accuracy.badFen.bstScore} => {Program.accuracy.badFen.badScore}) ({winChanceSou} => {winChanceDes})");
@@ -472,9 +472,7 @@ namespace NSProgram
                     continue;
                 if (tdg.prepared && tdg.done && !string.IsNullOrEmpty(tdg.bestMove))
                 {
-                    int best = tdg.line.First().score;
                     int score = tdg.line.GetScore(tdg.bestMove);
-                    int delta = best - score;
                     Program.accuracy.AddScore(tdg.line.fen, tdg.line.First().move, tdg.bestMove, tdg.line.First().score, score);
                     AccuracyLine();
                     if ((Constants.limit > 0) && (Program.accuracy.index >= Constants.limit))
