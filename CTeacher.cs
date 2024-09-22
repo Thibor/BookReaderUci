@@ -41,7 +41,7 @@ namespace NSProgram
         Process teacherProcess = new Process();
         Process studentProcess = new Process();
         readonly CUci uci = new CUci();
-        readonly CMod mod = new CMod();
+        public readonly CMod mod = new CMod();
         public List<string> students = new List<string>();
         public List<string> teachers = new List<string>();
         public CRapLog evaluationReport = new CRapLog("evaluation.log");
@@ -473,7 +473,7 @@ namespace NSProgram
                 if (tdg.prepared && tdg.done && !string.IsNullOrEmpty(tdg.bestMove))
                 {
                     int score = tdg.line.GetScore(tdg.bestMove);
-                    Program.accuracy.AddScore(tdg.line.fen, tdg.line.First().move, tdg.bestMove, tdg.line.First().score, score);
+                    Program.accuracy.AddScore(tdg.line.fen, tdg.line.First().move, tdg.bestMove, tdg.line.First().score,tdg.line.Last().score, score);
                     AccuracyLine();
                     if ((Constants.limit > 0) && (Program.accuracy.index >= Constants.limit))
                         break;

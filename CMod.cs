@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.AccessControl;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using RapIni;
 using RapLog;
@@ -47,7 +48,7 @@ namespace NSProgram
         public double bstScore = 0;
         int start = 0;
         int fail = 0;
-        int success = 0;
+        int success = -1;
         public readonly List<COption> optionList = new List<COption>();
         readonly static Random rnd = new Random();
         readonly CRapLog log = new CRapLog("mod.log");
@@ -88,6 +89,17 @@ namespace NSProgram
             ini.Save();
         }
 
+        public void Reset()
+        {
+            foreach (COption opt in optionList)
+                opt.cur = opt.bst;
+            start = 0;
+            fail = 0;
+            success = -1;
+            bstScore = 0;
+            Console.WriteLine(OptionsCur());
+        }
+
         public string OptionsCur()
         {
             string mod = string.Empty;
@@ -96,6 +108,17 @@ namespace NSProgram
                     mod += $" {opt.name} {opt.cur == 1}";
                 else
                     mod += $" {opt.name} {opt.cur}";
+            return mod;
+        }
+
+        public string OptionsBst()
+        {
+            string mod = string.Empty;
+            foreach (COption opt in optionList)
+                if ((opt.min == 0) && (opt.max == 1))
+                    mod += $" {opt.name} {opt.bst == 1}";
+                else
+                    mod += $" {opt.name} {opt.bst}";
             return mod;
         }
 
@@ -116,6 +139,7 @@ namespace NSProgram
             if ((cur >= opt.min) && (cur <= opt.max))
             {
                 opt.cur = cur;
+                Console.WriteLine($"{OptionsBst()} >> {opt.name} {up}");
                 SaveToIni();
                 return true;
             }

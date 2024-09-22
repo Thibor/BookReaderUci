@@ -93,21 +93,20 @@ namespace NSProgram
 			badFen.worstAccuracy = 100;
 		}
 
-		public void AddScore(string fen, string bstMove, string curMove,int bstScore, int curScore)
+		public void AddScore(string fen, string bstMove,string curMove,int bstScore,int badScore, int curScore)
 		{
-			int lastLoss = Math.Abs(bstScore - curScore);
-			if (lastLoss >= Constants.blunder)
-			{
-                lastLoss = Constants.blunder;
-				blunders++;
-			}
-			else if (lastLoss >= Constants.mistake)
-				mistakes++;
-			else if (lastLoss >= Constants.inaccuracy)
-				inaccuracies++;
-			double accuracy = GetAccuracy(bstScore, curScore);
+			double bstWC = WiningChances(bstScore);
+			double curWC = WiningChances(curScore);
+			double del = bstWC - curWC;
+            double accuracy = GetAccuracy(bstScore, curScore);
             totalCount++;
 			totalAccuracy += accuracy;
+			if (del > 30)
+				blunders++;
+			else if (del > 20)
+				mistakes++;
+			else if (del > 10)
+				inaccuracies++;
             if (badFen.worstAccuracy > accuracy)
 			{
 				badFen.worstAccuracy = accuracy;
