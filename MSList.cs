@@ -52,6 +52,13 @@ namespace NSProgram
 			SortScore();
 		}
 
+		public double DeltaWc() 
+		{
+			if(Count < 2)
+				return 0;
+			return CAccuracy.DeltaWC(First().score,Last().score);
+		}
+
 		public void SortScore()
 		{
 			Sort(delegate (MSRec r1, MSRec r2)
