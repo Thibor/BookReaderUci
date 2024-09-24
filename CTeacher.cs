@@ -514,7 +514,7 @@ namespace NSProgram
                 SetStudent(student);
                 foreach (COption opt in mod.optionList)
                     StudentWriteLine($"setoption {opt.name} value{opt.cur}");
-                Console.WriteLine(mod.OptionsCur());
+                Console.WriteLine(mod.optionList.OptionsCur());
                 double score = AccuracyStudent();
                 ConsoleWriteLine($"accuracy {score:N2}% best {mod.bstScore:N2}");
                 if (!mod.SetScore(score))

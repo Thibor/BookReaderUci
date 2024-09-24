@@ -1,24 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
 using System.Security.AccessControl;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using RapIni;
 using RapLog;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace NSProgram
 {
+    public enum EOptionType { eSpin, eCheck, eString }
 
     class COption
     {
-        public int cur = 0;
-        public int min = 0;
-        public int max = 0;
-        public int bst = 0;
+        public string cur = "0";
+        public int min = -50;
+        public int max = 50;
+        public string bst = "0";
         public string name = string.Empty;
+        public EOptionType oType = EOptionType.eSpin;
 
         public COption(string s)
         {
@@ -27,31 +31,171 @@ namespace NSProgram
 
         public void LoadFromIni(CRapIni ini)
         {
-            bst = ini.ReadInt($"option>{name}>bst");
-            min = ini.ReadInt($"option>{name}>min");
-            max = ini.ReadInt($"option>{name}>max");
-            cur = ini.ReadInt($"option>{name}>cur", bst);
+            oType = CMod.StrToType(ini.Read($"option>{name}>type"));
+            min = ini.ReadInt($"option>{name}>min", min);
+            max = ini.ReadInt($"option>{name}>max", max);
+            cur = ini.Read($"option>{name}>cur", ((min + max) / 2).ToString());
+            bst = ini.Read($"option>{name}>bst", cur);
         }
 
         public void SaveToIni(CRapIni ini)
         {
-            ini.Write($"option>{name}>bst", bst);
+            ini.Write($"option>{name}>type", CMod.TypeToStr(oType));
             ini.Write($"option>{name}>min", min);
             ini.Write($"option>{name}>max", max);
             ini.Write($"option>{name}>cur", cur);
+            ini.Write($"option>{name}>bst", bst);
+        }
+
+    }
+
+    class COptionList : List<COption>
+    {
+        public int start = 0;
+        readonly static Random rnd = new Random();
+
+        public void Init()
+        {
+            start = rnd.Next(Length() * 2);
+        }
+
+        public void SaveToIni(CRapIni ini)
+        {
+            foreach (COption option in this)
+                option.SaveToIni(ini);
+            ini.Write("mod>start", start);
+        }
+
+        public void LoadFromIni(CRapIni ini)
+        {
+            Init();
+            Clear();
+            List<string> ol = ini.ReadKeyList("option");
+            foreach (string name in ol)
+            {
+                COption option = new COption(name);
+                option.LoadFromIni(ini);
+                Add(option);
+            }
+            start = ini.ReadInt("mod>start", start);
+        }
+
+        public int Length()
+        {
+            int l = 0;
+            foreach (COption option in this)
+                if (option.oType == EOptionType.eString)
+                    l += option.cur.Length;
+                else l++;
+            return l;
+        }
+
+        bool GetIndexSub(int i, out int index, out int sub)
+        {
+            index = 0;
+            sub = 0;
+            if (Count == 0)
+                return false;
+            int l = 0;
+            i %= Length();
+            for (int n = 0; n < Count; n++)
+            {
+                COption opt = this[n];
+                if (opt.oType == EOptionType.eString)
+                    l += opt.cur.Length;
+                else l++;
+                if (l > i)
+                {
+                    index = n;
+                    sub = l - i - 1;
+                    break;
+                }
+            }
+            return true;
+        }
+
+        public string OptionsCur()
+        {
+            string mod = string.Empty;
+            foreach (COption opt in this)
+                mod += $" {opt.name} {opt.cur}";
+            return mod;
+        }
+
+        public string OptionsBst()
+        {
+            string mod = string.Empty;
+            foreach (COption opt in this)
+                mod += $" {opt.name} {opt.bst}";
+            return mod;
+        }
+
+        public bool Modify(int fail, int del)
+        {
+            bool result = false;
+            if (Count == 0)
+                return result;
+            GetIndexSub(start + fail, out int index, out int sub);
+            COption opt = this[index];
+            int val;
+            switch (opt.oType)
+            {
+                case EOptionType.eCheck:
+                    if ((del == 1) && (opt.cur != "true"))
+                    {
+                        opt.cur = "true";
+                        result = true;
+                    }
+                    else if ((del == -1) && (opt.cur != "false"))
+                    {
+                        opt.cur = "false";
+                        result = true;
+                    }
+                    break;
+                case EOptionType.eString:
+                    string s = opt.bst.Substring(sub, 1);
+                    if (!int.TryParse(s, out val))
+                        val = 5;
+                    val += del;
+                    if ((val >= 0) && (val <= 9))
+                    {
+                        string cur = opt.cur;
+                        char c = val.ToString()[0];
+                        char[] arr = cur.ToCharArray();
+                        arr[sub] = c;
+                        opt.cur = string.Join("", arr);
+                        result = true;
+                    }
+                    break;
+                default:
+                    val = Convert.ToInt32(opt.bst) + del;
+                    if ((val >= opt.min) && (val <= opt.max))
+                    {
+                        opt.cur = val.ToString();
+                        result = true;
+                    }
+                    break;
+            }
+            if (result)
+            {
+                string s = $"{opt.name} {opt.bst} >> {opt.cur}";
+                Console.WriteLine(s);
+                CMod.log.Add(s);
+            }
+            return result;
         }
 
     }
 
     internal class CMod
     {
+        string dna = string.Empty;
         public double bstScore = 0;
-        int start = 0;
-        int fail = 0;
+        int fail = -1;
         int success = -1;
-        public readonly List<COption> optionList = new List<COption>();
+        public readonly COptionList optionList = new COptionList();
         readonly static Random rnd = new Random();
-        readonly CRapLog log = new CRapLog("mod.log");
+        public static readonly CRapLog log = new CRapLog("mod.log");
         readonly CRapIni ini = new CRapIni(@"mod.ini");
 
 
@@ -60,19 +204,36 @@ namespace NSProgram
             LoadFromIni();
         }
 
+        public static string TypeToStr(EOptionType ot)
+        {
+            switch (ot)
+            {
+                case EOptionType.eCheck:
+                    return "check";
+                case EOptionType.eString:
+                    return "string";
+                default:
+                    return "spin";
+            }
+        }
+
+        public static EOptionType StrToType(string s)
+        {
+            switch (s)
+            {
+                case "check":
+                    return EOptionType.eCheck;
+                case "string":
+                    return EOptionType.eString;
+                default:
+                    return EOptionType.eSpin;
+            }
+        }
+
         void LoadFromIni()
         {
             ini.Load();
-            List<string> ol = ini.ReadKeyList("option");
-            optionList.Clear();
-            foreach (string o in ol)
-            {
-                COption option = new COption(o);
-                option.LoadFromIni(ini);
-                optionList.Add(option);
-            }
-            start = rnd.Next(optionList.Count * 2);
-            start = ini.ReadInt("mod>start", start);
+            optionList.LoadFromIni(ini);
             fail = ini.ReadInt("mod>fail");
             success = ini.ReadInt("mod>success", success);
             bstScore = ini.ReadDouble("mod>score");
@@ -80,9 +241,7 @@ namespace NSProgram
 
         void SaveToIni()
         {
-            foreach (COption opt in optionList)
-                opt.SaveToIni(ini);
-            ini.Write("mod>start", start);
+            optionList.SaveToIni(ini);
             ini.Write("mod>fail", fail);
             ini.Write("mod>success", success);
             ini.Write("mod>score", bstScore);
@@ -91,35 +250,13 @@ namespace NSProgram
 
         public void Reset()
         {
+            optionList.Init();
             foreach (COption opt in optionList)
                 opt.cur = opt.bst;
-            start = 0;
-            fail = 0;
+            fail = -1;
             success = -1;
             bstScore = 0;
-            Console.WriteLine(OptionsCur());
-        }
-
-        public string OptionsCur()
-        {
-            string mod = string.Empty;
-            foreach (COption opt in optionList)
-                if ((opt.min == 0) && (opt.max == 1))
-                    mod += $" {opt.name} {opt.cur == 1}";
-                else
-                    mod += $" {opt.name} {opt.cur}";
-            return mod;
-        }
-
-        public string OptionsBst()
-        {
-            string mod = string.Empty;
-            foreach (COption opt in optionList)
-                if ((opt.min == 0) && (opt.max == 1))
-                    mod += $" {opt.name} {opt.bst == 1}";
-                else
-                    mod += $" {opt.name} {opt.bst}";
-            return mod;
+            Console.WriteLine(optionList.OptionsCur());
         }
 
         bool Modify(int probe = 0)
@@ -129,22 +266,18 @@ namespace NSProgram
             foreach (COption o in optionList)
                 o.cur = o.bst;
             SaveToIni();
-            int index = (fail + start) % optionList.Count;
-            int multi = fail / (optionList.Count * 2);
+            int len = optionList.Length();
+            int multi = fail / (len * 2);
             int up = (1 << multi) + success;
-            if (((fail / optionList.Count) & 1) == (start & 1))
+            if (((fail / len) & 1) == (optionList.start & 1))
                 up = -up;
-            COption opt = optionList[index];
-            int cur = opt.bst + up;
-            if ((cur >= opt.min) && (cur <= opt.max))
+            if (optionList.Modify(fail + 1, up))
             {
-                opt.cur = cur;
-                Console.WriteLine($"{OptionsBst()} >> {opt.name} {up}");
                 SaveToIni();
                 return true;
             }
             fail++;
-            if (++probe < optionList.Count * 2)
+            if (++probe < len * 2)
                 return Modify(probe);
             return false;
         }
@@ -158,7 +291,7 @@ namespace NSProgram
                 foreach (COption opt in optionList)
                     opt.bst = opt.cur;
                 SaveToIni();
-                log.Add($"accuracy ({s:N2}){OptionsCur()}");
+                log.Add($"accuracy ({s:N2}){optionList.OptionsCur()}");
             }
             else
             {
@@ -166,7 +299,7 @@ namespace NSProgram
                 if (success > 0)
                 {
                     fail = 0;
-                    start = rnd.Next(optionList.Count * 2);
+                    optionList.Init();
                 }
                 success = 0;
             }
