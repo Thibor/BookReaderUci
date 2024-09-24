@@ -68,7 +68,6 @@ namespace NSProgram
 
         public void LoadFromIni(CRapIni ini)
         {
-            Init();
             Clear();
             List<string> ol = ini.ReadKeyList("option");
             foreach (string name in ol)
@@ -77,6 +76,7 @@ namespace NSProgram
                 option.LoadFromIni(ini);
                 Add(option);
             }
+            Init();
             start = ini.ReadInt("mod>start", start);
         }
 

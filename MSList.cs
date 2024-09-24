@@ -192,6 +192,13 @@ namespace NSProgram
 				min = 0;
 		}
 
+		public void SetDepth(int depth)
+		{
+            foreach (MSLine msl in this)
+				if(msl.depth > depth)
+					msl.depth = depth;
+        }
+
 		public void GetMoves(out int min, out int max)
 		{
 			min = int.MaxValue;

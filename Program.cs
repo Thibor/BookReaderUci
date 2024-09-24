@@ -258,8 +258,10 @@ namespace NSProgram
                                     }
                                     break;
                                 case "add":
-                                    int i = uci.GetInt("add");
-                                    accuracy.Add(i);
+                                    accuracy.Add(uci.GetInt("add"));
+                                    break;
+                                case "depth":
+                                    accuracy.SetDepth(uci.GetInt("depth"));
                                     break;
                                 case "start":
                                     Constants.limit = uci.GetInt("start", accuracy.Count);
