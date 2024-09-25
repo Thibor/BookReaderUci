@@ -6,9 +6,9 @@ namespace NSProgram
 	{
 		public static int minDepth = 16;
 		public static int limit = 0;
-		public static int inaccuracy = 50;
-		public static int mistake = 100;
-		public static int blunder = 300;
+		public static int inaccuracy = 10;
+		public static int mistake = 20;
+		public static int blunder = 30;
 		public static double minAcc = 54;
 		public static double maxAcc = 97;
 		public static double minElo = 1200;

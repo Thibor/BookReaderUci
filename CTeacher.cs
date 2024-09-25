@@ -392,7 +392,7 @@ namespace NSProgram
                     tdg.line.AddRec(new MSRec(tdg.bestMove, tdg.bestScore));
                     Console.WriteLine($"{tdg.bestMove} {tdg.bestScore} {tdg.line.DeltaWc():N2}");
                     SetTData(tdg);
-                    if (tdg.line.DeltaWc() <= 30)
+                    if (tdg.line.DeltaWc() <= Constants.blunder)
                         if (AccuracyUpdatePrepare(tdg))
                             continue;
                     Program.accuracy.ReplaceLine(tdg.line);
@@ -446,8 +446,8 @@ namespace NSProgram
             }
             Program.accuracy.his.Add($"start {name}");
             AccuracyStudent();
-            int winChanceSou = Convert.ToInt32(CAccuracy.WiningChances(Program.accuracy.badFen.bstScore) * 100.0);
-            int winChanceDes = Convert.ToInt32(CAccuracy.WiningChances(Program.accuracy.badFen.badScore) * 100.0);
+            int winChanceSou = Convert.ToInt32(MSLine.WiningChances(Program.accuracy.badFen.bstScore) * 100.0);
+            int winChanceDes = Convert.ToInt32(MSLine.WiningChances(Program.accuracy.badFen.badScore) * 100.0);
             double accuracy = Program.accuracy.GetAccuracy();
             int elo = Program.accuracy.GetElo(accuracy, out int del);
             Program.accuracy.log.Add($"accuracy {accuracy:N2}% elo {elo} (±{del}) count {Program.accuracy.index} {name} blunders {Program.accuracy.blunders} mistakes {Program.accuracy.mistakes} inaccuracies {Program.accuracy.inaccuracies} {Program.accuracy.badFen.fen} ({Program.accuracy.badFen.bstMove} => {Program.accuracy.badFen.badMove}) ({Program.accuracy.badFen.bstScore} => {Program.accuracy.badFen.badScore}) ({winChanceSou} => {winChanceDes})");

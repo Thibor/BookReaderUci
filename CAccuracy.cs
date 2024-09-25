@@ -97,17 +97,17 @@ namespace NSProgram
 
         public void AddScore(string fen, string bstMove, string curMove, int bstScore, int badScore, int curScore)
         {
-            double bstWC = WiningChances(bstScore);
-            double curWC = WiningChances(curScore);
+            double bstWC = MSLine.WiningChances(bstScore);
+            double curWC = MSLine.WiningChances(curScore);
             double del = bstWC - curWC;
-            lastAccuracy = GetAccuracy(bstWC, curWC);
+            lastAccuracy = MSLine.GetAccuracy(bstWC, curWC);
             totalCount++;
             totalAccuracy += lastAccuracy;
-            if (del > 30)
+            if (del >= Constants.blunder)
                 blunders++;
-            else if (del > 20)
+            else if (del >= Constants.mistake)
                 mistakes++;
-            else if (del > 10)
+            else if (del >= Constants.inaccuracy)
                 inaccuracies++;
             if (badFen.worstAccuracy > lastAccuracy)
             {
@@ -122,26 +122,9 @@ namespace NSProgram
 
         public static double DeltaWC(int before ,int after)
         {
-            double winPercentBefore = WiningChances(before);
-            double winPercentAfter = WiningChances(after);
+            double winPercentBefore = MSLine.WiningChances(before);
+            double winPercentAfter = MSLine.WiningChances(after);
             return winPercentBefore - winPercentAfter;
-        }
-
-        public static double WiningChances(int centipawns)
-        {
-            return 50 + 50 * (2 / (1 + Math.Exp(-0.00368208 * centipawns)) - 1);
-        }
-
-        public double GetAccuracy(int scoreBefore, int scoreAfter)
-        {
-            double winPercentBefore = WiningChances(scoreBefore);
-            double winPercentAfter = WiningChances(scoreAfter);
-            return GetAccuracy(winPercentBefore, winPercentAfter);
-        }
-
-        public double GetAccuracy(double winPercentBefore, double winPercentAfter)
-        {
-            return 103.1668 * Math.Exp(-0.04354 * (winPercentBefore - winPercentAfter)) - 3.1669;
         }
 
         public double GetAccuracy()

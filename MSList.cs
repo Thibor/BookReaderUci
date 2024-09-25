@@ -81,13 +81,30 @@ namespace NSProgram
 			return null;
 		}
 
-		public int GetLoss()
+        public static double WiningChances(int centipawns)
+        {
+            return 50 + 50 * (2 / (1 + Math.Exp(-0.00368208 * centipawns)) - 1);
+        }
+
+        public static double GetAccuracy(int scoreBefore, int scoreAfter)
+        {
+            double winPercentBefore = WiningChances(scoreBefore);
+            double winPercentAfter = WiningChances(scoreAfter);
+            return GetAccuracy(winPercentBefore, winPercentAfter);
+        }
+
+        public static double GetAccuracy(double winPercentBefore, double winPercentAfter)
+        {
+            return 103.1668 * Math.Exp(-0.04354 * (winPercentBefore - winPercentAfter)) - 3.1669;
+        }
+
+        public double GetAccuracy()
 		{
 			MSRec f = First();
 			MSRec l = Last();
 			if ((f == null) || (l == null))
 				return 0;
-			return First().score - Last().score;
+			return GetAccuracy(First().score,Last().score);
 		}
 
 		public bool MoveExists(string move)
@@ -255,7 +272,7 @@ namespace NSProgram
 			for (int n = 0; n < this.Count; n++)
 			{
 				MSLine msl = this[n];
-				if (((msl.Count > 0) && msl.GetLoss() < Constants.blunder))
+				if (((msl.Count > 0) && msl.GetAccuracy() <= Constants.blunder))
 					msl.fail = true;
 				if ((n > 0) && (msl.fen == last.fen))
 					if (msl.depth < last.depth)
