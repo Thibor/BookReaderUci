@@ -473,8 +473,7 @@ namespace NSProgram
                     continue;
                 if (tdg.prepared && tdg.done && !string.IsNullOrEmpty(tdg.bestMove))
                 {
-                    int score = tdg.line.GetScore(tdg.bestMove);
-                    Program.accuracy.AddScore(tdg.line.fen, tdg.line.First().move, tdg.bestMove, tdg.line.First().score, tdg.line.Last().score, score);
+                    Program.accuracy.AddScore(tdg.line.fen, tdg.line.First().move, tdg.bestMove, tdg.line.First().score, tdg.line.GetScore(tdg.bestMove));
                     AccuracyLine();
                     if ((Constants.limit > 0) && (Program.accuracy.index >= Constants.limit))
                         break;

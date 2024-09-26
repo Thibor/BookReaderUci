@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.ConstrainedExecution;
 using System.Security.AccessControl;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -36,6 +37,16 @@ namespace NSProgram
             max = ini.ReadInt($"option>{name}>max", max);
             cur = ini.Read($"option>{name}>cur", ((min + max) / 2).ToString());
             bst = ini.Read($"option>{name}>bst", cur);
+            if(oType == EOptionType.eCheck)
+            {
+                min = 0;
+                max = 1;
+            }
+            if (oType == EOptionType.eString)
+            {
+                min = 0;
+                max = 9;
+            }
         }
 
         public void SaveToIni(CRapIni ini)
@@ -45,6 +56,59 @@ namespace NSProgram
             ini.Write($"option>{name}>max", max);
             ini.Write($"option>{name}>cur", cur);
             ini.Write($"option>{name}>bst", bst);
+        }
+
+        public bool Modify(int sub, int del)
+        {
+            int val;
+            switch (oType)
+            {
+                case EOptionType.eCheck:
+                    if ((del == 1) && (bst != "true"))
+                    {
+                        cur = "true";
+                        return true;
+                    }
+                    else if ((del == -1) && (bst != "false"))
+                    {
+                        cur = "false";
+                        return true;
+                    }
+                    break;
+                case EOptionType.eString:
+                    string s = bst.Substring(sub, 1);
+                    if (!int.TryParse(s, out val))
+                        val = 5;
+                    if ((val == 0) && (del < 0))
+                        return false;
+                    if ((val == 9) && (del > 0))
+                        return false;
+                    val += del;
+                    if (val < 0)
+                        val = 0;
+                    if (val > 9)
+                        val = 9;
+                    string cu = cur;
+                    char c = val.ToString()[0];
+                    char[] arr = cu.ToCharArray();
+                    arr[sub] = c;
+                    cur = string.Join("", arr);
+                    return true;
+                default:
+                    val = Convert.ToInt32(bst);
+                    if ((val == min) && (del < 0))
+                        return false;
+                    if ((val == max) && (del > 0))
+                        return false;
+                    val += del;
+                    if (val < min)
+                        val = min;
+                    if (val > max)
+                        val = max;
+                    cur = val.ToString();
+                    return true;
+            }
+            return false;
         }
 
     }
@@ -132,57 +196,18 @@ namespace NSProgram
 
         public bool Modify(int fail, int del)
         {
-            bool result = false;
             if (Count == 0)
-                return result;
+                return false;
             GetIndexSub(start + fail, out int index, out int sub);
             COption opt = this[index];
-            int val;
-            switch (opt.oType)
-            {
-                case EOptionType.eCheck:
-                    if ((del == 1) && (opt.cur != "true"))
-                    {
-                        opt.cur = "true";
-                        result = true;
-                    }
-                    else if ((del == -1) && (opt.cur != "false"))
-                    {
-                        opt.cur = "false";
-                        result = true;
-                    }
-                    break;
-                case EOptionType.eString:
-                    string s = opt.bst.Substring(sub, 1);
-                    if (!int.TryParse(s, out val))
-                        val = 5;
-                    val += del;
-                    if ((val >= 0) && (val <= 9))
-                    {
-                        string cur = opt.cur;
-                        char c = val.ToString()[0];
-                        char[] arr = cur.ToCharArray();
-                        arr[sub] = c;
-                        opt.cur = string.Join("", arr);
-                        result = true;
-                    }
-                    break;
-                default:
-                    val = Convert.ToInt32(opt.bst) + del;
-                    if ((val >= opt.min) && (val <= opt.max))
-                    {
-                        opt.cur = val.ToString();
-                        result = true;
-                    }
-                    break;
-            }
-            if (result)
+            if (opt.Modify(sub,del))
             {
                 string s = $"{opt.name} {opt.bst} >> {opt.cur}";
                 Console.WriteLine(s);
                 CMod.log.Add(s);
+                return true;
             }
-            return result;
+            return false;
         }
 
     }
@@ -277,6 +302,7 @@ namespace NSProgram
                 return true;
             }
             fail++;
+            success = 0;
             if (++probe < len * 2)
                 return Modify(probe);
             return false;

@@ -95,7 +95,7 @@ namespace NSProgram
             badFen.worstAccuracy = 100;
         }
 
-        public void AddScore(string fen, string bstMove, string curMove, int bstScore, int badScore, int curScore)
+        public void AddScore(string fen, string bstMove, string curMove, int bstScore, int curScore)
         {
             double bstWC = MSLine.WiningChances(bstScore);
             double curWC = MSLine.WiningChances(curScore);
