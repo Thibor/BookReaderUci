@@ -202,7 +202,7 @@ namespace NSProgram
             COption opt = this[index];
             if (opt.Modify(sub,del))
             {
-                string s = $"{opt.name} {opt.bst} >> {opt.cur}";
+                string s = $"fail {fail} delta {del} {opt.name} {opt.bst} >> {opt.cur}";
                 Console.WriteLine(s);
                 CMod.log.Add(s);
                 return true;
