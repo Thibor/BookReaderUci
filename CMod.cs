@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.ConstrainedExecution;
 using System.Security.AccessControl;
 using System.Security.Cryptography;
@@ -10,11 +12,131 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using RapIni;
 using RapLog;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace NSProgram
 {
     public enum EOptionType { eSpin, eCheck, eString }
+
+    class CHis
+    {
+        public double score;
+        public int index;
+        public int delta;
+
+        public string ToStr()
+        {
+            return $"{score} {index} {delta}";
+        }
+
+        public void FromStr(string s)
+        {
+            string[] a = s.Split();
+            score = Convert.ToDouble(a[0]);
+            index = Convert.ToInt32(a[1]);
+            delta = Convert.ToInt32(a[2]);
+        }
+
+    }
+
+    class CHisList : List<CHis>
+    {
+        int limit = 3;
+
+        public bool AddHis(CHis his)
+        {
+            if (his.delta == 0)
+                return false;
+            for (int n = 0; n < Count; n++)
+                if (this[n].score < his.score)
+                {
+                    Insert(n, his);
+                    if (Count > limit)
+                        RemoveRange(limit, Count - limit);
+                    return Count == limit;
+                }
+            if (Count < limit)
+            {
+                Add(his);
+                return Count == limit;
+            }
+            return false;
+        }
+
+        public CHis Last()
+        {
+            if (Count > 0)
+                return this[Count - 1];
+            return null;
+        }
+
+        public void FromSl(List<string> sl)
+        {
+            Clear();
+            for (int n = 0; n < sl.Count; n++)
+            {
+                CHis h = new CHis();
+                h.FromStr(sl[n]);
+                Add(h);
+            }
+        }
+
+        public List<string> ToSl()
+        {
+            List<string> sl = new List<string>();
+            for (int n = 0; n < Count; n++)
+                sl.Add(this[n].ToStr());
+            return sl;
+        }
+
+        public bool Add(double score, int index, int delta)
+        {
+            CHis h = new CHis();
+            h.score = score;
+            h.index = index;
+            h.delta = delta;
+            return AddHis(h);
+        }
+
+    }
+
+    class CMix : List<int>
+    {
+        static readonly Random rnd = new Random();
+
+        public void Shuffle()
+        {
+            for (int n = 0; n < Count; n++)
+            {
+                int r = rnd.Next(Count);
+                (this[r], this[n]) = (this[n], this[r]);
+            }
+        }
+
+        public void SetLen(int len)
+        {
+            Clear();
+            int v = 0;
+            for (int n = 0; n < len; n++)
+                for (int m = 0; m < 2; m++)
+                    Add(v++);
+            Shuffle();
+        }
+
+        public void SetList(List<int> list)
+        {
+            Clear();
+            foreach (int n in list)
+                Add(n);
+        }
+
+        public int GetVal(int i)
+        {
+            return this[i % Count];
+        }
+
+    }
 
     class COption
     {
@@ -33,20 +155,15 @@ namespace NSProgram
         public void LoadFromIni(CRapIni ini)
         {
             oType = CMod.StrToType(ini.Read($"option>{name}>type"));
-            min = ini.ReadInt($"option>{name}>min", min);
-            max = ini.ReadInt($"option>{name}>max", max);
-            cur = ini.Read($"option>{name}>cur", ((min + max) / 2).ToString());
-            bst = ini.Read($"option>{name}>bst", cur);
-            if(oType == EOptionType.eCheck)
+            if (oType == EOptionType.eCheck)
             {
                 min = 0;
                 max = 1;
             }
-            if (oType == EOptionType.eString)
-            {
-                min = 0;
-                max = 9;
-            }
+            min = ini.ReadInt($"option>{name}>min", min);
+            max = ini.ReadInt($"option>{name}>max", max);
+            cur = ini.Read($"option>{name}>cur", ((min + max) / 2).ToString());
+            bst = ini.Read($"option>{name}>bst", cur);
         }
 
         public void SaveToIni(CRapIni ini)
@@ -76,35 +193,20 @@ namespace NSProgram
                     }
                     break;
                 case EOptionType.eString:
-                    string s = bst.Substring(sub, 1);
-                    if (!int.TryParse(s, out val))
-                        val = 5;
-                    if ((val == 0) && (del < 0))
-                        return false;
-                    if ((val == 9) && (del > 0))
-                        return false;
-                    val += del;
-                    if (val < 0)
+                    string[] tokens = bst.Trim().Split();
+                    if (!int.TryParse(tokens[sub], out val))
                         val = 0;
-                    if (val > 9)
-                        val = 9;
-                    string cu = cur;
-                    char c = val.ToString()[0];
-                    char[] arr = cu.ToCharArray();
-                    arr[sub] = c;
-                    cur = string.Join("", arr);
+                    val += del;
+                    if ((val < min) || (val > max))
+                        return false;
+                    tokens[sub] = val.ToString();
+                    cur = string.Join(" ", tokens);
                     return true;
                 default:
                     val = Convert.ToInt32(bst);
-                    if ((val == min) && (del < 0))
-                        return false;
-                    if ((val == max) && (del > 0))
-                        return false;
                     val += del;
-                    if (val < min)
-                        val = min;
-                    if (val > max)
-                        val = max;
+                    if ((val < min) || (val > max))
+                        return false;
                     cur = val.ToString();
                     return true;
             }
@@ -115,19 +217,26 @@ namespace NSProgram
 
     class COptionList : List<COption>
     {
-        public int start = 0;
+        public int index = 0;
+        public int delta = 0;
+        public int length = 0;
+        public CMix mix = new CMix();
         readonly static Random rnd = new Random();
 
         public void Init()
         {
-            start = rnd.Next(Length() * 2);
+            int len = Length();
+            mix.SetLen(len);
         }
 
         public void SaveToIni(CRapIni ini)
         {
             foreach (COption option in this)
                 option.SaveToIni(ini);
-            ini.Write("mod>start", start);
+            ini.Write("mod>mix", mix);
+            ini.Write("mod>length", length);
+            ini.Write("mod>index", index);
+            ini.Write("mod>delta", delta);
         }
 
         public void LoadFromIni(CRapIni ini)
@@ -140,8 +249,12 @@ namespace NSProgram
                 option.LoadFromIni(ini);
                 Add(option);
             }
-            Init();
-            start = ini.ReadInt("mod>start", start);
+            index = ini.ReadInt("mod>index");
+            delta = ini.ReadInt("mod>delta");
+            mix.SetList(ini.ReadListInt("mod>mix"));
+            length = Length();
+            if (mix.Count != length * 2)
+                mix.SetLen(length);
         }
 
         public int Length()
@@ -149,7 +262,7 @@ namespace NSProgram
             int l = 0;
             foreach (COption option in this)
                 if (option.oType == EOptionType.eString)
-                    l += option.cur.Length;
+                    l += option.cur.Split().Length;
                 else l++;
             return l;
         }
@@ -161,12 +274,12 @@ namespace NSProgram
             if (Count == 0)
                 return false;
             int l = 0;
-            i %= Length();
+            i %= length;
             for (int n = 0; n < Count; n++)
             {
                 COption opt = this[n];
                 if (opt.oType == EOptionType.eString)
-                    l += opt.cur.Length;
+                    l += opt.cur.Split().Length;
                 else l++;
                 if (l > i)
                 {
@@ -194,17 +307,46 @@ namespace NSProgram
             return mod;
         }
 
-        public bool Modify(int fail, int del)
+        public void BstToCur()
+        {
+            foreach (COption opt in this)
+                opt.cur = opt.bst;
+        }
+
+        public void CurToBst()
+        {
+            foreach (COption opt in this)
+                opt.bst = opt.cur;
+        }
+
+        public void Modify()
+        {
+            BstToCur();
+            Modify(index, delta);
+        }
+
+        public bool Modify(int i, int d)
+        {
+            i = i % length;
+            GetIndexSub(i, out int idx, out int sub);
+            return this[idx].Modify(sub, d);
+        }
+
+        public bool Modify(double bstScore, int fail, int success)
         {
             if (Count == 0)
                 return false;
-            GetIndexSub(start + fail, out int index, out int sub);
-            COption opt = this[index];
-            if (opt.Modify(sub,del))
+            int value = mix.GetVal(fail);
+            delta = 1 << (fail / (length * 2) + value / (length * 2)) + success;
+            if (value % (length * 2) < length)
+                delta = -delta;
+            index = value % length;
+            GetIndexSub(value, out int idx, out int sub);
+            COption opt = this[idx];
+            if (opt.Modify(sub, delta))
             {
-                string s = $"fail {fail} delta {del} {opt.name} {opt.bst} >> {opt.cur}";
+                string s = $"best {bstScore:N2} fail {fail} delta {delta} {opt.name} {opt.bst} >> {opt.cur}";
                 Console.WriteLine(s);
-                CMod.log.Add(s);
                 return true;
             }
             return false;
@@ -214,10 +356,13 @@ namespace NSProgram
 
     internal class CMod
     {
-        string dna = string.Empty;
         public double bstScore = 0;
-        int fail = -1;
-        int success = -1;
+        double kilScore = 0;
+        int kilFail = 0;
+        int fail = 0;
+        int success = 0;
+        int extra = 0;
+        CHisList hl = new CHisList();
         public readonly COptionList optionList = new COptionList();
         readonly static Random rnd = new Random();
         public static readonly CRapLog log = new CRapLog("mod.log");
@@ -259,27 +404,34 @@ namespace NSProgram
         {
             ini.Load();
             optionList.LoadFromIni(ini);
+            extra = ini.ReadInt("mod>extra");
             fail = ini.ReadInt("mod>fail");
+            kilFail = ini.ReadInt("mod>kilFail");
             success = ini.ReadInt("mod>success", success);
             bstScore = ini.ReadDouble("mod>score");
+            kilScore = ini.ReadDouble("mod>kilScore");
+            hl.FromSl(ini.ReadListStr("mod>his", "|"));
         }
 
-        void SaveToIni()
+        public void SaveToIni()
         {
             optionList.SaveToIni(ini);
+            ini.Write("mod>extra", extra);
             ini.Write("mod>fail", fail);
+            ini.Write("mod>kilFail", kilFail);
             ini.Write("mod>success", success);
             ini.Write("mod>score", bstScore);
+            ini.Write("mod>kilScore", kilScore);
+            ini.Write("mod>his", hl.ToSl(), "|");
             ini.Save();
         }
 
         public void Reset()
         {
             optionList.Init();
-            foreach (COption opt in optionList)
-                opt.cur = opt.bst;
-            fail = -1;
-            success = -1;
+            optionList.BstToCur();
+            fail = 0;
+            success = 0;
             bstScore = 0;
             Console.WriteLine(optionList.OptionsCur());
         }
@@ -288,46 +440,62 @@ namespace NSProgram
         {
             if (optionList.Count == 0)
                 return false;
-            foreach (COption o in optionList)
-                o.cur = o.bst;
-            SaveToIni();
-            int len = optionList.Length();
-            int multi = fail / (len * 2);
-            int up = (1 << multi) + success;
-            if (((fail / len) & 1) == (optionList.start & 1))
-                up = -up;
-            if (optionList.Modify(fail + 1, up))
-            {
-                SaveToIni();
+            optionList.BstToCur();
+            if (optionList.Modify(bstScore, fail, success))
                 return true;
-            }
             fail++;
             success = 0;
-            if (++probe < len * 2)
+            if (++probe < optionList.mix.Count)
                 return Modify(probe);
             return false;
         }
 
         public bool SetScore(double s)
         {
+            bool added = extra == 0 ? hl.Add(s, optionList.index, optionList.delta) : false;
+            if (extra > 0)
+                extra--;
             if (bstScore < s)
             {
-                success++;
+                if (extra == 0)
+                    success++;
+                if (success == 0)
+                    fail = 0;
+                extra = 0;
                 bstScore = s;
-                foreach (COption opt in optionList)
-                    opt.bst = opt.cur;
-                SaveToIni();
-                log.Add($"accuracy ({s:N2}){optionList.OptionsCur()}");
+                optionList.CurToBst();
+                optionList.Init();
+                log.Add($"bst ({s:N2}){optionList.OptionsCur()}");
             }
             else
             {
-                fail++;
-                if (success > 0)
+                kilFail++;
+                if (s + kilFail * 0.1 > kilScore)
                 {
-                    fail = 0;
-                    optionList.Init();
+                    kilScore = s;
+                    kilFail = 0;
+                    log.Add($"sec ({s:N2}){optionList.OptionsCur()}");
                 }
                 success = 0;
+                if (added && (extra == 0))
+                    extra = 2;
+                if (extra > 0)
+                {
+                    optionList.Modify();
+                    int modified = 0;
+                    for (int n = 0; n < hl.Count; n++)
+                        if (hl[n].index != optionList.index)
+                        {
+                            optionList.Modify(hl[n].index, hl[n].delta);
+                            if (++modified >= extra)
+                                break;
+                        }
+                    if (extra > modified)
+                        extra = modified;
+                    Console.WriteLine($"extra {extra}");
+                    return true;
+                }
+                fail++;
             }
             return Modify(0);
         }

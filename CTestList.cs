@@ -40,7 +40,7 @@ namespace NSProgram
 		public void Reset()
 		{
 			index = -1;
-			number = 1;
+			number = 0;
 			resultOk = 0;
 			resultFail = 0;
 			Next();

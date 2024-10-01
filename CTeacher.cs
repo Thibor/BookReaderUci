@@ -514,8 +514,8 @@ namespace NSProgram
                 foreach (COption opt in mod.optionList)
                     StudentWriteLine($"setoption {opt.name} value{opt.cur}");
                 Console.WriteLine(mod.optionList.OptionsCur());
+                mod.SaveToIni();
                 double score = AccuracyStudent();
-                ConsoleWriteLine($"accuracy {score:N2}% best {mod.bstScore:N2}");
                 if (!mod.SetScore(score))
                     break;
             }
@@ -652,7 +652,7 @@ namespace NSProgram
             while (true)
             {
                 CTData tdg = GetTData();
-                if (tdg.prepared && tdg.done)
+                if (tdg.prepared && !tdg.done)
                     continue;
                 if (tdg.done && !string.IsNullOrEmpty(tdg.bestMove))
                 {

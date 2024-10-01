@@ -81,9 +81,9 @@ namespace RapIni
               Write(key,dt.ToString(CultureInfo.InvariantCulture));
         }
 
-		public void Write(string key, List<string> value)
+		public void Write(string key, List<string> value,string separator=",")
 		{
-			Write(key, ListToString(value));
+			Write(key, ListToString(value,separator));
 		}
 
 		public void Write(string key, int[] arr,string separator = ",")
@@ -118,9 +118,9 @@ namespace RapIni
 			return list;
 		}
 
-		public List<string> ReadListStr(string key)
+		public List<string> ReadListStr(string key,string separator = ",")
 		{
-			string[] arrStr = ReadArrStr(key);
+			string[] arrStr = ReadArrStr(key,separator);
 			return arrStr.ToList();
 		}
 
