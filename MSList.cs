@@ -334,7 +334,7 @@ namespace NSProgram
 		{
 			string last = String.Empty;
 			SortFen();
-			using (FileStream fs = File.Open(Constants.epd, FileMode.Create, FileAccess.Write, FileShare.None))
+			using (FileStream fs = File.Open(Constants.accuracyEpd, FileMode.Create, FileAccess.Write, FileShare.None))
 			using (StreamWriter sw = new StreamWriter(fs))
 			{
 				foreach (MSLine msl in this)
@@ -352,9 +352,9 @@ namespace NSProgram
 		public bool LoadFromEpd()
 		{
 			Clear();
-			if (!File.Exists(Constants.epd))
+			if (!File.Exists(Constants.accuracyEpd))
 				return false;
-			using (FileStream fs = File.Open(Constants.epd, FileMode.Open, FileAccess.Read, FileShare.Read))
+			using (FileStream fs = File.Open(Constants.accuracyEpd, FileMode.Open, FileAccess.Read, FileShare.Read))
 			using (StreamReader reader = new StreamReader(fs))
 			{
 				string line = String.Empty;

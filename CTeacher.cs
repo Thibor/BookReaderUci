@@ -171,11 +171,11 @@ namespace NSProgram
                         return;
                     }
 
-                    if (uci.command == "evaluation")
+                    if (uci.command == "score")
                     {
                         CTData td = GetTData();
                         td.done = true;
-                        td.bestScore = uci.GetInt("evaluation");
+                        td.bestScore = uci.GetInt("score");
                         SetTData(td);
                         return;
                     }

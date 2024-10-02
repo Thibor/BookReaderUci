@@ -1,19 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.ConstrainedExecution;
-using System.Security.AccessControl;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 using RapIni;
 using RapLog;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace NSProgram
 {
@@ -267,7 +255,14 @@ namespace NSProgram
             return l;
         }
 
-        bool GetIndexSub(int i, out int index, out int sub)
+        public COption GetOption(int i)
+        {
+            if ((i >= 0) && (i < Count))
+                return this[i];
+            return null;
+        }
+
+        public bool GetIndexSub(int i, out int index, out int sub)
         {
             index = 0;
             sub = 0;
@@ -345,11 +340,17 @@ namespace NSProgram
             COption opt = this[idx];
             if (opt.Modify(sub, delta))
             {
-                string s = $"best {bstScore:N2} fail {fail} delta {delta} {opt.name} {opt.bst} >> {opt.cur}";
-                Console.WriteLine(s);
+                Console.WriteLine($">> {bstScore:N2} fail {fail} delta {delta} {opt.name} {opt.bst} >> {opt.cur}");
                 return true;
             }
             return false;
+        }
+
+        public COption Option()
+        {
+            if ((index >= 0) && (index < Count))
+                return this[index];
+            return null;
         }
 
     }
@@ -357,12 +358,10 @@ namespace NSProgram
     internal class CMod
     {
         public double bstScore = 0;
-        double kilScore = 0;
-        int kilFail = 0;
         int fail = 0;
         int success = 0;
         int extra = 0;
-        CHisList hl = new CHisList();
+        readonly CHisList hl = new CHisList();
         public readonly COptionList optionList = new COptionList();
         readonly static Random rnd = new Random();
         public static readonly CRapLog log = new CRapLog("mod.log");
@@ -372,6 +371,11 @@ namespace NSProgram
         public CMod()
         {
             LoadFromIni();
+        }
+
+        public bool IsReady()
+        {
+            return optionList.Count > 0;
         }
 
         public static string TypeToStr(EOptionType ot)
@@ -406,10 +410,8 @@ namespace NSProgram
             optionList.LoadFromIni(ini);
             extra = ini.ReadInt("mod>extra");
             fail = ini.ReadInt("mod>fail");
-            kilFail = ini.ReadInt("mod>kilFail");
             success = ini.ReadInt("mod>success", success);
             bstScore = ini.ReadDouble("mod>score");
-            kilScore = ini.ReadDouble("mod>kilScore");
             hl.FromSl(ini.ReadListStr("mod>his", "|"));
         }
 
@@ -418,10 +420,8 @@ namespace NSProgram
             optionList.SaveToIni(ini);
             ini.Write("mod>extra", extra);
             ini.Write("mod>fail", fail);
-            ini.Write("mod>kilFail", kilFail);
             ini.Write("mod>success", success);
             ini.Write("mod>score", bstScore);
-            ini.Write("mod>kilScore", kilScore);
             ini.Write("mod>his", hl.ToSl(), "|");
             ini.Save();
         }
@@ -452,50 +452,58 @@ namespace NSProgram
 
         public bool SetScore(double s)
         {
-            bool added = extra == 0 ? hl.Add(s, optionList.index, optionList.delta) : false;
+            bool added = extra == 0 && hl.Add(s, optionList.index, optionList.delta);
+            if (added)
+                log.Add($"sec ({s:N2}){optionList.OptionsCur()}");
             if (extra > 0)
                 extra--;
             if (bstScore < s)
             {
-                if (extra == 0)
-                    success++;
-                if (success == 0)
-                    fail = 0;
-                extra = 0;
                 bstScore = s;
                 optionList.CurToBst();
-                optionList.Init();
+                if ((extra == 0) && (optionList.delta != 0))
+                    success++;
+                if (success == 0)
+                {
+                    fail = 0;
+                    extra = 0;
+                    optionList.Init();
+                }
                 log.Add($"bst ({s:N2}){optionList.OptionsCur()}");
             }
             else
             {
-                kilFail++;
-                if (s + kilFail * 0.1 > kilScore)
-                {
-                    kilScore = s;
-                    kilFail = 0;
-                    log.Add($"sec ({s:N2}){optionList.OptionsCur()}");
-                }
                 success = 0;
                 if (added && (extra == 0))
                     extra = 2;
                 if (extra > 0)
                 {
+                    string names = string.Empty;
+                    optionList.GetIndexSub(optionList.index, out int idx, out int _);
+                    COption opt = optionList.GetOption(idx);
+                    if (opt != null)
+                        names = $"{opt.name} {optionList.index}";
                     optionList.Modify();
                     int modified = 0;
                     for (int n = 0; n < hl.Count; n++)
-                        if (hl[n].index != optionList.index)
+                    {
+                        CHis h = hl[n];
+                        if (h.index != optionList.index)
                         {
-                            optionList.Modify(hl[n].index, hl[n].delta);
+                            optionList.GetIndexSub(h.index, out idx, out _);
+                            opt = optionList.GetOption(idx);
+                            if (opt != null)
+                                names += $" {opt.name} {h.index}";
+                            optionList.Modify(h.index, h.delta);
                             if (++modified >= extra)
                                 break;
                         }
-                    if (extra > modified)
-                        extra = modified;
-                    Console.WriteLine($"extra {extra}");
+                    }
+                    Console.WriteLine($"extra {extra} {names}");
                     return true;
                 }
-                fail++;
+                else
+                    fail++;
             }
             return Modify(0);
         }

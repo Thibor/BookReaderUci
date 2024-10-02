@@ -16,11 +16,11 @@ namespace NSProgram
 		public static short CHECKMATE_MAX = short.MaxValue;
 		public static short CHECKMATE_NEAR = 0x7000;
 		public static string go = "go movetime 1000";
-		public static string epd = "accuracy.epd";
-		public static string evalGo = "eval";
-		public static string evalFen = "evaluation.fen";
+		public static string accuracyEpd = "accuracy.epd";
+        public static string evalEpd = "evaluation.epd";
+        public static string testEpd = "test.epd";
+        public static string evalGo = "eval";
 		public static string testGo = "go movetime 1000";
-		public static string testFen = "test.fen";
 		public static string teacher = "teacher.exe";
 		public static string student = "student.exe";
         public static string studentArg = String.Empty;

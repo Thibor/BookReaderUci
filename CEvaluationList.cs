@@ -112,7 +112,7 @@ namespace NSProgram
 			if (loaded)
 				return;
 			loaded = true;
-			string fn = Constants.evalFen;
+			string fn = Constants.evalEpd;
 			Clear();
 			if (!File.Exists(fn))
 				return;
@@ -134,7 +134,7 @@ namespace NSProgram
 		public void SaveToFile()
 		{
 			string lastFen = String.Empty;
-			using (FileStream fs = File.Open(Constants.evalFen, FileMode.Create, FileAccess.Write, FileShare.None))
+			using (FileStream fs = File.Open(Constants.evalEpd, FileMode.Create, FileAccess.Write, FileShare.None))
 			using (StreamWriter sw = new StreamWriter(fs))
 			{
 				foreach (CElementE e in this)

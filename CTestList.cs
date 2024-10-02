@@ -59,7 +59,7 @@ namespace NSProgram
 
 		public void LoadFromFile()
 		{
-			string fn = Constants.testFen;
+			string fn = Constants.testEpd;
 			Clear();
 			if (!File.Exists(fn))
 				return;

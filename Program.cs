@@ -190,8 +190,12 @@ namespace NSProgram
                 Console.WriteLine("info string student on");
             if (File.Exists("accuracy.epd"))
                 Console.WriteLine("info string accuracy on");
-            if (File.Exists("test.fen"))
+            if (File.Exists("test.epd"))
                 Console.WriteLine("info string test on");
+            if (File.Exists("evaluation.epd"))
+                Console.WriteLine("info string evaluation on");
+            if (File.Exists("mod.ini"))
+                Console.WriteLine("info string mod on");
             if (File.Exists("accuracy.fen"))
                 Console.WriteLine("info string fen on");
             bool bookLoaded = SetBookFile(bookFile);
@@ -218,7 +222,7 @@ namespace NSProgram
                     case "accuracy":
                         accuracy.LoadFromFile();
                         if (accuracy.Count == 0)
-                            Console.WriteLine($"file \"{Constants.epd}\" unavabile");
+                            Console.WriteLine($"file \"{Constants.accuracyEpd}\" unavabile");
                         if (uci.tokens.Length > 1)
                             switch (uci.tokens[1])
                             {
@@ -278,7 +282,7 @@ namespace NSProgram
                     case "mod":
                         accuracy.LoadFromFile();
                         if (accuracy.Count == 0)
-                            Console.WriteLine($"file \"{Constants.epd}\" unavabile");
+                            Console.WriteLine($"file \"{Constants.accuracyEpd}\" unavabile");
                         if (uci.tokens.Length > 1)
                             switch (uci.tokens[1])
                             {
@@ -478,14 +482,14 @@ namespace NSProgram
             {
                 ini.Load();
                 Constants.go = ini.Read("go", Constants.go);
-                Constants.epd = ini.Read("fen", Constants.epd);
+                Constants.accuracyEpd = ini.Read("fen", Constants.accuracyEpd);
                 Constants.student = ini.Read("student", Constants.student);
                 Constants.studentArg = ini.Read("student>arg", Constants.studentArg);
                 Constants.teacher = ini.Read("teacher", Constants.teacher);
                 Constants.evalGo = ini.Read("test>go", Constants.evalGo);
-                Constants.evalFen = ini.Read("test>fen", Constants.evalFen);
+                Constants.evalEpd = ini.Read("test>fen", Constants.evalEpd);
                 Constants.testGo = ini.Read("test>go", Constants.testGo);
-                Constants.testFen = ini.Read("test>fen", Constants.testFen);
+                Constants.testEpd = ini.Read("test>fen", Constants.testEpd);
                 Constants.command = ini.Read("command", Constants.command);
                 Constants.limit = ini.ReadInt("limit", Constants.limit);
                 if (!File.Exists(Constants.student))
