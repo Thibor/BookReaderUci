@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using RapIni;
 using RapLog;
 
@@ -30,33 +31,32 @@ namespace NSProgram
 
     class CHisList : List<CHis>
     {
-        int limit = 3;
+        readonly int limit = 8;
 
         public bool AddHis(CHis his)
         {
             if (his.delta == 0)
                 return false;
+            for (int n = Count - 1; n >= 0; n--)
+            {
+                CHis h = this[n];
+                if (h.index == his.index)
+                    if (h.score >= his.score)
+                        return false;
+                    else
+                        RemoveAt(n);
+            }
             for (int n = 0; n < Count; n++)
                 if (this[n].score < his.score)
                 {
                     Insert(n, his);
                     if (Count > limit)
                         RemoveRange(limit, Count - limit);
-                    return Count == limit;
+                    return (n < 3) && (limit == Count);
                 }
             if (Count < limit)
-            {
                 Add(his);
-                return Count == limit;
-            }
             return false;
-        }
-
-        public CHis Last()
-        {
-            if (Count > 0)
-                return this[Count - 1];
-            return null;
         }
 
         public void FromSl(List<string> sl)
@@ -80,11 +80,24 @@ namespace NSProgram
 
         public bool Add(double score, int index, int delta)
         {
-            CHis h = new CHis();
-            h.score = score;
-            h.index = index;
-            h.delta = delta;
+            CHis h = new CHis
+            {
+                score = score,
+                index = index,
+                delta = delta
+            };
             return AddHis(h);
+        }
+
+        public bool RemoveIndex(int i)
+        {
+            for (int n = Count - 1; n >= 0; n--)
+                if (this[n].index == i)
+                {
+                    RemoveAt(n);
+                    return true;
+                }
+            return false;
         }
 
     }
@@ -169,19 +182,19 @@ namespace NSProgram
             switch (oType)
             {
                 case EOptionType.eCheck:
-                    if ((del == 1) && (bst != "true"))
+                    if ((del == 1) && (cur != "true"))
                     {
                         cur = "true";
                         return true;
                     }
-                    else if ((del == -1) && (bst != "false"))
+                    else if ((del == -1) && (cur != "false"))
                     {
                         cur = "false";
                         return true;
                     }
                     break;
                 case EOptionType.eString:
-                    string[] tokens = bst.Trim().Split();
+                    string[] tokens = cur.Trim().Split();
                     if (!int.TryParse(tokens[sub], out val))
                         val = 0;
                     val += del;
@@ -191,7 +204,7 @@ namespace NSProgram
                     cur = string.Join(" ", tokens);
                     return true;
                 default:
-                    val = Convert.ToInt32(bst);
+                    val = Convert.ToInt32(cur);
                     val += del;
                     if ((val < min) || (val > max))
                         return false;
@@ -209,7 +222,6 @@ namespace NSProgram
         public int delta = 0;
         public int length = 0;
         public CMix mix = new CMix();
-        readonly static Random rnd = new Random();
 
         public void Init()
         {
@@ -331,27 +343,27 @@ namespace NSProgram
         {
             if (Count == 0)
                 return false;
-            int value = mix.GetVal(fail);
-            delta = 1 << (fail / (length * 2) + value / (length * 2)) + success;
-            if (value % (length * 2) < length)
-                delta = -delta;
-            index = value % length;
-            GetIndexSub(value, out int idx, out int sub);
+            if ((success == 0) || (delta == 0))
+            {
+                int value = mix.GetVal(fail);
+                delta = 1 << (fail / (length * 2) + value / (length * 2));
+                if (value % (length * 2) < length)
+                    delta = -delta;
+                index = value % length;
+            }
+            else
+                delta *= 2;
+            GetIndexSub(index, out int idx, out int sub);
             COption opt = this[idx];
             if (opt.Modify(sub, delta))
             {
+                Console.WriteLine();
                 Console.WriteLine($">> {bstScore:N2} fail {fail} delta {delta} {opt.name} {opt.bst} >> {opt.cur}");
                 return true;
             }
             return false;
         }
 
-        public COption Option()
-        {
-            if ((index >= 0) && (index < Count))
-                return this[index];
-            return null;
-        }
 
     }
 
@@ -363,7 +375,6 @@ namespace NSProgram
         int extra = 0;
         readonly CHisList hl = new CHisList();
         public readonly COptionList optionList = new COptionList();
-        readonly static Random rnd = new Random();
         public static readonly CRapLog log = new CRapLog("mod.log");
         readonly CRapIni ini = new CRapIni(@"mod.ini");
 
@@ -371,11 +382,6 @@ namespace NSProgram
         public CMod()
         {
             LoadFromIni();
-        }
-
-        public bool IsReady()
-        {
-            return optionList.Count > 0;
         }
 
         public static string TypeToStr(EOptionType ot)
@@ -433,6 +439,8 @@ namespace NSProgram
             fail = 0;
             success = 0;
             bstScore = 0;
+            hl.Clear();
+            SaveToIni();
             Console.WriteLine(optionList.OptionsCur());
         }
 
@@ -452,30 +460,32 @@ namespace NSProgram
 
         public bool SetScore(double s)
         {
-            bool added = extra == 0 && hl.Add(s, optionList.index, optionList.delta);
-            if (added)
-                log.Add($"sec ({s:N2}){optionList.OptionsCur()}");
+            int oExtra = extra;
             if (extra > 0)
                 extra--;
             if (bstScore < s)
             {
                 bstScore = s;
                 optionList.CurToBst();
-                if ((extra == 0) && (optionList.delta != 0))
+                hl.RemoveIndex(optionList.index);
+                if (hl.Count > 0)
+                    hl.RemoveIndex(hl.First().index);
+                fail = 0;
+                optionList.Init();
+                if ((oExtra == 0) && (optionList.delta != 0))
                     success++;
-                if (success == 0)
-                {
-                    fail = 0;
-                    extra = 0;
-                    optionList.Init();
-                }
+                extra = 0;
                 log.Add($"bst ({s:N2}){optionList.OptionsCur()}");
             }
             else
             {
                 success = 0;
-                if (added && (extra == 0))
-                    extra = 2;
+                if (hl.Add(s, optionList.index, optionList.delta))
+                {
+                    log.Add($"sec ({s:N2}){optionList.OptionsCur()}");
+                    if ((oExtra == 0) && (hl.Count > 2))
+                        extra = 2;
+                }
                 if (extra > 0)
                 {
                     string names = string.Empty;
@@ -499,8 +509,10 @@ namespace NSProgram
                                 break;
                         }
                     }
+                    if (extra > modified)
+                        extra = modified;
                     Console.WriteLine($"extra {extra} {names}");
-                    return true;
+                    return modified > 0;
                 }
                 else
                     fail++;

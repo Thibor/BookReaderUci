@@ -230,13 +230,6 @@ namespace NSProgram
             return true;
         }
 
-        /*
-        void SaveLog()
-        {
-            string last = moves.Last();
-            Program.log.Add($"moves {last}");
-        }*/
-
         public bool SavePgn(string p)
         {
             path = p;

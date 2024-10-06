@@ -512,7 +512,7 @@ namespace NSProgram
             {
                 SetStudent(student);
                 foreach (COption opt in mod.optionList)
-                    StudentWriteLine($"setoption {opt.name} value{opt.cur}");
+                    StudentWriteLine($"setoption name {opt.name} value {opt.cur}");
                 Console.WriteLine(mod.optionList.OptionsCur());
                 mod.SaveToIni();
                 double score = AccuracyStudent();
