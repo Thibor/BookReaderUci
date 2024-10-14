@@ -379,6 +379,7 @@ namespace NSProgram
 
         public void AccuracyUpdate()
         {
+            int fail = Program.accuracy.CountFail();
             if (!PrepareTeachers())
                 return;
             SetTeacher();
@@ -399,7 +400,7 @@ namespace NSProgram
                     Program.accuracy.SaveToEpd();
                 }
                 Program.accuracy.SortDepth();
-                MSLine msl = Program.accuracy.GetShallowLine();
+                MSLine msl = fail>0? Program.accuracy.GetLineFail():Program.accuracy.GetShallowLine();
                 if ((msl == null) || (msl.depth >= Constants.minDepth))
                     break;
                 CTData tds = new CTData() { prepared = true };
@@ -456,9 +457,10 @@ namespace NSProgram
 
         void AccuracyLine()
         {
+            double loss = Program.accuracy.GetLoss();
             double accuracy = Program.accuracy.GetAccuracy();
             int elo = Program.accuracy.GetElo(accuracy, out int del);
-            ConsoleWrite($"\rprogress {Program.accuracy.index * 100.0 / Program.accuracy.Count:N2}% accuracy {accuracy:N2}% elo {elo} (±{del}) last {Program.accuracy.lastAccuracy:N2} blunders {Program.accuracy.blunders} mistakes {Program.accuracy.mistakes} inaccuracies {Program.accuracy.inaccuracies}");
+            ConsoleWrite($"\rprogress {Program.accuracy.index * 100.0 / Program.accuracy.Count:N2}% accuracy {accuracy:N2}% elo {elo} (±{del}) loss {loss:N2} blunders {Program.accuracy.blunders} mistakes {Program.accuracy.mistakes} inaccuracies {Program.accuracy.inaccuracies}");
         }
 
         public double AccuracyStudent()
@@ -508,6 +510,7 @@ namespace NSProgram
             }
             string name = Path.GetFileNameWithoutExtension(student);
             Console.WriteLine($"{name} ready");
+            Console.WriteLine($" length {mod.optionList.length}");
             while (true)
             {
                 SetStudent(student);

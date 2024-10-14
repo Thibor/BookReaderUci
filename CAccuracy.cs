@@ -21,7 +21,7 @@ namespace NSProgram
         public int index = 0;
         long totalCount = 0;
         double totalAccuracy = 0;
-        public double lastAccuracy = 0;
+        double totalLoss = 0;
         public int inaccuracies = 0;
         public int mistakes = 0;
         public int blunders = 0;
@@ -90,7 +90,7 @@ namespace NSProgram
             blunders = 0;
             totalCount = 0;
             totalAccuracy = 0;
-            lastAccuracy = 0;
+            totalLoss = 0;
             badFen = default;
             badFen.worstAccuracy = 100;
         }
@@ -99,19 +99,20 @@ namespace NSProgram
         {
             double bstWC = MSLine.WiningChances(bstScore);
             double curWC = MSLine.WiningChances(curScore);
-            double del = bstWC - curWC;
-            lastAccuracy = MSLine.GetAccuracy(bstWC, curWC);
+            double loss = bstWC - curWC;
+            double curAccuracy = MSLine.GetAccuracy(bstWC, curWC);
             totalCount++;
-            totalAccuracy += lastAccuracy;
-            if (del >= Constants.blunder)
+            totalLoss += loss;
+            totalAccuracy += curAccuracy;
+            if (loss >= Constants.blunder)
                 blunders++;
-            else if (del >= Constants.mistake)
+            if (loss >= Constants.mistake)
                 mistakes++;
-            else if (del >= Constants.inaccuracy)
+            if (loss >= Constants.inaccuracy)
                 inaccuracies++;
-            if (badFen.worstAccuracy > lastAccuracy)
+            if (badFen.worstAccuracy > curAccuracy)
             {
-                badFen.worstAccuracy = lastAccuracy;
+                badFen.worstAccuracy = curAccuracy;
                 badFen.fen = fen;
                 badFen.bstMove = bstMove;
                 badFen.badMove = curMove;
@@ -130,6 +131,11 @@ namespace NSProgram
         public double GetAccuracy()
         {
             return totalAccuracy / totalCount;
+        }
+
+        public double GetLoss()
+        {
+            return totalLoss / totalCount;
         }
 
         public int GetElo(double accuracy)

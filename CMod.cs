@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using RapIni;
 using RapLog;
 
@@ -169,11 +170,13 @@ namespace NSProgram
 
         public void SaveToIni(CRapIni ini)
         {
+            string ele = GetElements();
             ini.Write($"option>{name}>type", CMod.TypeToStr(oType));
             ini.Write($"option>{name}>min", min);
             ini.Write($"option>{name}>max", max);
             ini.Write($"option>{name}>cur", cur);
             ini.Write($"option>{name}>bst", bst);
+            ini.Write($"option>{name}>ele",ele);
         }
 
         public bool Modify(int sub, int del)
@@ -214,6 +217,38 @@ namespace NSProgram
             return false;
         }
 
+        public void Zero()
+        {
+            switch (oType)
+            {
+                case EOptionType.eCheck:
+                    bst = "false";
+                    break;
+                case EOptionType.eString:
+                    string[] tokens = cur.Trim().Split();
+                    for(int n=0;n<tokens.Length;n++)
+                        tokens[n] = "0";
+                    bst = string.Join(" ", tokens);
+                    break;
+                default:
+                    int mid = (min + max) / 2;
+                    bst = mid.ToString();
+                    break;
+            }
+        }
+
+        public string GetElements() {
+            if(oType == EOptionType.eString)
+            {
+                string result=string.Empty;
+                string[] tokens = bst.Trim().Split();
+                for (int n = 0; n < tokens.Length; n++)
+                    result += $" {n+1}={tokens[n]}";
+                return result;
+            }
+            return string.Empty;
+        }
+
     }
 
     class COptionList : List<COption>
@@ -234,7 +269,6 @@ namespace NSProgram
             foreach (COption option in this)
                 option.SaveToIni(ini);
             ini.Write("mod>mix", mix);
-            ini.Write("mod>length", length);
             ini.Write("mod>index", index);
             ini.Write("mod>delta", delta);
         }
@@ -343,7 +377,7 @@ namespace NSProgram
         {
             if (Count == 0)
                 return false;
-            if ((success == 0) || (delta == 0))
+            if (success == 0)
             {
                 int value = mix.GetVal(fail);
                 delta = 1 << (fail / (length * 2) + value / (length * 2));
@@ -351,8 +385,10 @@ namespace NSProgram
                     delta = -delta;
                 index = value % length;
             }
+            else if (delta < 0)
+                delta--;
             else
-                delta *= 2;
+                delta++;
             GetIndexSub(index, out int idx, out int sub);
             COption opt = this[idx];
             if (opt.Modify(sub, delta))
@@ -371,7 +407,7 @@ namespace NSProgram
     {
         public double bstScore = 0;
         int fail = 0;
-        int success = 0;
+        int success = -1;
         int extra = 0;
         readonly CHisList hl = new CHisList();
         public readonly COptionList optionList = new COptionList();
@@ -437,10 +473,11 @@ namespace NSProgram
             optionList.Init();
             optionList.BstToCur();
             fail = 0;
-            success = 0;
+            success = -1;
             bstScore = 0;
             hl.Clear();
             SaveToIni();
+            LoadFromIni();
             Console.WriteLine(optionList.OptionsCur());
         }
 
@@ -472,7 +509,7 @@ namespace NSProgram
                     hl.RemoveIndex(hl.First().index);
                 fail = 0;
                 optionList.Init();
-                if ((oExtra == 0) && (optionList.delta != 0))
+                if (oExtra == 0)
                     success++;
                 extra = 0;
                 log.Add($"bst ({s:N2}){optionList.OptionsCur()}");
@@ -518,6 +555,21 @@ namespace NSProgram
                     fail++;
             }
             return Modify(0);
+        }
+
+        public void Zero()
+        {
+            optionList.Init();
+            fail = 0;
+            success = -1;
+            bstScore = 0;
+            hl.Clear();
+            foreach (COption opt in optionList)
+                opt.Zero();
+            optionList.BstToCur();
+            SaveToIni();
+            LoadFromIni();
+            Console.WriteLine(optionList.OptionsCur());
         }
 
     }

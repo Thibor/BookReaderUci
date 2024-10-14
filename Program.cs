@@ -292,6 +292,9 @@ namespace NSProgram
                                 case "reset":
                                     teacher.mod.Reset();
                                     break;
+                                case "zero":
+                                    teacher.mod.Zero();
+                                    break;
                                 default:
                                     Console.WriteLine($"Unknown command [{uci.tokens[1]}]");
                                     break;
