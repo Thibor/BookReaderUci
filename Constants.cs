@@ -11,8 +11,7 @@ namespace NSProgram
 		public static int blunder = 30;
 		public static double minAcc = 54;
 		public static double maxAcc = 97;
-		public static double minElo = 1200;
-		public static double maxElo = 3500;
+		public static double maxElo = 3950;
 		public static short CHECKMATE_MAX = short.MaxValue;
 		public static short CHECKMATE_NEAR = 0x7000;
 		public static string go = "go movetime 1000";

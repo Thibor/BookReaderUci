@@ -19,9 +19,10 @@ namespace NSProgram
     {
         bool loaded = false;
         public int index = 0;
-        long totalCount = 0;
-        double totalAccuracy = 0;
+        int totalCount = 0;
         double totalLoss = 0;
+        double totalAccuracy = 0;
+        double totalWeight = 0;
         public int inaccuracies = 0;
         public int mistakes = 0;
         public int blunders = 0;
@@ -89,8 +90,9 @@ namespace NSProgram
             mistakes = 0;
             blunders = 0;
             totalCount = 0;
-            totalAccuracy = 0;
             totalLoss = 0;
+            totalAccuracy = 0;
+            totalWeight = 0;
             badFen = default;
             badFen.worstAccuracy = 100;
         }
@@ -99,11 +101,12 @@ namespace NSProgram
         {
             double bstWC = MSLine.WiningChances(bstScore);
             double curWC = MSLine.WiningChances(curScore);
-            double loss = bstWC - curWC;
             double curAccuracy = MSLine.GetAccuracy(bstWC, curWC);
+            double loss = bstWC - curWC +1;
             totalCount++;
-            totalLoss += loss;
             totalAccuracy += curAccuracy;
+            totalLoss += loss;
+            totalWeight += loss * curAccuracy;
             if (loss >= Constants.blunder)
                 blunders++;
             if (loss >= Constants.mistake)
@@ -121,36 +124,43 @@ namespace NSProgram
             }
         }
 
-        public static double DeltaWC(int before ,int after)
-        {
-            double winPercentBefore = MSLine.WiningChances(before);
-            double winPercentAfter = MSLine.WiningChances(after);
-            return winPercentBefore - winPercentAfter;
-        }
-
         public double GetAccuracy()
         {
+            if (totalCount == 0)
+                return 0;
             return totalAccuracy / totalCount;
+        }
+
+        public double GetWeight()
+        {
+            if (totalLoss == 0)
+                return 100.0;
+            return totalWeight / totalLoss;
         }
 
         public double GetLoss()
         {
+            if (totalCount == 0)
+                return 0;
             return totalLoss / totalCount;
         }
 
-        public int GetElo(double accuracy)
+        public int GetEloAccuracy(double accuracy)
         {
             accuracy /= 100.0;
-            accuracy = (accuracy - 0.6) / 0.4;
-            if (accuracy < 0)
-                accuracy = 0;
             return Convert.ToInt32(accuracy * Constants.maxElo);
         }
 
-        public int GetElo(double accuracy, out int del)
+        public int GetEloWeight(double weight)
         {
-            int eloMax = GetElo(accuracy);
-            int eloMin = GetElo(totalAccuracy / (totalCount + 1));
+            weight /= 100.0;
+            return Convert.ToInt32(weight * Constants.maxElo);
+        }
+
+        public int GetEloAccuracy(double accuracy, out int del)
+        {
+            int eloMax = GetEloAccuracy(accuracy);
+            int eloMin = GetEloAccuracy(totalAccuracy / (totalCount + 1));
             del = eloMax - eloMin;
             return eloMax;
         }

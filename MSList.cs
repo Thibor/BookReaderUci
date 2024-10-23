@@ -51,13 +51,6 @@ namespace NSProgram
             SortScore();
         }
 
-        public double DeltaWc()
-        {
-            if (Count < 2)
-                return 0;
-            return CAccuracy.DeltaWC(First().score, Last().score);
-        }
-
         public void SortScore()
         {
             Sort(delegate (MSRec r1, MSRec r2)
@@ -85,6 +78,11 @@ namespace NSProgram
             return 50 + 50 * (2 / (1 + Math.Exp(-0.00368208 * centipawns)) - 1);
         }
 
+        public static double GetAccuracy(double winPercentBefore, double winPercentAfter)
+        {
+            return 103.1668 * Math.Exp(-0.04354 * (winPercentBefore - winPercentAfter)) - 3.1669;
+        }
+
         public static double GetAccuracy(int scoreBefore, int scoreAfter)
         {
             double winPercentBefore = WiningChances(scoreBefore);
@@ -92,9 +90,11 @@ namespace NSProgram
             return GetAccuracy(winPercentBefore, winPercentAfter);
         }
 
-        public static double GetAccuracy(double winPercentBefore, double winPercentAfter)
+        public static double GetLoss(int before, int after)
         {
-            return 103.1668 * Math.Exp(-0.04354 * (winPercentBefore - winPercentAfter)) - 3.1669;
+            double winPercentBefore = WiningChances(before);
+            double winPercentAfter = WiningChances(after);
+            return winPercentBefore - winPercentAfter;
         }
 
         public double GetAccuracy()
@@ -110,7 +110,7 @@ namespace NSProgram
         {
             if (Count == 0)
                 return false;
-            if (GetAccuracy() <= Constants.blunder)
+            if (GetAccuracy() >= Constants.blunder)
                 return true;
             return false;
         }
@@ -277,14 +277,14 @@ namespace NSProgram
         {
             SortFen();
             MSLine last = null;
-            for (int n = Count-1;n>=0; n--)
+            for (int n = Count - 1; n >= 0; n--)
             {
                 MSLine msl = this[n];
                 if ((n < Count - 1) && (msl.fen == last.fen))
                     if (msl.depth < last.depth)
                         RemoveAt(n);
                     else
-                        RemoveAt(n+1);
+                        RemoveAt(n + 1);
                 last = msl;
             }
         }

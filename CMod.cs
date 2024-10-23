@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using RapIni;
 using RapLog;
@@ -8,6 +9,39 @@ using RapLog;
 namespace NSProgram
 {
     public enum EOptionType { eSpin, eCheck, eString }
+
+    class CLast : List<double>
+    {
+        public bool AddVal(double v)
+        {
+            bool bst = true;
+            foreach (double d in this)
+            {
+                if (d > v)
+                    bst = false;
+            }
+            Add(v);
+            if (Count > 10)
+                RemoveRange(0,Count-10);
+            return bst;
+        }
+
+        public void FromSl(List<string> sl)
+        {
+            Clear();
+            for (int n = 0; n < sl.Count; n++)
+                Add(Convert.ToDouble(sl[n]));
+        }
+
+        public List<string> ToSl()
+        {
+            List<string> sl = new List<string>();
+            for (int n = 0; n < Count; n++)
+                sl.Add(this[n].ToString());
+            return sl;
+        }
+
+    }
 
     class CHis
     {
@@ -176,7 +210,7 @@ namespace NSProgram
             ini.Write($"option>{name}>max", max);
             ini.Write($"option>{name}>cur", cur);
             ini.Write($"option>{name}>bst", bst);
-            ini.Write($"option>{name}>ele",ele);
+            ini.Write($"option>{name}>ele", ele);
         }
 
         public bool Modify(int sub, int del)
@@ -226,7 +260,7 @@ namespace NSProgram
                     break;
                 case EOptionType.eString:
                     string[] tokens = cur.Trim().Split();
-                    for(int n=0;n<tokens.Length;n++)
+                    for (int n = 0; n < tokens.Length; n++)
                         tokens[n] = "0";
                     bst = string.Join(" ", tokens);
                     break;
@@ -237,13 +271,14 @@ namespace NSProgram
             }
         }
 
-        public string GetElements() {
-            if(oType == EOptionType.eString)
+        public string GetElements()
+        {
+            if (oType == EOptionType.eString)
             {
-                string result=string.Empty;
+                string result = string.Empty;
                 string[] tokens = bst.Trim().Split();
                 for (int n = 0; n < tokens.Length; n++)
-                    result += $" {n+1}={tokens[n]}";
+                    result += $" {n + 1}={tokens[n]}";
                 return result;
             }
             return string.Empty;
@@ -257,6 +292,7 @@ namespace NSProgram
         public int delta = 0;
         public int length = 0;
         public CMix mix = new CMix();
+        public string factor = string.Empty;
 
         public void Init()
         {
@@ -268,9 +304,10 @@ namespace NSProgram
         {
             foreach (COption option in this)
                 option.SaveToIni(ini);
-            ini.Write("mod>mix", mix);
             ini.Write("mod>index", index);
             ini.Write("mod>delta", delta);
+            ini.Write("mod>factor", factor);
+            ini.Write("mod>mix", mix);
         }
 
         public void LoadFromIni(CRapIni ini)
@@ -285,6 +322,7 @@ namespace NSProgram
             }
             index = ini.ReadInt("mod>index");
             delta = ini.ReadInt("mod>delta");
+            factor = ini.Read("factor>last");
             mix.SetList(ini.ReadListInt("mod>mix"));
             length = Length();
             if (mix.Count != length * 2)
@@ -393,6 +431,7 @@ namespace NSProgram
             COption opt = this[idx];
             if (opt.Modify(sub, delta))
             {
+                factor = $"{opt.name} {opt.cur}";
                 Console.WriteLine();
                 Console.WriteLine($">> {bstScore:N2} fail {fail} delta {delta} {opt.name} {opt.bst} >> {opt.cur}");
                 return true;
@@ -409,6 +448,7 @@ namespace NSProgram
         int fail = 0;
         int success = -1;
         int extra = 0;
+        CLast last = new CLast();
         readonly CHisList hl = new CHisList();
         public readonly COptionList optionList = new COptionList();
         public static readonly CRapLog log = new CRapLog("mod.log");
@@ -455,6 +495,7 @@ namespace NSProgram
             success = ini.ReadInt("mod>success", success);
             bstScore = ini.ReadDouble("mod>score");
             hl.FromSl(ini.ReadListStr("mod>his", "|"));
+            last.FromSl(ini.ReadListStr("mod>last", "|"));
         }
 
         public void SaveToIni()
@@ -465,6 +506,7 @@ namespace NSProgram
             ini.Write("mod>success", success);
             ini.Write("mod>score", bstScore);
             ini.Write("mod>his", hl.ToSl(), "|");
+            ini.Write("mod>last", last.ToSl(), "|");
             ini.Save();
         }
 
@@ -497,6 +539,8 @@ namespace NSProgram
 
         public bool SetScore(double s)
         {
+            if (last.AddVal(s))
+                log.Add($"{optionList.factor} {s:N2}");
             int oExtra = extra;
             if (extra > 0)
                 extra--;
@@ -512,17 +556,13 @@ namespace NSProgram
                 if (oExtra == 0)
                     success++;
                 extra = 0;
-                log.Add($"bst ({s:N2}){optionList.OptionsCur()}");
             }
             else
             {
                 success = 0;
                 if (hl.Add(s, optionList.index, optionList.delta))
-                {
-                    log.Add($"sec ({s:N2}){optionList.OptionsCur()}");
                     if ((oExtra == 0) && (hl.Count > 2))
                         extra = 2;
-                }
                 if (extra > 0)
                 {
                     string names = string.Empty;
