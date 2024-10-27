@@ -30,13 +30,13 @@ To use this program you need install  <a href="https://dotnet.microsoft.com/down
 	**book getoption** - show options<br/>
 	**book setoption name [option name] value [option value]** - set option<br/>
 **accuracy** - evaluate accuracy and elo of chess engine<br />
-	**accuracy start** - start test for the average centipawn loss, this command need file "accuracy fen.txt" and student file<br/>
-	**accuracy update [depth]** - update file "accuracy.fen" this command need teacher file<br/>
-	**accuracy delete** - delete positions from "accuracy.fen" where player cannot make blunder<br/>
+	**accuracy start** - start test for the average centipawn loss, this command need file "accuracy.epd" and student file<br/>
+	**accuracy update [depth]** - update file "accuracy.epd" this command need teacher file<br/>
+	**accuracy delete** - delete positions from "accuracy.epd" where player cannot make blunder<br/>
 **mod** - modify factors of chess engine<br />
-**evaluation** - evaluation chess positions by chess engine<br />
+**evaluation** - evaluation chess positions by chess engine, this command nedd file "evaluation.epd"<br />
 **test** - test chess engine<br />
-	**test start** - start test chess engine, this command need file "accuracy fen.txt" and student file<br/>
+	**test start** - start test chess engine, this command need file "test.epd" and student file<br/>
 **ini** - create configuration file<br />
 
 ### Examples of using parameters
