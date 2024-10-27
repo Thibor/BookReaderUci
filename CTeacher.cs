@@ -492,7 +492,6 @@ namespace NSProgram
                 CTData tdg = GetTData();
                 if (tdg.prepared && !tdg.done)
                     continue;
-                //if (tdg.prepared && tdg.done && !string.IsNullOrEmpty(tdg.bestMove))
                 if (tdg.prepared && tdg.done)
                 {
                     Program.accuracy.AddScore(tdg.line.fen, tdg.line.First().move, tdg.bestMove, tdg.line.First().score, tdg.line.GetScore(tdg.bestMove));

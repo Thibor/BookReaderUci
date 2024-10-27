@@ -522,6 +522,8 @@ namespace NSProgram
             void SavetoIni()
             {
                 ini.Write("go", Constants.go);
+                ini.Write("teacher", Constants.teacher);
+                ini.Write("student", Constants.student);
                 ini.Save();
             }
 
