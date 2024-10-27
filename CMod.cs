@@ -237,7 +237,8 @@ namespace NSProgram
                     cur = string.Join(" ", tokens);
                     return true;
                 default:
-                    val = Convert.ToInt32(cur);
+                    if (!int.TryParse(cur, out val))
+                        val = (min + max) / 2;
                     val += del;
                     if ((val < min) || (val > max))
                         return false;
