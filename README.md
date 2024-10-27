@@ -24,7 +24,7 @@ To use this program you need install  <a href="https://dotnet.microsoft.com/down
 	**book load** [filename].[uci|pgn] - clear and add moves from file<br/>
 	**book save** [filename].[uci|png] - save book to the file<br/>
 	**book addfile** [filename].[uci|pgn] - adds moves to the book from the file<br/>
-	**book adduci** [uci moves] - add moves in uci format to the book");
+	**book adduci** [uci moves] - add moves in uci format to the book<br />
 	**book delete** [number x] - delete x games from the book<br/>
 	**book clear** - remove all moves from the book<br/>
 	**book getoption** - show options<br/>
