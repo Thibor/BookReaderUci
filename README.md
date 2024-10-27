@@ -20,17 +20,24 @@ To use this program you need install  <a href="https://dotnet.microsoft.com/down
 
 ## Console commands
 
-**book load** [filename].[uci|pgn] - clear and add<br/>
-**book save** [filename].[uci|png|fen] - save book to the file<br/>
-**book addfile** [filename].[uci|pgn] - adds moves from another book<br/>
-**book delete** [number x] - delete x moves from the book<br/>
-**book clear** - clear all moves from the book<br/>
-**book getoption** - show options<br/>
-**book setoption name [option name] value [option value]** - set option<br/>
-**accuracy start** - start test for the average centipawn loss, this command need file "accuracy fen.txt" and student file<br/>
-**accuracy update [depth]** - update file "accuracy.fen" this command need teacher file<br/>
-**accuracy delete** - delete positions from "accuracy.fen" where player cannot make blunder<br/>
-**test start** - start test chess engine, this command need file "accuracy fen.txt" and student file<br/>
+**book** - operations on chess openings book in format uci<br />
+	**book load** [filename].[uci|pgn] - clear and add moves from file<br/>
+	**book save** [filename].[uci|png] - save book to the file<br/>
+	**book addfile** [filename].[uci|pgn] - adds moves to the book from the file<br/>
+	**book adduci** [uci moves] - add moves in uci format to the book");
+	**book delete** [number x] - delete x games from the book<br/>
+	**book clear** - remove all moves from the book<br/>
+	**book getoption** - show options<br/>
+	**book setoption name [option name] value [option value]** - set option<br/>
+**accuracy** - evaluate accuracy and elo of chess engine<br />
+	**accuracy start** - start test for the average centipawn loss, this command need file "accuracy fen.txt" and student file<br/>
+	**accuracy update [depth]** - update file "accuracy.fen" this command need teacher file<br/>
+	**accuracy delete** - delete positions from "accuracy.fen" where player cannot make blunder<br/>
+**mod** - modify factors of chess engine<br />
+**evaluation** - evaluation chess positions by chess engine<br />
+**test** - test chess engine<br />
+	**test start** - start test chess engine, this command need file "accuracy fen.txt" and student file<br/>
+**ini** - create configuration file<br />
 
 ### Examples of using parameters
 

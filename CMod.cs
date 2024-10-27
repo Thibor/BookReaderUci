@@ -22,7 +22,7 @@ namespace NSProgram
             }
             Add(v);
             if (Count > 10)
-                RemoveRange(0,Count-10);
+                RemoveRange(0, Count - 10);
             return bst;
         }
 
@@ -66,7 +66,6 @@ namespace NSProgram
 
     class CHisList : List<CHis>
     {
-        readonly int limit = 8;
 
         public bool AddHis(CHis his)
         {
@@ -85,12 +84,9 @@ namespace NSProgram
                 if (this[n].score < his.score)
                 {
                     Insert(n, his);
-                    if (Count > limit)
-                        RemoveRange(limit, Count - limit);
-                    return (n < 3) && (limit == Count);
+                    return true;
                 }
-            if (Count < limit)
-                Add(his);
+            Add(his);
             return false;
         }
 
@@ -518,6 +514,7 @@ namespace NSProgram
             success = -1;
             bstScore = 0;
             hl.Clear();
+            last.Clear();
             SaveToIni();
             LoadFromIni();
             Console.WriteLine(optionList.OptionsCur());
@@ -539,9 +536,11 @@ namespace NSProgram
 
         public bool SetScore(double s)
         {
-            if (last.AddVal(s))
-                log.Add($"{optionList.factor} {s:N2}");
-            int oExtra = extra;
+            bool lastAdd = last.AddVal(s);
+            if (lastAdd)
+                if (!string.IsNullOrEmpty(optionList.factor))
+                    log.Add($"{optionList.factor} {s:N2}");
+            int oldExtra = extra;
             if (extra > 0)
                 extra--;
             if (bstScore < s)
@@ -549,19 +548,21 @@ namespace NSProgram
                 bstScore = s;
                 optionList.CurToBst();
                 hl.RemoveIndex(optionList.index);
-                if (hl.Count > 0)
-                    hl.RemoveIndex(hl.First().index);
                 fail = 0;
                 optionList.Init();
-                if (oExtra == 0)
+                if (oldExtra == 0)
                     success++;
                 extra = 0;
+                string bst = $"!! {s:N2} {optionList.OptionsBst()}";
+                log.Add(bst);
+                Console.WriteLine();
+                Console.WriteLine(bst);
             }
             else
             {
                 success = 0;
                 if (hl.Add(s, optionList.index, optionList.delta))
-                    if ((oExtra == 0) && (hl.Count > 2))
+                    if (lastAdd && (oldExtra == 0))
                         extra = 2;
                 if (extra > 0)
                 {

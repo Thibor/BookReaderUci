@@ -462,6 +462,16 @@ namespace NSProgram
             StudentTerminate();
         }
 
+        int GetLimit()
+        {
+            return Constants.limit < 1 ? Program.accuracy.Count : Math.Min(Constants.limit, Program.accuracy.Count);
+        }
+
+        double GetProgress()
+        {
+           return Program.accuracy.index * 100.0 / GetLimit();
+        }
+
         void AccuracyLine()
         {
             double loss = Program.accuracy.GetLoss();
@@ -469,7 +479,7 @@ namespace NSProgram
             double weight = Program.accuracy.GetWeight();
             Program.accuracy.GetEloAccuracy(accuracy, out int del);
             int elo = Program.accuracy.GetEloWeight(weight);
-            ConsoleWrite($"\rprogress {Program.accuracy.index * 100.0 / Program.accuracy.Count:N2}% accuracy {accuracy:N2}% weight {weight:N2}% elo {elo} (±{del}) loss {loss:N2} blunders {Program.accuracy.blunders} mistakes {Program.accuracy.mistakes} inaccuracies {Program.accuracy.inaccuracies}");
+            ConsoleWrite($"\rprogress {GetProgress():N2}% accuracy {accuracy:N2}% weight {weight:N2}% elo {elo} (±{del}) loss {loss:N2} blunders {Program.accuracy.blunders} mistakes {Program.accuracy.mistakes} inaccuracies {Program.accuracy.inaccuracies}");
         }
 
         public double AccuracyStudent()
