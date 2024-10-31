@@ -291,6 +291,19 @@ namespace NSProgram
                                         break;
                                 }
                             break;
+                        case "test":
+                            test.LoadFromFile();
+                            if (test.Count == 0)
+                                Console.WriteLine("file \"test.fen\" unavabile");
+                            if (uci.tokens.Length > 1)
+                                switch (uci.tokens[1])
+                                {
+                                    case "start":
+                                        Constants.limit = uci.GetInt("test", accuracy.Count);
+                                        teacher.TestStart();
+                                        break;
+                                }
+                            break;
                         case "evaluation":
                             evaluation.LoadFromFile();
                             if (evaluation.Count == 0)
@@ -306,19 +319,6 @@ namespace NSProgram
                                         break;
                                     case "start":
                                         teacher.EvaluationStart();
-                                        break;
-                                }
-                            break;
-                        case "test":
-                            test.LoadFromFile();
-                            if (test.Count == 0)
-                                Console.WriteLine("file \"test.fen\" unavabile");
-                            if (uci.tokens.Length > 1)
-                                switch (uci.tokens[1])
-                                {
-                                    case "start":
-                                        Constants.limit = uci.GetInt("test", accuracy.Count);
-                                        teacher.TestStart();
                                         break;
                                 }
                             break;

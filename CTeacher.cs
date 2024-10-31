@@ -446,8 +446,6 @@ namespace NSProgram
                     if ((Constants.limit > 0) && (Program.accuracy.index >= Constants.limit))
                         break;
                 }
-                if (Program.accuracy.GetMargin()<-1)
-                    break;
                 if (!Program.accuracy.NextLine(out MSLine line))
                     break;
                 if (line.depth < Constants.minDepth)
@@ -593,6 +591,76 @@ namespace NSProgram
 
         #endregion mod
 
+        #region test
+
+        void TestLine()
+        {
+            double progress = Program.test.GetProgress();
+            double test = Program.test.GetTest();
+            int testOk = Program.test.resultOk;
+            int testFail = Program.test.resultFail;
+            ConsoleWrite($"\rprogress {progress:N2}% test {test:N2}% success {testOk} fail {testFail}");
+        }
+
+        public void TestStudent()
+        {
+            Program.test.Reset();
+            while (true)
+            {
+                CTData tdg = GetTData();
+                if (tdg.prepared && !tdg.done)
+                    continue;
+                if (tdg.prepared && tdg.done)
+                { 
+                    Program.test.SetResult(tdg.bestMove);
+                    TestLine();
+                    if (!Program.test.Next())
+                        return;
+                    if ((Constants.limit > 0) && (Program.test.GetNumber() >= Constants.limit))
+                        return;
+                }
+                CTData tds = new CTData() { prepared = true };
+                tds.line.fen=Program.test.CurElement().GetFen();
+                SetTData(tds);
+                StudentWriteLine("ucinewgame");
+                StudentWriteLine($"position fen {tds.line.fen}");
+                StudentWriteLine(Constants.testGo);
+            }
+        }
+
+        void TestStart(string student)
+        {
+            if (!SetStudent(student))
+            {
+                Console.WriteLine($"{student} not avabile");
+                return;
+            }
+            string name = Path.GetFileNameWithoutExtension(student);
+            Console.WriteLine($"{name} ready");
+            Program.test.delete = student == Constants.teacher;
+            TestStudent();
+            int ok = Program.test.resultOk;
+            int fail = Program.test.resultFail;
+            double test = Program.test.GetTest();
+            testReport.Add($"result {test:N2}% {name} ok {ok} fail {fail}");
+            StudentTerminate();
+            if (Program.test.delete)
+                Program.test.SaveToFile();
+        }
+
+        public void TestStart()
+        {
+            if (!PrepareStudents())
+                return;
+            foreach (string student in students)
+                TestStart(student);
+            Console.WriteLine();
+            Console.WriteLine("finish");
+            Console.Beep();
+        }
+
+        #endregion test
+
         #region evaluation
 
         public void EvaluationUpdate()
@@ -633,30 +701,6 @@ namespace NSProgram
             Console.WriteLine("finish");
         }
 
-        public void EvaluationStart()
-        {
-            if (!PrepareStudents())
-                return;
-            foreach (string student in students)
-                EvaluationStart(student);
-            Console.WriteLine("finish");
-            Console.Beep();
-        }
-
-        void EvaluationStart(string student)
-        {
-            string name = Path.GetFileNameWithoutExtension(student);
-            Console.WriteLine(student);
-            if (!SetStudent(student))
-            {
-                Console.WriteLine($"{student} not avabile");
-                return;
-            }
-            EvaluationStudent();
-            evaluationReport.Add($"loss {Program.evaluation.GetAccuracy():N2} count {Program.evaluation.centyCount} {name}");
-            StudentTerminate();
-        }
-
         double EvaluationStudent()
         {
             Program.evaluation.Reset();
@@ -683,76 +727,31 @@ namespace NSProgram
             return Program.evaluation.GetAccuracy();
         }
 
-        #endregion evaluation
-
-        #region test
-
-        void TestLine()
+        void EvaluationStart(string student)
         {
-            double progress = Program.test.GetProgress();
-            double test = Program.test.GetTest();
-            int testOk = Program.test.resultOk;
-            int testFail = Program.test.resultFail;
-            ConsoleWrite($"\rprogress {progress:N2}% test {test:N2}% success {testOk} fail {testFail}");
-        }
-
-        public void TestStudent()
-        {
-            Program.test.Reset();
-            while (true)
-            {
-                CTData tdg = GetTData();
-                if (tdg.prepared && !tdg.done)
-                    continue;
-                if (tdg.prepared && tdg.done)
-                { 
-                    Program.test.SetResult(tdg.bestMove);
-                    TestLine();
-                    if (!Program.test.Next())
-                        return;
-                    if ((Constants.limit > 0) && (Program.test.GetNumber() >= Constants.limit))
-                        return;
-                }
-                CTData tds = new CTData() { prepared = true };
-                tds.line.fen=Program.test.CurElement().GetFen();
-                SetTData(tds);
-                StudentWriteLine("ucinewgame");
-                StudentWriteLine($"position fen {tds.line.fen}");
-                StudentWriteLine(Constants.testGo);
-            }
-        }
-
-        void TestStart(string student)
-        {
-            string name = Path.GetFileNameWithoutExtension(student);
-            Console.WriteLine($"{name} ready");
             if (!SetStudent(student))
             {
                 Console.WriteLine($"{student} not avabile");
                 return;
             }
-            Program.test.delete = student == Constants.teacher;
-            TestStudent();
-            int ok = Program.test.resultOk;
-            int fail = Program.test.resultFail;
-            double test = Program.test.GetTest();
-            testReport.Add($"result {test:N2}% {name} ok {ok} fail {fail}");
+            string name = Path.GetFileNameWithoutExtension(student);
+            Console.WriteLine($"{name} ready");
+            EvaluationStudent();
+            evaluationReport.Add($"loss {Program.evaluation.GetAccuracy():N2} count {Program.evaluation.centyCount} {name}");
             StudentTerminate();
-            if (Program.test.delete)
-                Program.test.SaveToFile();
         }
 
-        public void TestStart()
+        public void EvaluationStart()
         {
             if (!PrepareStudents())
                 return;
             foreach (string student in students)
-                TestStart(student);
-            Console.WriteLine();
+                EvaluationStart(student);
             Console.WriteLine("finish");
             Console.Beep();
         }
 
-        #endregion test
+        #endregion evaluation
+
     }
 }
