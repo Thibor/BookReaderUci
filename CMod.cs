@@ -518,6 +518,7 @@ namespace NSProgram
             last.Clear();
             SaveToIni();
             LoadFromIni();
+            Program.accuracy.ResetLoss();
             Console.WriteLine(optionList.OptionsCur());
         }
 
@@ -611,6 +612,7 @@ namespace NSProgram
             optionList.BstToCur();
             SaveToIni();
             LoadFromIni();
+            Program.accuracy.ResetLoss();
             Console.WriteLine(optionList.OptionsCur());
         }
 

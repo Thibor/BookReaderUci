@@ -1,6 +1,7 @@
 ﻿using NSChess;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 
 namespace NSProgram
@@ -27,6 +28,7 @@ namespace NSProgram
     {
         public string fen = String.Empty;
         public int depth = 0;
+        public double loss = 0;
 
         public void Assign(MSLine line)
         {
@@ -127,6 +129,7 @@ namespace NSProgram
         {
             fen = String.Empty;
             depth = 0;
+            loss = 0;
             Clear();
         }
 
@@ -151,7 +154,8 @@ namespace NSProgram
         public string SaveToStr()
         {
             string moves = GetMoves();
-            return $"{fen} acd {depth} {moves}".Trim();
+            string l = Convert.ToString(loss, CultureInfo.InvariantCulture.NumberFormat);
+            return $"{fen} acd {depth} loss {l} {moves}".Trim();
         }
 
         public bool LoadFromStr(string line)
@@ -166,7 +170,7 @@ namespace NSProgram
             for (int n = 0; n < sl.Count; n++)
             {
                 string s = sl[n];
-                if ((s == "bm") || (s == "ce") || (s == "acd"))
+                if ((s == "bm") || (s == "ce") || (s == "acd") || (s == "loss"))
                 {
                     last = s;
                     continue;
@@ -180,6 +184,9 @@ namespace NSProgram
                 {
                     case "acd":
                         depth = Convert.ToInt32(s);
+                        break;
+                    case "loss":
+                        double.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture.NumberFormat, out loss);
                         break;
                     case "bm":
                         move = s;
@@ -392,6 +399,17 @@ namespace NSProgram
             });
         }
 
+        public void SortLoss()
+        {
+            Sort(delegate (MSLine l1, MSLine l2)
+            {
+                double d1 = l1.loss;
+                double d2 = l2.loss;
+                if (d1 == d2) return 0;
+                return d1 < d2 ? 1:-1;
+            });
+        }
+
         public void SortRandom()
         {
             for (int n = 0; n < Count; n++)
@@ -467,6 +485,13 @@ namespace NSProgram
                 return null;
             int index = CChess.rnd.Next(Count);
             return this[index];
+        }
+
+        public void ResetLoss()
+        {
+            foreach (MSLine line in this)
+                line.loss = 100;
+            SaveToEpd();
         }
 
     }

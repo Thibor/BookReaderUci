@@ -20,7 +20,8 @@ namespace NSProgram
         bool loaded = false;
         public int index = 0;
         int totalCount = 0;
-        double totalLoss = 0;
+        public double totalLoss = 0;
+        public double totalLossBst = 0;
         double totalAccuracy = 0;
         double totalWeight = 0;
         public int inaccuracies = 0;
@@ -91,22 +92,28 @@ namespace NSProgram
             blunders = 0;
             totalCount = 0;
             totalLoss = 0;
+            totalLossBst = 0;
             totalAccuracy = 0;
             totalWeight = 0;
             badFen = default;
             badFen.worstAccuracy = 100;
+            LoadFromEpd();
+            SortLoss();
         }
 
         public void AddScore(string fen, string bstMove, string curMove, int bstScore, int curScore)
         {
+            MSLine msl = GetLine(fen);
             double bstWC = MSLine.WiningChances(bstScore);
             double curWC = MSLine.WiningChances(curScore);
             double curAccuracy = MSLine.GetAccuracy(bstWC, curWC);
-            double loss = bstWC - curWC +1;
+            double loss = bstWC - curWC;
+            totalLossBst += msl.loss;
+            msl.loss = loss;
             totalCount++;
             totalAccuracy += curAccuracy;
             totalLoss += loss;
-            totalWeight += loss * curAccuracy;
+            totalWeight += (loss + 1) * curAccuracy;
             if (loss >= Constants.blunder)
                 blunders++;
             if (loss >= Constants.mistake)
@@ -124,6 +131,11 @@ namespace NSProgram
             }
         }
 
+        public double GetMargin()
+        {
+            return totalLossBst - totalLoss;
+        }
+
         public double GetAccuracy()
         {
             if (totalCount == 0)
@@ -131,11 +143,35 @@ namespace NSProgram
             return totalAccuracy / totalCount;
         }
 
+        public double GetGain()
+        {
+            if (totalCount == 0)
+                return 0;
+            return 100.0 - totalLoss / totalCount;
+        }
+
         public double GetWeight()
         {
-            if (totalLoss == 0)
-                return 100.0;
-            return totalWeight / totalLoss;
+            if (totalCount == 0)
+                return 0;
+            return totalWeight / (totalLoss + totalCount);
+        }
+
+        int GetLimit()
+        {
+            return Constants.limit < 1 ? Count : Math.Min(Constants.limit, Count);
+        }
+
+        public double GetProgress()
+        {
+            return index * 100.0 / GetLimit();
+        }
+
+        public MSLine GetLine(string fen)
+        {
+            foreach (MSLine msl in this)
+                if (msl.fen == fen) return msl;
+            return null;
         }
 
         public double GetLoss()
