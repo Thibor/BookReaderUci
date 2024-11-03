@@ -2,6 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 using RapLog;
+using RapIni;
 
 namespace NSProgram
 {
@@ -18,6 +19,7 @@ namespace NSProgram
     internal class CAccuracy : MSList
     {
         bool loaded = false;
+        int start = 0;
         public int index = 0;
         int totalCount = 0;
         public double totalLoss = 0;
@@ -39,7 +41,12 @@ namespace NSProgram
                 return;
             loaded = true;
             LoadFromEpd();
-            Check();
+            int c = Check();
+            if (c > 0)
+            {
+                Console.WriteLine($"{c} errors fixed.");
+                SaveToEpd();
+            }
         }
 
         public void PrintInfo()
@@ -84,8 +91,9 @@ namespace NSProgram
             Console.WriteLine($"{fl.Count} fens left.");
         }
 
-        public void Reset()
+        public void Prolog()
         {
+            start = (Count - GetLimit()) / 2;
             index = 0;
             inaccuracies = 0;
             mistakes = 0;
@@ -159,6 +167,8 @@ namespace NSProgram
 
         int GetLimit()
         {
+            if (!valid)
+                return Count;
             return Constants.limit < 1 ? Count : Math.Min(Constants.limit, Count);
         }
 
@@ -204,9 +214,11 @@ namespace NSProgram
         public bool NextLine(out MSLine line)
         {
             line = null;
-            if (index >= Count)
+            int i = start + index;
+            if (i >= Count)
                 return false;
-            line = this[index++];
+            index++;
+            line = this[i];
             return true;
         }
 

@@ -261,7 +261,6 @@ namespace NSProgram
                                         accuracy.SetDepth(uci.GetInt("depth"));
                                         break;
                                     case "start":
-                                        Constants.limit = uci.GetInt("start", accuracy.Count);
                                         teacher.AccuracyStart();
                                         break;
                                     default:

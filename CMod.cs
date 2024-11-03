@@ -14,6 +14,8 @@ namespace NSProgram
     {
         public bool AddVal(double v)
         {
+            if (Program.accuracy.GetProgress() < 100)
+                return false;
             bool bst = true;
             foreach (double d in this)
             {
@@ -493,6 +495,8 @@ namespace NSProgram
             bstScore = ini.ReadDouble("mod>score");
             hl.FromSl(ini.ReadListStr("mod>his", "|"));
             last.FromSl(ini.ReadListStr("mod>last", "|"));
+            if (bstScore == 0)
+                optionList.BstToCur();
         }
 
         public void SaveToIni()
@@ -505,21 +509,6 @@ namespace NSProgram
             ini.Write("mod>his", hl.ToSl(), "|");
             ini.Write("mod>last", last.ToSl(), "|");
             ini.Save();
-        }
-
-        public void Reset()
-        {
-            optionList.Init();
-            optionList.BstToCur();
-            fail = 0;
-            success = -1;
-            bstScore = 0;
-            hl.Clear();
-            last.Clear();
-            SaveToIni();
-            LoadFromIni();
-            Program.accuracy.ResetLoss();
-            Console.WriteLine(optionList.OptionsCur());
         }
 
         bool Modify(int probe = 0)
@@ -547,6 +536,7 @@ namespace NSProgram
                 extra--;
             if (bstScore < s)
             {
+                Program.accuracy.SaveToEpd();
                 bstScore = s;
                 optionList.CurToBst();
                 hl.RemoveIndex(optionList.index);
@@ -562,6 +552,7 @@ namespace NSProgram
             }
             else
             {
+                Program.accuracy.LoadFromEpd();
                 success = 0;
                 if (hl.Add(s, optionList.index, optionList.delta))
                     if (lastAdd && (oldExtra == 0))
@@ -600,20 +591,25 @@ namespace NSProgram
             return Modify(0);
         }
 
-        public void Zero()
+        public void Reset()
         {
             optionList.Init();
+            optionList.BstToCur();
             fail = 0;
             success = -1;
             bstScore = 0;
             hl.Clear();
+            last.Clear();
+            SaveToIni();
+            Console.WriteLine(optionList.OptionsCur());
+        }
+
+        public void Zero()
+        {
+            Program.accuracy.ResetLoss();
             foreach (COption opt in optionList)
                 opt.Zero();
-            optionList.BstToCur();
-            SaveToIni();
-            LoadFromIni();
-            Program.accuracy.ResetLoss();
-            Console.WriteLine(optionList.OptionsCur());
+            Reset();
         }
 
     }

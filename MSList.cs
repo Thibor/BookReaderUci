@@ -28,7 +28,12 @@ namespace NSProgram
     {
         public string fen = String.Empty;
         public int depth = 0;
-        public double loss = 0;
+        public double loss = 100;
+
+        public bool Valid()
+        {
+            return loss < 100;
+        }
 
         public void Assign(MSLine line)
         {
@@ -59,6 +64,11 @@ namespace NSProgram
             {
                 return r2.score - r1.score;
             });
+        }
+
+        public string ShortFen()
+        {
+            return fen.Split(' ')[0];
         }
 
         public MSRec First()
@@ -108,13 +118,18 @@ namespace NSProgram
             return GetAccuracy(First().score, Last().score);
         }
 
+        public double GetLoss()
+        {
+            if(Count < 2)
+                return 0;
+            return GetLoss(First().score, Last().score);
+        }
+
         public bool Fail()
         {
-            if (Count == 0)
+            if (Count<2)
                 return false;
-            if (GetAccuracy() >= Constants.blunder)
-                return true;
-            return false;
+            return GetLoss() < Constants.blunder;
         }
 
         public bool MoveExists(string move)
@@ -208,6 +223,43 @@ namespace NSProgram
 
     internal class MSList : List<MSLine>
     {
+        public bool valid = true;
+
+        public int Check()
+        {
+            if (Count == 0)
+                return 0;
+            SortFen();
+            MSLine last = this[0];
+            CChess chess = new CChess();
+            int result = 0;
+            for (int n = Count - 1; n >= 0; n--)
+            {
+                MSLine msl = this[n];
+                if (chess.SetFen(msl.fen))
+                {
+                    string fen = chess.GetFen();
+                    if (msl.fen != fen)
+                        result++;
+                    msl.fen = fen;
+                }
+                else
+                {
+                    result++;
+                    RemoveAt(n);
+                }
+                if ((msl.ShortFen() == last.ShortFen()) && (Count > 1))
+                {
+                    result++;
+                    if (msl.depth < last.depth)
+                        RemoveAt(n);
+                    else
+                        RemoveAt(n + 1);
+                }
+                last = msl;
+            }
+            return result;
+        }
 
         public void GetDepth(out int min, out int max)
         {
@@ -280,22 +332,6 @@ namespace NSProgram
             return result;
         }
 
-        public void Check()
-        {
-            SortFen();
-            MSLine last = null;
-            for (int n = Count - 1; n >= 0; n--)
-            {
-                MSLine msl = this[n];
-                if ((n < Count - 1) && (msl.fen == last.fen))
-                    if (msl.depth < last.depth)
-                        RemoveAt(n);
-                    else
-                        RemoveAt(n + 1);
-                last = msl;
-            }
-        }
-
         public int CountFail()
         {
             int result = 0;
@@ -345,7 +381,6 @@ namespace NSProgram
 
         public void SaveToEpd()
         {
-            string last = String.Empty;
             SortFen();
             using (FileStream fs = File.Open(Constants.accuracyEpd, FileMode.Create, FileAccess.Write, FileShare.None))
             using (StreamWriter sw = new StreamWriter(fs))
@@ -353,10 +388,6 @@ namespace NSProgram
                 foreach (MSLine msl in this)
                 {
                     string l = msl.SaveToStr();
-                    string[] tokens = l.Split(' ');
-                    if (last == tokens[0])
-                        continue;
-                    last = tokens[0];
                     sw.WriteLine(l);
                 }
             }
@@ -364,6 +395,7 @@ namespace NSProgram
 
         public bool LoadFromEpd()
         {
+            valid = true;
             Clear();
             if (!File.Exists(Constants.accuracyEpd))
                 return false;
@@ -376,6 +408,8 @@ namespace NSProgram
                     MSLine msl = new MSLine();
                     if (msl.LoadFromStr(line))
                         Add(msl);
+                    if(!msl.Valid())
+                        valid= false;
                 }
             }
             return Count > 0;
@@ -406,7 +440,7 @@ namespace NSProgram
                 double d1 = l1.loss;
                 double d2 = l2.loss;
                 if (d1 == d2) return 0;
-                return d1 < d2 ? 1:-1;
+                return d1 < d2 ? 1 : -1;
             });
         }
 
