@@ -408,14 +408,13 @@ namespace NSProgram
                 }
                 Program.accuracy.SortDepth();
                 MSLine msl = fail > 0 ? Program.accuracy.GetLineFail() : Program.accuracy.GetShallowLine();
-                int depth = fail > 0 ? msl.depth : Constants.minDepth;
                 if ((msl == null) || ((fail == 0) && (msl.depth >= Constants.minDepth)))
                     break;
                 CTData tds = new CTData() { prepared = true };
                 tds.line.fen = msl.fen;
-                tds.line.depth = depth;
+                tds.line.depth = Constants.minDepth;
                 int c = fail > 0 ? Program.accuracy.CountFail() : Program.accuracy.CountShallowLine();
-                Console.WriteLine($"{c} depth {msl.depth} >> {depth} fen {msl.fen}");
+                Console.WriteLine($"{c} depth {msl.depth} >> {Constants.minDepth} fen {msl.fen}");
                 AccuracyUpdatePrepare(tds);
             }
             Console.Beep();
@@ -442,24 +441,21 @@ namespace NSProgram
                     continue;
                 if (tdg.prepared && tdg.done)
                 {
-                    Program.accuracy.AddScore(tdg.line.fen, tdg.line.First().move, tdg.bestMove, tdg.line.First().score, tdg.line.GetScore(tdg.bestMove));
+                    Program.accuracy.AddScore(tdg.line.fen, tdg.bestMove);
                     AccuracyLine();
                 }
-                if ((Constants.limit > 0) && (Program.accuracy.index >= Constants.limit))
-                    break;
-                if (!Program.accuracy.NextLine(out MSLine line))
-                    break;
-                if (line.depth < Constants.minDepth)
-                    continue;
                 CTData tds = new CTData
                 {
                     prepared = true
                 };
-                tds.line.Assign(line);
+                if (!Program.accuracy.NextLine(out tds.line))
+                    break;
+                if (tds.line.depth < Constants.minDepth)
+                    continue;
                 SetTData(tds);
-                Program.accuracy.his.Add(line.fen);
+                Program.accuracy.his.Add(tds.line.fen);
                 StudentWriteLine("ucinewgame");
-                StudentWriteLine($"position fen {line.fen}");
+                StudentWriteLine($"position fen {tds.line.fen}");
                 StudentWriteLine(Constants.go);
             }
             Console.WriteLine();
@@ -523,7 +519,6 @@ namespace NSProgram
 
         public double ModStudent()
         {
-            Program.accuracy.Prolog();
             SetTData(new CTData());
             while (true)
             {
@@ -532,30 +527,25 @@ namespace NSProgram
                     continue;
                 if (tdg.prepared && tdg.done)
                 {
-                    Program.accuracy.AddScore(tdg.line.fen, tdg.line.First().move, tdg.bestMove, tdg.line.First().score, tdg.line.GetScore(tdg.bestMove));
+                    Program.accuracy.AddScore(tdg.line.fen, tdg.bestMove);
                     RenderLineMod();
                 }
-                if ((mod.bstScore>0) && (Program.accuracy.GetMargin() < -1))
+                if (Program.accuracy.valid && (mod.bstGain > 0) && !Program.accuracy.Procede() && (Program.accuracy.GetGain() < mod.last.Min()))
                     break;
-                if ((Constants.limit > 0) && (Program.accuracy.index >= Constants.limit))
-                    if (Program.accuracy.valid)
-                        break;
-                if (!Program.accuracy.NextLine(out MSLine line))
-                    break;
-                if (line.depth < Constants.minDepth)
-                    continue;
                 CTData tds = new CTData
                 {
                     prepared = true
                 };
-                tds.line.Assign(line);
+                if (!Program.accuracy.NextLine(out tds.line))
+                    break;
+                if (tds.line.depth < Constants.minDepth)
+                    continue;
                 SetTData(tds);
-                Program.accuracy.his.Add(line.fen);
+                Program.accuracy.his.Add(tds.line.fen);
                 StudentWriteLine("ucinewgame");
-                StudentWriteLine($"position fen {line.fen}");
+                StudentWriteLine($"position fen {tds.line.fen}");
                 StudentWriteLine(Constants.go);
             }
-            Program.accuracy.valid = true;
             Console.WriteLine();
             return Program.accuracy.GetGain();
         }
@@ -572,18 +562,19 @@ namespace NSProgram
             }
             string name = Path.GetFileNameWithoutExtension(student);
             Console.WriteLine($"{name} ready");
-            Console.WriteLine($"factors {mod.optionList.length} {mod.optionList.factor}");
+            Console.WriteLine($"factors {mod.optionList.length} {mod.optionList.factor} fens {Program.accuracy.Count} gain {Program.accuracy.GetLastGain():N2}");
             while (true)
             {
+                Program.accuracy.Prolog();
+                if ((!Program.accuracy.valid) || (mod.bstGain == 0))
+                    mod.optionList.BstToCur();
                 SetStudent(student);
                 foreach (COption opt in mod.optionList)
                     StudentWriteLine($"setoption name {opt.name} value {opt.cur}");
                 Console.WriteLine(mod.optionList.OptionsCur());
-                mod.SaveToIni();
-                double score = ModStudent();
-                if (Program.accuracy.valid)
-                    if (!mod.SetScore(score))
-                        break;
+                ModStudent();
+                if (!mod.SetScore())
+                    break;
             }
             Console.Beep();
             Console.WriteLine("finish");

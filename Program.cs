@@ -285,6 +285,9 @@ namespace NSProgram
                                     case "zero":
                                         teacher.mod.Zero();
                                         break;
+                                    case "best":
+                                        teacher.mod.optionList.PrintBest();
+                                        break;
                                     default:
                                         Console.WriteLine($"Unknown command [{uci.tokens[1]}]");
                                         break;

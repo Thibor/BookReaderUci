@@ -40,6 +40,7 @@ namespace NSProgram
             Clear();
             fen = line.fen;
             depth = line.depth;
+            loss = line.loss;
             foreach (MSRec rec in line)
                 Add(new MSRec(rec));
         }
@@ -120,15 +121,19 @@ namespace NSProgram
 
         public double GetLoss()
         {
-            if(Count < 2)
+            if (Count < 2)
                 return 0;
             return GetLoss(First().score, Last().score);
         }
 
         public bool Fail()
         {
-            if (Count<2)
-                return false;
+            if (Count < 3)
+                return true;
+            if (Math.Abs(First().score) > 30000)
+                return true;
+            if (Math.Abs(Last().score) > 30000)
+                return true;
             return GetLoss() < Constants.blunder;
         }
 
@@ -408,8 +413,11 @@ namespace NSProgram
                     MSLine msl = new MSLine();
                     if (msl.LoadFromStr(line))
                         Add(msl);
-                    if(!msl.Valid())
-                        valid= false;
+                    if (!msl.Valid())
+                    {
+                        msl.Valid();
+                        valid = false;
+                    }
                 }
             }
             return Count > 0;
@@ -526,6 +534,15 @@ namespace NSProgram
             foreach (MSLine line in this)
                 line.loss = 100;
             SaveToEpd();
+            valid = false;
+        }
+
+        public bool GetValid()
+        {
+            foreach (MSLine msl in this)
+                if (msl.loss == 100)
+                    return false;
+            return true;
         }
 
     }

@@ -19,7 +19,8 @@ namespace NSProgram
     internal class CAccuracy : MSList
     {
         bool loaded = false;
-        int start = 0;
+        public int start = 0;
+        public int limit = 0;
         public int index = 0;
         int totalCount = 0;
         public double totalLoss = 0;
@@ -34,6 +35,59 @@ namespace NSProgram
         public CRapLog log = new CRapLog("accuracy.log");
         public CRapLog his = new CRapLog("accuracy.his");
         readonly static Random rnd = new Random();
+
+        public bool IsLimit()
+        {
+            return GetLimit() < Count;
+        }
+
+        int GetLimit()
+        {
+            if (!valid)
+                return Count;
+            return Constants.limit < 1 ? Count : Math.Min(Constants.limit, Count);
+        }
+
+        int GetStart()
+        {
+            return 0;
+            //return (Count - GetLimit()) / 2;
+        }
+
+        public double GetProgress()
+        {
+            return index * 100.0 / GetLimit();
+        }
+
+        public double GetLastGain()
+        {
+            SortLoss();
+            start = GetStart();
+            limit = GetLimit();
+            double loss = 0;
+            for (int n = 0; n < limit; n++)
+                loss += this[start + n].loss;
+            return 100.0 - loss / limit;
+        }
+
+        public void Prolog()
+        {
+            LoadFromEpd();
+            start = GetStart();
+            limit = GetLimit();
+            index = 0;
+            inaccuracies = 0;
+            mistakes = 0;
+            blunders = 0;
+            totalCount = 0;
+            totalLoss = 0;
+            totalLossBst = 0;
+            totalAccuracy = 0;
+            totalWeight = 0;
+            badFen = default;
+            badFen.worstAccuracy = 100;
+            SortLoss();
+        }
 
         public void LoadFromFile()
         {
@@ -91,27 +145,11 @@ namespace NSProgram
             Console.WriteLine($"{fl.Count} fens left.");
         }
 
-        public void Prolog()
-        {
-            start = (Count - GetLimit()) / 2;
-            index = 0;
-            inaccuracies = 0;
-            mistakes = 0;
-            blunders = 0;
-            totalCount = 0;
-            totalLoss = 0;
-            totalLossBst = 0;
-            totalAccuracy = 0;
-            totalWeight = 0;
-            badFen = default;
-            badFen.worstAccuracy = 100;
-            LoadFromEpd();
-            SortLoss();
-        }
-
-        public void AddScore(string fen, string bstMove, string curMove, int bstScore, int curScore)
+        public void AddScore(string fen, string curMove)
         {
             MSLine msl = GetLine(fen);
+            int bstScore = msl.First().score;
+            int curScore = msl.GetScore(curMove);
             double bstWC = MSLine.WiningChances(bstScore);
             double curWC = MSLine.WiningChances(curScore);
             double curAccuracy = MSLine.GetAccuracy(bstWC, curWC);
@@ -132,7 +170,7 @@ namespace NSProgram
             {
                 badFen.worstAccuracy = curAccuracy;
                 badFen.fen = fen;
-                badFen.bstMove = bstMove;
+                badFen.bstMove = msl.First().move;
                 badFen.badMove = curMove;
                 badFen.bstScore = bstScore;
                 badFen.badScore = curScore;
@@ -142,6 +180,12 @@ namespace NSProgram
         public double GetMargin()
         {
             return totalLossBst - totalLoss;
+        }
+
+        public bool Procede()
+        {
+            int limit = GetLimit();
+            return GetMargin()>(-128*(limit-index)/limit);
         }
 
         public double GetAccuracy()
@@ -163,18 +207,6 @@ namespace NSProgram
             if (totalCount == 0)
                 return 0;
             return totalWeight / (totalLoss + totalCount);
-        }
-
-        int GetLimit()
-        {
-            if (!valid)
-                return Count;
-            return Constants.limit < 1 ? Count : Math.Min(Constants.limit, Count);
-        }
-
-        public double GetProgress()
-        {
-            return index * 100.0 / GetLimit();
         }
 
         public MSLine GetLine(string fen)
@@ -214,11 +246,10 @@ namespace NSProgram
         public bool NextLine(out MSLine line)
         {
             line = null;
-            int i = start + index;
-            if (i >= Count)
+            if (index >= limit)
                 return false;
+            line = this[start + index];
             index++;
-            line = this[i];
             return true;
         }
 

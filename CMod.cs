@@ -14,8 +14,6 @@ namespace NSProgram
     {
         public bool AddVal(double v)
         {
-            if (Program.accuracy.GetProgress() < 100)
-                return false;
             bool bst = true;
             foreach (double d in this)
             {
@@ -41,6 +39,15 @@ namespace NSProgram
             for (int n = 0; n < Count; n++)
                 sl.Add(this[n].ToString());
             return sl;
+        }
+
+        public double Max()
+        {
+            double max = 0;
+            foreach (double v in this)
+                if (v > max)
+                    max = v;
+            return max;
         }
 
     }
@@ -131,6 +138,15 @@ namespace NSProgram
                     return true;
                 }
             return false;
+        }
+
+        public double Max()
+        {
+            double max = 0;
+            foreach (CHis h in this)
+                if (max < h.score)
+                    max = h.score;
+            return max;
         }
 
     }
@@ -280,7 +296,7 @@ namespace NSProgram
                     result += $" {n + 1}={tokens[n]}";
                 return result;
             }
-            return string.Empty;
+            return bst;
         }
 
     }
@@ -403,6 +419,11 @@ namespace NSProgram
             Modify(index, delta);
         }
 
+        public bool Modified()
+        {
+            return OptionsBst() != OptionsCur();
+        }
+
         public bool Modify(int i, int d)
         {
             i = i % length;
@@ -414,6 +435,7 @@ namespace NSProgram
         {
             if (Count == 0)
                 return false;
+            int oldDelta = delta;
             if (success == 0)
             {
                 int value = mix.GetVal(fail);
@@ -432,10 +454,19 @@ namespace NSProgram
             {
                 factor = $"{opt.name} {opt.cur}";
                 Console.WriteLine();
-                Console.WriteLine($">> {bstScore:N2} fail {fail} delta {delta} {opt.name} {opt.bst} >> {opt.cur}");
+                if (Modified())
+                    Console.WriteLine($">> {bstScore:N2} fail {fail} delta {delta} {opt.name} {opt.bst} >> {opt.cur}");
+                else
+                    Console.WriteLine($">> {bstScore:N2}");
                 return true;
             }
             return false;
+        }
+
+        public void PrintBest()
+        {
+            foreach(COption op in this)
+                Console.WriteLine($"{op.name} {op.GetElements()}");
         }
 
 
@@ -443,11 +474,11 @@ namespace NSProgram
 
     internal class CMod
     {
-        public double bstScore = 0;
         int fail = 0;
         int success = -1;
         int extra = 0;
-        CLast last = new CLast();
+        public double bstGain = 0;
+        public CLast last = new CLast();
         readonly CHisList hl = new CHisList();
         public readonly COptionList optionList = new COptionList();
         public static readonly CRapLog log = new CRapLog("mod.log");
@@ -492,11 +523,9 @@ namespace NSProgram
             extra = ini.ReadInt("mod>extra");
             fail = ini.ReadInt("mod>fail");
             success = ini.ReadInt("mod>success", success);
-            bstScore = ini.ReadDouble("mod>score");
+            bstGain = ini.ReadDouble("mod>score");
             hl.FromSl(ini.ReadListStr("mod>his", "|"));
             last.FromSl(ini.ReadListStr("mod>last", "|"));
-            if (bstScore == 0)
-                optionList.BstToCur();
         }
 
         public void SaveToIni()
@@ -505,7 +534,7 @@ namespace NSProgram
             ini.Write("mod>extra", extra);
             ini.Write("mod>fail", fail);
             ini.Write("mod>success", success);
-            ini.Write("mod>score", bstScore);
+            ini.Write("mod>score", bstGain);
             ini.Write("mod>his", hl.ToSl(), "|");
             ini.Write("mod>last", last.ToSl(), "|");
             ini.Save();
@@ -516,7 +545,7 @@ namespace NSProgram
             if (optionList.Count == 0)
                 return false;
             optionList.BstToCur();
-            if (optionList.Modify(bstScore, fail, success))
+            if (optionList.Modify(bstGain, fail, success))
                 return true;
             fail++;
             success = 0;
@@ -525,36 +554,45 @@ namespace NSProgram
             return false;
         }
 
-        public bool SetScore(double s)
+        public bool SetScore()
         {
-            bool lastAdd = last.AddVal(s);
+            if (!Program.accuracy.valid)
+                bstGain = 0;
+            Program.accuracy.valid = Program.accuracy.GetValid();
+            if (!Program.accuracy.valid)
+                return false;
+            double gain = Program.accuracy.GetLastGain();
+            bool lastAdd = false;
+            if (Program.accuracy.GetProgress() == 100)
+                lastAdd = last.AddVal(gain);
             if (lastAdd)
                 if (!string.IsNullOrEmpty(optionList.factor))
-                    log.Add($"{optionList.factor} {s:N2}");
+                    log.Add($"{optionList.factor} {gain:N2}");
             int oldExtra = extra;
             if (extra > 0)
                 extra--;
-            if (bstScore < s)
+            if (bstGain < gain)
             {
+                bstGain = gain;
+                if (optionList.Modified() && Program.accuracy.IsLimit())
+                    Program.accuracy.ResetLoss();
                 Program.accuracy.SaveToEpd();
-                bstScore = s;
                 optionList.CurToBst();
-                hl.RemoveIndex(optionList.index);
-                fail = 0;
-                optionList.Init();
-                if (oldExtra == 0)
+                if ((extra == 0) && optionList.Modified())
                     success++;
                 extra = 0;
-                string bst = $"!! {s:N2} {optionList.OptionsBst()}";
+                fail = 0;
+                hl.RemoveIndex(optionList.index);
+                optionList.Init();
+                string bst = $"!! {gain:N2} {optionList.OptionsBst()}";
                 log.Add(bst);
                 Console.WriteLine();
                 Console.WriteLine(bst);
             }
             else
             {
-                Program.accuracy.LoadFromEpd();
                 success = 0;
-                if (hl.Add(s, optionList.index, optionList.delta))
+                if (hl.Add(gain, optionList.index, optionList.delta))
                     if (lastAdd && (oldExtra == 0))
                         extra = 2;
                 if (extra > 0)
@@ -588,6 +626,7 @@ namespace NSProgram
                 else
                     fail++;
             }
+            SaveToIni();
             return Modify(0);
         }
 
@@ -597,16 +636,15 @@ namespace NSProgram
             optionList.BstToCur();
             fail = 0;
             success = -1;
-            bstScore = 0;
+            bstGain = 0;
             hl.Clear();
-            last.Clear();
+            Program.accuracy.ResetLoss();
             SaveToIni();
             Console.WriteLine(optionList.OptionsCur());
         }
 
         public void Zero()
         {
-            Program.accuracy.ResetLoss();
             foreach (COption opt in optionList)
                 opt.Zero();
             Reset();
