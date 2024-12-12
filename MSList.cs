@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Windows.Forms.VisualStyles;
 
 namespace NSProgram
 {
@@ -229,6 +230,7 @@ namespace NSProgram
     internal class MSList : List<MSLine>
     {
         public bool valid = true;
+        public string fileName = Constants.accuracyEpd;
 
         public int Check()
         {
@@ -387,7 +389,7 @@ namespace NSProgram
         public void SaveToEpd()
         {
             SortFen();
-            using (FileStream fs = File.Open(Constants.accuracyEpd, FileMode.Create, FileAccess.Write, FileShare.None))
+            using (FileStream fs = File.Open(fileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
             using (StreamWriter sw = new StreamWriter(fs))
             {
                 foreach (MSLine msl in this)
@@ -402,9 +404,9 @@ namespace NSProgram
         {
             valid = true;
             Clear();
-            if (!File.Exists(Constants.accuracyEpd))
+            if (!File.Exists(fileName))
                 return false;
-            using (FileStream fs = File.Open(Constants.accuracyEpd, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (FileStream fs = File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
             using (StreamReader reader = new StreamReader(fs))
             {
                 string line = String.Empty;

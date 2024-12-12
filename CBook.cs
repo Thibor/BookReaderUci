@@ -270,7 +270,10 @@ namespace NSProgram
         public void ShowInfo()
         {
             if (moves.Count == 0)
+            {
+                Console.WriteLine("no records");
                 return;
+            }
             int minL = int.MaxValue;
             int maxL = int.MinValue;
             int minM = 0;
@@ -291,7 +294,12 @@ namespace NSProgram
                 }
             }
             sum /= (moves.Count * 5);
-            Console.WriteLine($"info string moves average moves per game {sum:N2} ({minM} - {maxM})");
+            string frm = "{0,8:N0}";
+            Console.WriteLine();
+            Console.WriteLine($"games     {frm}",moves.Count);
+            Console.WriteLine($"depth avg {frm}",sum);
+            Console.WriteLine($"depth min {frm}",minM);
+            Console.WriteLine($"depth max {frm}",maxM);
         }
 
     }

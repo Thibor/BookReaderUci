@@ -15,7 +15,8 @@ namespace NSProgram
         public static bool isLog = false;
         public static bool isW = false;
         public static CChessExt chess = new CChessExt();
-        public static CAccuracy accuracy = new CAccuracy();
+        public static CAccuracyList accuracy = new CAccuracyList();
+        public static CModList modEpd = new CModList();
         public static CEvaluationList evaluation = new CEvaluationList();
         public static CTestList test = new CTestList();
         public static CTeacher teacher = new CTeacher();
@@ -78,7 +79,7 @@ namespace NSProgram
             _handler += new EventHandler(Handler);
             SetConsoleCtrlHandler(_handler, true);
             if (args.Length == 0)
-                LoadFromIni();
+                Constants.LoadFromIni(ini);
             int missingIndex = 0;
             bool isInfo = false;
             bool bookRead = false;
@@ -166,8 +167,11 @@ namespace NSProgram
             string engineArguments = String.Join(" ", listEa);
             teacherFile = String.Join(" ", listTf);
             studentFile = String.Join(" ", listSf);
-            Console.WriteLine($"idbook name {book.name} ver {book.version}");
-            Console.WriteLine($"idbook extension {CBook.defExt}");
+            if (args.Length == 0)
+                bookFile = Constants.bookFile;
+            Console.WriteLine($"idbook name {CHeader.name}");
+            Console.WriteLine($"idbook version {CHeader.version}");
+            Console.WriteLine($"idbook extension {CHeader.extension}");
             Process myProcess = new Process();
             if (File.Exists(engineFile))
             {
@@ -199,6 +203,7 @@ namespace NSProgram
             if (File.Exists("accuracy.fen"))
                 Console.WriteLine("info string fen on");
             bool bookLoaded = SetBookFile(bookFile);
+            bool help = false;
             do
             {
                 string msg = String.IsNullOrEmpty(Constants.command) ? Console.ReadLine().Trim() : Constants.command;
@@ -206,240 +211,235 @@ namespace NSProgram
                 uci.SetMsg(msg);
                 int count = book.moves.Count;
                 bool done = true;
-                bool help = uci.tokens.Length < 1;
-                if (!help)
-                    switch (uci.command)
-                    {
-                        case "accuracy":
-                            accuracy.LoadFromFile();
-                            if (accuracy.Count == 0)
-                                Console.WriteLine($"file \"{Constants.accuracyEpd}\" unavabile");
-                            if (uci.tokens.Length > 1)
-                                switch (uci.tokens[1])
-                                {
-                                    case "update":
-                                        accuracy.GetDepth(out int minD, out _);
-                                        minD = uci.GetInt("update", ++minD);
-                                        if (Constants.minDepth < minD)
-                                            Constants.minDepth = minD;
-                                        teacher.AccuracyUpdate();
-                                        break;
-                                    case "delete":
-                                        int cf = accuracy.CountFail();
-                                        if (cf > 0)
-                                        {
-                                            if (Confirm($"Delete {cf} fens"))
-                                            {
-                                                cf = accuracy.DeleteFail();
-                                                Console.WriteLine($"{cf} fens deleted");
-                                            }
-                                            break;
-                                        }
-                                        if (uci.GetValue("delete") == "min")
-                                        {
-                                            int cm = accuracy.CountMovesMin(out int minM);
-                                            if (Confirm($"Delete {cm} fens"))
-                                            {
-                                                cm = accuracy.DeleteMoves(minM);
-                                                Console.WriteLine($"{cm} fens deleted");
-                                            }
-                                        }
-                                        if (uci.GetValue("delete") == "max")
-                                        {
-                                            int cm = accuracy.CountMovesMax(out int maxM);
-                                            if (Confirm($"Delete {cm} fens"))
-                                            {
-                                                cm = accuracy.DeleteMoves(maxM);
-                                                Console.WriteLine($"{cm} fens deleted");
-                                            }
-                                        }
-                                        break;
-                                    case "add":
-                                        accuracy.Add(uci.GetInt("add"));
-                                        break;
-                                    case "depth":
-                                        accuracy.SetDepth(uci.GetInt("depth"));
-                                        break;
-                                    case "start":
-                                        teacher.AccuracyStart();
-                                        break;
-                                    default:
-                                        Console.WriteLine($"Unknown command [{uci.tokens[1]}]");
-                                        break;
-                                }
-                            accuracy.PrintInfo();
-                            break;
-                        case "mod":
-                            accuracy.LoadFromFile();
-                            if (accuracy.Count == 0)
-                                Console.WriteLine($"file \"{Constants.accuracyEpd}\" unavabile");
-                            if (uci.tokens.Length > 1)
-                                switch (uci.tokens[1])
-                                {
-                                    case "start":
-                                        teacher.ModStart();
-                                        break;
-                                    case "reset":
-                                        teacher.mod.Reset();
-                                        break;
-                                    case "zero":
-                                        teacher.mod.Zero();
-                                        break;
-                                    case "best":
-                                        teacher.mod.optionList.PrintBest();
-                                        break;
-                                    default:
-                                        Console.WriteLine($"Unknown command [{uci.tokens[1]}]");
-                                        break;
-                                }
-                            break;
-                        case "test":
-                            test.LoadFromFile();
-                            if (test.Count == 0)
-                                Console.WriteLine("file \"test.fen\" unavabile");
-                            if (uci.tokens.Length > 1)
-                                switch (uci.tokens[1])
-                                {
-                                    case "start":
-                                        Constants.limit = uci.GetInt("test", accuracy.Count);
-                                        teacher.TestStart();
-                                        break;
-                                }
-                            break;
-                        case "evaluation":
-                            evaluation.LoadFromFile();
-                            if (evaluation.Count == 0)
-                                Console.WriteLine("file \"evaluation.fen\" unavabile");
-                            if (uci.tokens.Length > 1)
-                                switch (uci.tokens[1])
-                                {
-                                    case "reset":
-                                        evaluation.Fill();
-                                        break;
-                                    case "update":
-                                        teacher.EvaluationUpdate();
-                                        break;
-                                    case "start":
-                                        teacher.EvaluationStart();
-                                        break;
-                                }
-                            break;
-                        case "ini":
-                            SavetoIni();
-                            break;
-                        case "book":
-                            help = uci.tokens.Length < 2;
-                            if (!help)
-                                switch (uci.tokens[1])
-                                {
-                                    case "addfile":
-                                        if (!book.AddFile(uci.GetValue("addfile")))
-                                            Console.WriteLine("File not found");
-                                        else
-                                            Console.WriteLine($"{book.moves.Count - count:N0} lines have been added");
-                                        break;
-                                    case "adduci":
-                                        book.moves.Add(uci.GetValue("adduci"));
-                                        Console.WriteLine($"{book.moves.Count - count:N0} lines have been added");
-                                        break;
-                                    case "clear":
-                                        book.moves.Clear();
-                                        Console.WriteLine("Book is empty");
-                                        break;
-                                    case "delete":
-                                        int c = book.Delete(uci.GetInt("delete"));
-                                        Console.WriteLine($"{c:N0} moves was deleted");
-                                        break;
-                                    case "load":
-                                        if (!book.LoadFromFile(uci.GetValue("load")))
-                                            Console.WriteLine("File not found");
-                                        else
-                                            Console.WriteLine($"{book.moves.Count:N0} lines in the book");
-                                        break;
-                                    case "save":
-                                        book.Save(uci.GetValue("save"));
-                                        Console.WriteLine("The book has been saved");
-                                        break;
-                                    case "info":
-                                        book.ShowInfo();
-                                        break;
-                                    case "getoption":
-                                        Console.WriteLine($"option name book_file type string default book{CBook.defExt}");
-                                        Console.WriteLine($"option name Write type check default false");
-                                        Console.WriteLine($"option name Log type check default false");
-                                        Console.WriteLine($"option name Limit read moves type spin default {bookLimitR} min 0 max 100");
-                                        Console.WriteLine($"option name Limit write moves type spin default {bookLimitW} min 0 max 100");
-                                        Console.WriteLine($"option name Limit games type string default 1k");
-                                        Console.WriteLine($"option name Random type spin default {random} min 0 max 10");
-                                        Console.WriteLine("optionend");
-                                        break;
-                                    case "setoption":
-                                        switch (uci.GetValue("name", "value").ToLower())
-                                        {
-                                            case "book_file":
-                                                bookFile = uci.GetValue("value");
-                                                break;
-                                            case "write":
-                                                isW = uci.GetValue("value") == "true";
-                                                break;
-                                            case "log":
-                                                isLog = uci.GetValue("value") == "true";
-                                                break;
-                                            case "limit read":
-                                                bookLimitR = uci.GetInt("value");
-                                                break;
-                                            case "limit write":
-                                                bookLimitW = uci.GetInt("value");
-                                                break;
-                                            case "limit games":
-                                                string limit = uci.GetValue("value");
-                                                limit = limit.Replace("k", "000").Replace("m", "000000");
-                                                limitGames = int.TryParse(limit, out int lg) ? lg : 0;
-                                                break;
-                                            case "random":
-                                                random = uci.GetInt("value");
-                                                break;
-                                        }
-                                        break;
-                                    case "optionend":
-                                        SetBookFile(bookFile);
-                                        break;
-                                    case "help":
-                                        help = true;
-                                        break;
-                                    default:
-                                        help = true;
-                                        Console.WriteLine($"unknown command [{uci.tokens[1]}]");
-                                        break;
-                                }
-                            if (help)
-                            {
-                                Console.WriteLine("book load [filename].[uci|png] - clear and add moves from file");
-                                Console.WriteLine("book save [filename].[uci|png] - save book to the file");
-                                Console.WriteLine("book addfile [filename].[uci|png] - add moves to the book from file");
-                                Console.WriteLine("book adduci [uci moves] - add moves in uci format to the book");
-                                Console.WriteLine("book delete [number x] - delete x games from the book");
-                                Console.WriteLine("book clear - remove all moves from the book");
-                                Console.WriteLine("book getoption - show options");
-                                Console.WriteLine("book setoption name [option name] value [option value] - set option");
-                                help = false;
-                            }
-                            break;
-                        case "help":
-                            help = true;
-                            break;
-                        default:
-                            done = false;
-                            break;
-                    }
-                if (help)
+                if (help || String.IsNullOrEmpty(msg) || (msg == "help") || (msg == "book"))
                 {
-                    Console.WriteLine("book - operations on chess openings book in format uci");
-                    Console.WriteLine("accuracy - evaluate accuracy and elo of chess engine");
-                    Console.WriteLine("mod - modify factors of chess engine");
+                    Console.WriteLine("book       - operations on chess openings book in format uci");
+                    Console.WriteLine("accuracy   - evaluate accuracy and elo of chess engine");
+                    Console.WriteLine("mod        - modify factors of chess engine");
                     Console.WriteLine("evaluation - evaluation chess positions by chess engine");
-                    Console.WriteLine("test - test chess engine");
-                    Console.WriteLine("ini - create configuration file");
+                    Console.WriteLine("test       - test chess engine");
+                    Console.WriteLine("ini        - create configuration file");
+                    help = false;
+                    continue;
+                }
+                switch (uci.command)
+                {
+                    case "accuracy":
+                        accuracy.LoadFromFile();
+                        if (accuracy.Count == 0)
+                            Console.WriteLine($"file \"{Constants.accuracyEpd}\" unavabile");
+                        if (uci.tokens.Length > 1)
+                            switch (uci.tokens[1])
+                            {
+                                case "update":
+                                    accuracy.GetDepth(out int minD, out _);
+                                    minD = uci.GetInt("update", ++minD);
+                                    if (Constants.minDepth < minD)
+                                        Constants.minDepth = minD;
+                                    teacher.AccuracyUpdate();
+                                    break;
+                                case "delete":
+                                    int cf = accuracy.CountFail();
+                                    if (cf > 0)
+                                    {
+                                        if (Confirm($"Delete {cf} fens?"))
+                                        {
+                                            cf = accuracy.DeleteFail();
+                                            Console.WriteLine($"{cf} fens deleted");
+                                        }
+                                        break;
+                                    }
+                                    if (uci.GetValue("delete") == "min")
+                                    {
+                                        int cm = accuracy.CountMovesMin(out int minM);
+                                        if (Confirm($"Delete {cm} fens"))
+                                        {
+                                            cm = accuracy.DeleteMoves(minM);
+                                            Console.WriteLine($"{cm} fens deleted");
+                                        }
+                                    }
+                                    if (uci.GetValue("delete") == "max")
+                                    {
+                                        int cm = accuracy.CountMovesMax(out int maxM);
+                                        if (Confirm($"Delete {cm} fens"))
+                                        {
+                                            cm = accuracy.DeleteMoves(maxM);
+                                            Console.WriteLine($"{cm} fens deleted");
+                                        }
+                                    }
+                                    break;
+                                case "add":
+                                    accuracy.Add(uci.GetInt("add"));
+                                    break;
+                                case "depth":
+                                    accuracy.SetDepth(uci.GetInt("depth"));
+                                    break;
+                                case "start":
+                                    teacher.AccuracyStart();
+                                    break;
+                                default:
+                                    Console.WriteLine($"Unknown command [{uci.tokens[1]}]");
+                                    break;
+                            }
+                        accuracy.PrintInfo();
+                        break;
+                    case "mod":
+                        modEpd.LoadFromEpd();
+                        if (modEpd.Count == 0)
+                            Console.WriteLine($"file \"{Constants.modEpd}\" unavabile");
+                        if (uci.tokens.Length > 1)
+                            switch (uci.tokens[1])
+                            {
+                                case "add":
+                                    modEpd.AddEpd(uci.GetInt("add"));
+                                    break;
+                                case "start":
+                                    teacher.ModStart();
+                                    break;
+                                case "reset":
+                                    teacher.mod.Reset();
+                                    break;
+                                case "zero":
+                                    teacher.mod.Zero();
+                                    break;
+                                case "best":
+                                    teacher.mod.optionList.PrintBest();
+                                    break;
+                                default:
+                                    Console.WriteLine($"Unknown command [{uci.tokens[1]}]");
+                                    break;
+                            }
+                        break;
+                    case "test":
+                        test.LoadFromFile();
+                        if (test.Count == 0)
+                            Console.WriteLine("file \"test.fen\" unavabile");
+                        if (uci.tokens.Length > 1)
+                            switch (uci.tokens[1])
+                            {
+                                case "start":
+                                    Constants.limit = uci.GetInt("test", accuracy.Count);
+                                    teacher.TestStart();
+                                    break;
+                            }
+                        break;
+                    case "evaluation":
+                        evaluation.LoadFromFile();
+                        if (evaluation.Count == 0)
+                            Console.WriteLine("file \"evaluation.fen\" unavabile");
+                        if (uci.tokens.Length > 1)
+                            switch (uci.tokens[1])
+                            {
+                                case "reset":
+                                    evaluation.Fill();
+                                    break;
+                                case "update":
+                                    teacher.EvaluationUpdate();
+                                    break;
+                                case "start":
+                                    teacher.EvaluationStart();
+                                    break;
+                            }
+                        break;
+                    case "ini":
+                        Constants.SavetoIni(ini);
+                        break;
+                    case "book":
+                        help = uci.tokens.Length < 2;
+                        if (!help)
+                            switch (uci.tokens[1])
+                            {
+                                case "addfile":
+                                    if (!book.AddFile(uci.GetValue("addfile")))
+                                        Console.WriteLine("File not found");
+                                    else
+                                        Console.WriteLine($"{book.moves.Count - count:N0} lines have been added");
+                                    break;
+                                case "adduci":
+                                    book.moves.Add(uci.GetValue("adduci"));
+                                    Console.WriteLine($"{book.moves.Count - count:N0} lines have been added");
+                                    break;
+                                case "clear":
+                                    book.moves.Clear();
+                                    Console.WriteLine("Book is empty");
+                                    break;
+                                case "delete":
+                                    int c = book.Delete(uci.GetInt("delete"));
+                                    Console.WriteLine($"{c:N0} moves was deleted");
+                                    break;
+                                case "load":
+                                    if (!book.LoadFromFile(uci.GetValue("load")))
+                                        Console.WriteLine("File not found");
+                                    else
+                                        Console.WriteLine($"{book.moves.Count:N0} lines in the book");
+                                    break;
+                                case "save":
+                                    book.Save(uci.GetValue("save"));
+                                    Console.WriteLine("The book has been saved");
+                                    break;
+                                case "info":
+                                    book.ShowInfo();
+                                    break;
+                                case "getoption":
+                                    Console.WriteLine($"option name book_file type string default book{CBook.defExt}");
+                                    Console.WriteLine($"option name Write type check default false");
+                                    Console.WriteLine($"option name Log type check default false");
+                                    Console.WriteLine($"option name Limit read moves type spin default {bookLimitR} min 0 max 100");
+                                    Console.WriteLine($"option name Limit write moves type spin default {bookLimitW} min 0 max 100");
+                                    Console.WriteLine($"option name Limit games type string default 1k");
+                                    Console.WriteLine($"option name Random type spin default {random} min 0 max 10");
+                                    Console.WriteLine("optionend");
+                                    break;
+                                case "setoption":
+                                    switch (uci.GetValue("name", "value").ToLower())
+                                    {
+                                        case "book_file":
+                                            SetBookFile(uci.GetValue("value"));
+                                            break;
+                                        case "write":
+                                            isW = uci.GetValue("value") == "true";
+                                            break;
+                                        case "log":
+                                            isLog = uci.GetValue("value") == "true";
+                                            break;
+                                        case "limit read":
+                                            bookLimitR = uci.GetInt("value");
+                                            break;
+                                        case "limit write":
+                                            bookLimitW = uci.GetInt("value");
+                                            break;
+                                        case "limit games":
+                                            string limit = uci.GetValue("value");
+                                            limit = limit.Replace("k", "000").Replace("m", "000000");
+                                            limitGames = int.TryParse(limit, out int lg) ? lg : 0;
+                                            break;
+                                        case "random":
+                                            random = uci.GetInt("value");
+                                            break;
+                                    }
+                                    break;
+                                case "help":
+                                    Console.WriteLine("book load [filename].[uci|png]    - clear and add moves from file");
+                                    Console.WriteLine("book save [filename].[uci|png]    - save book to the file");
+                                    Console.WriteLine("book addfile [filename].[uci|png] - add moves to the book from file");
+                                    Console.WriteLine("book adduci [uci moves]           - add moves in uci format to the book");
+                                    Console.WriteLine("book delete [number x]            - delete x games from the book");
+                                    Console.WriteLine("book clear                        - remove all moves from the book");
+                                    Console.WriteLine("book getoption                    - show options");
+                                    Console.WriteLine("book setoption name [option name] value [option value] - set option");
+                                    break;
+                                default:
+                                    Console.WriteLine($"unknown command [{uci.tokens[1]}]");
+                                    Console.WriteLine($"book help - show console commands");
+                                    break;
+                            }
+                        break;
+                    case "help":
+                        help = true;
+                        break;
+                    default:
+                        done = false;
+                        break;
                 }
                 if (done)
                     continue;
@@ -503,44 +503,14 @@ namespace NSProgram
             } while (uci.command != "quit");
             teacher.Terminate();
 
-            void LoadFromIni()
-            {
-                ini.Load();
-                Constants.go = ini.Read("go", Constants.go);
-                Constants.accuracyEpd = ini.Read("accuracy>epd", Constants.accuracyEpd);
-                Constants.student = ini.Read("student", Constants.student);
-                Constants.studentArg = ini.Read("student>arg", Constants.studentArg);
-                Constants.teacher = ini.Read("teacher", Constants.teacher);
-                Constants.evalGo = ini.Read("eval>go", Constants.evalGo);
-                Constants.evalEpd = ini.Read("eval>epd", Constants.evalEpd);
-                Constants.testGo = ini.Read("test>go", Constants.testGo);
-                Constants.testEpd = ini.Read("test>epd", Constants.testEpd);
-                Constants.command = ini.Read("command", Constants.command);
-                Constants.limit = ini.ReadInt("limit", Constants.limit);
-                if (!File.Exists(Constants.student))
-                    Constants.studentArg = string.Empty;
-            }
-
-            void SavetoIni()
-            {
-                ini.Write("go", Constants.go);
-                ini.Write("teacher", Constants.teacher);
-                ini.Write("student", Constants.student);
-                ini.Save();
-            }
-
             bool SetBookFile(string bn)
             {
                 bookFile = bn;
                 bookLoaded = book.LoadFromFile(bookFile);
                 if (bookLoaded)
                 {
-                    if ((book.moves.Count > 0) && File.Exists(book.path))
-                    {
-                        FileInfo fi = new FileInfo(book.path);
-                        long mpg = (fi.Length / 5) / book.moves.Count;
-                        Console.WriteLine($"info string book on {book.moves.Count:N0} games ({mpg} moves per game)");
-                    }
+                    if (File.Exists(book.path))
+                        Console.WriteLine("info string book on");
                     if (isW)
                         Console.WriteLine($"info string write on");
                     if (isInfo)

@@ -423,11 +423,10 @@ namespace NSProgram
 
         void AccuracyLine()
         {
-            double gain = Program.accuracy.GetGain();
             double accuracy = Program.accuracy.GetAccuracy();
             double weight = Program.accuracy.GetWeight();
             double progress = Program.accuracy.GetProgress();
-            ConsoleWrite($"\rprogress {progress:N2}% gain {gain:N2}% accuracy {accuracy:N2}% weight {weight:N2}% blunders {Program.accuracy.blunders} mistakes {Program.accuracy.mistakes} inaccuracies {Program.accuracy.inaccuracies}");
+            ConsoleWrite($"\rprogress {progress:N2}% accuracy {accuracy:N2}% weight {weight:N2}% blunders {Program.accuracy.blunders} mistakes {Program.accuracy.mistakes} inaccuracies {Program.accuracy.inaccuracies}");
         }
 
         public double AccuracyStudent()
@@ -459,7 +458,7 @@ namespace NSProgram
                 StudentWriteLine(Constants.go);
             }
             Console.WriteLine();
-            return Program.accuracy.GetGain();
+            return Program.accuracy.GetTotalGain();
         }
 
         void AccuracyStart(string student)
@@ -489,7 +488,11 @@ namespace NSProgram
             foreach (string student in students)
                 AccuracyStart(student);
             int del = count - Program.accuracy.Count;
-            Console.WriteLine($"deleted {del}");
+            if (del > 0)
+            {
+                Program.accuracy.SaveToEpd();
+                Console.WriteLine($"deleted {del}");
+            }
             List<string> list = Program.accuracy.log.List();
             count = 0;
             foreach (string l in list)
@@ -509,15 +512,14 @@ namespace NSProgram
 
         void RenderLineMod()
         {
-            double margin = Program.accuracy.GetMargin();
-            double gain = Program.accuracy.GetGain();
-            double accuracy = Program.accuracy.GetAccuracy();
-            double weight = Program.accuracy.GetWeight();
-            double progress = Program.accuracy.GetProgress();
-            ConsoleWrite($"\rprogress {progress:N2}% gain {gain:N2}% accuracy {accuracy:N2}% weight {weight:N2}% margin {margin:N2} blunders {Program.accuracy.blunders} mistakes {Program.accuracy.mistakes} inaccuracies {Program.accuracy.inaccuracies}");
+            double margin = Program.modEpd.GetMargin();
+            double accuracy = Program.modEpd.GetAccuracy();
+            double weight = Program.modEpd.GetWeight();
+            double progress = Program.modEpd.GetProgress();
+            ConsoleWrite($"\rprogress {progress:N2}% accuracy {accuracy:N2}% weight {weight:N2}% margin {margin:N2} blunders {Program.modEpd.blunders} mistakes {Program.modEpd.mistakes} inaccuracies {Program.modEpd.inaccuracies}");
         }
 
-        public double ModStudent()
+        public void ModStudent()
         {
             SetTData(new CTData());
             while (true)
@@ -527,27 +529,26 @@ namespace NSProgram
                     continue;
                 if (tdg.prepared && tdg.done)
                 {
-                    Program.accuracy.AddScore(tdg.line.fen, tdg.bestMove);
+                    Program.modEpd.AddScore(tdg.line.fen, tdg.bestMove);
                     RenderLineMod();
                 }
-                if (Program.accuracy.valid && (mod.bstGain > 0) && !Program.accuracy.Procede() && (Program.accuracy.GetGain() < mod.last.Min()))
+                if (Program.accuracy.valid && (mod.bstScore > 0) && !Program.modEpd.Procede() && (Program.modEpd.GetTotalGain() < mod.last.Min()))
                     break;
                 CTData tds = new CTData
                 {
                     prepared = true
                 };
-                if (!Program.accuracy.NextLine(out tds.line))
+                if (!Program.modEpd.NextLine(out tds.line))
                     break;
                 if (tds.line.depth < Constants.minDepth)
                     continue;
                 SetTData(tds);
-                Program.accuracy.his.Add(tds.line.fen);
+                Program.modEpd.his.Add(tds.line.fen);
                 StudentWriteLine("ucinewgame");
                 StudentWriteLine($"position fen {tds.line.fen}");
                 StudentWriteLine(Constants.go);
             }
             Console.WriteLine();
-            return Program.accuracy.GetGain();
         }
 
         public void ModStart()
@@ -562,11 +563,11 @@ namespace NSProgram
             }
             string name = Path.GetFileNameWithoutExtension(student);
             Console.WriteLine($"{name} ready");
-            Console.WriteLine($"factors {mod.optionList.length} {mod.optionList.factor} fens {Program.accuracy.Count} gain {Program.accuracy.GetLastGain():N2}");
+            Console.WriteLine($"factors {mod.optionList.length} {mod.optionList.factor} fens {Program.modEpd.Count} gain {Program.teacher.mod.bstScore:N2}");
             while (true)
             {
-                Program.accuracy.Prolog();
-                if ((!Program.accuracy.valid) || (mod.bstGain == 0))
+                Program.modEpd.Prolog();
+                if (Program.teacher.mod.bstScore == 0)
                     mod.optionList.BstToCur();
                 SetStudent(student);
                 foreach (COption opt in mod.optionList)
