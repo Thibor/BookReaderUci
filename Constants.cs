@@ -63,7 +63,6 @@ namespace NSProgram
     {
         public const string name = "BookReaderUci";
         public const string version = "2024-12-11";
-        public const string extension = "uci";
     }
 
     }

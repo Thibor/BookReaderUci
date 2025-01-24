@@ -1,32 +1,31 @@
-﻿using System;
+﻿using NSChess;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using NSChess;
 
 namespace NSProgram
 {
-    public class CBook
+    public class CBook:List<string>
     {
         public const string defExt = ".uci";
         public string path = String.Empty;
         public readonly string name = "BookReaderUci";
         public readonly string version = "2022-03-19";
-        public List<string> moves = new List<string>();
         readonly CChessExt chess = new CChessExt();
         public static Random rnd = new Random();
 
         public void AddUci(string uci)
         {
             int del = 0;
-            for (int n = moves.Count - 1; n >= 0; n--)
-                if (uci.IndexOf(moves[n]) == 0)
+            for (int n =Count - 1; n >= 0; n--)
+                if (uci.IndexOf(this[n]) == 0)
                 {
                     del++;
-                    moves.RemoveRange(n, 1);
+                    RemoveRange(n, 1);
                 }
-            moves.Add(uci);
+            Add(uci);
             if ((del > 0) && Program.isLog)
                 Program.log.Add($"delted {del} ({uci})");
         }
@@ -38,14 +37,14 @@ namespace NSProgram
 
         int SelectDel()
         {
-            if (moves.Count == 0)
+            if (Count == 0)
                 return -1;
             int bi = 0;
-            double bv = moves[0].Length;
-            for (int n = 1; n < moves.Count; n++)
+            double bv = this[0].Length;
+            for (int n = 1; n < Count; n++)
             {
-                double len = moves[n].Length;
-                double cv = len - (len * n) / moves.Count;
+                double len = this[n].Length;
+                double cv = len - (len * n) / Count;
                 if (bv < cv)
                 {
                     bv = cv;
@@ -57,58 +56,74 @@ namespace NSProgram
 
         public int DeleteMate(int lg)
         {
-            int count = moves.Count - lg;
+            int count = Count - lg;
             if (count <= 0)
                 return 0;
-            int c = moves.Count;
-            if (count >= moves.Count)
-                moves.Clear();
+            int c = Count;
+            if (count >= Count)
+                Clear();
             else
             {
-                moves.RemoveRange(SelectDel(), 1);
+                RemoveRange(SelectDel(), 1);
                 if (--count > 0)
-                    moves.RemoveRange(0, count);
+                    RemoveRange(0, count);
             }
-            return c - moves.Count;
+            return c - Count;
         }
 
         public int Delete(int count)
         {
             if (count <= 0)
                 return 0;
-            int c = moves.Count;
-            if (count >= moves.Count)
-                moves.Clear();
+            int c = Count;
+            if (count >= Count)
+                Clear();
             else
-                moves.RemoveRange(0, count);
-            return c - moves.Count;
+                RemoveRange(0, count);
+            return c - Count;
         }
 
         public string GetMove(string m)
         {
-            if (moves.Count < 1)
-                return String.Empty;
-            string[] mo = m.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            int bstC = 0;
-            string bstM = String.Empty;
-            int odd = Program.chess.halfMove & 1;
-            for (int n = 0; n < moves.Count; n++)
+            return GetMove(GetRecList(m));
+        }
+
+        string GetMove(RecList rl)
+        {
+            string move = String.Empty;
+            int w = 0;
+            foreach (ERec r in rl)
             {
-                string cm = moves[n];
+                w += r.games;
+                if (rnd.Next(w) < r.games)
+                    move = r.move;
+            }
+            return move;
+        }
+
+        public RecList GetRecList(string m)
+        {
+            RecList rl = new RecList();
+            if (Count < 1)
+                return rl;
+            string[] am = m.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            int odd = am.Length & 1;
+            for (int n = 0; n < Count; n++)
+            {
+                string cm = this[n];
                 if (cm.IndexOf(m) == 0)
                 {
-                    string[] mr = cm.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                    if ((mr.Length > mo.Length) && ((mr.Length & 1) != odd))
-                        if (rnd.Next(++bstC) == 0)
-                            bstM = mr[mo.Length];
+                    string[] ar = cm.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    if ((ar.Length > am.Length) && ((ar.Length & 1) != odd))
+                        rl.AddRec(new ERec{move = ar[am.Length]});
                 }
             }
-            return bstM;
+            return rl;
         }
 
         public bool LoadFromFile(string p)
         {
-            moves.Clear();
+            Clear();
             return AddFile(p);
         }
 
@@ -137,7 +152,7 @@ namespace NSProgram
                 string line = String.Empty;
                 while ((line = reader.ReadLine()) != null)
                     if (!String.IsNullOrEmpty(line))
-                        moves.Add(line);
+                        Add(line);
             }
             return true;
         }
@@ -167,7 +182,7 @@ namespace NSProgram
                     int emo = chess.UmoToEmo(umo);
                     chess.MakeMove(emo);
                 }
-                moves.Add(movesUci.Trim());
+                Add(movesUci.Trim());
             }
             return true;
         }
@@ -200,7 +215,7 @@ namespace NSProgram
             using (FileStream fs = File.Open(p, FileMode.Create, FileAccess.Write, FileShare.None))
             using (StreamWriter sw = new StreamWriter(fs))
             {
-                foreach (string uci in moves)
+                foreach (string uci in this)
                 {
                     string u = uci.Trim();
                     if (!string.IsNullOrEmpty(u))
@@ -216,7 +231,7 @@ namespace NSProgram
             using (FileStream fs = File.Open(p, FileMode.Create, FileAccess.Write, FileShare.None))
             using (StreamWriter sw = new StreamWriter(fs))
             {
-                foreach (string uci in moves)
+                foreach (string uci in this)
                 {
                     string u = uci.Trim();
                     if (!string.IsNullOrEmpty(u))
@@ -239,7 +254,7 @@ namespace NSProgram
         bool SavePgn()
         {
             List<string> listPgn = new List<string>();
-            foreach (string m in moves)
+            foreach (string m in this)
             {
                 string[] arrMoves = m.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 chess.SetFen();
@@ -267,9 +282,37 @@ namespace NSProgram
             return true;
         }
 
+        public void InfoMoves(string moves = "")
+        {
+            chess.SetFen();
+            if (!chess.MakeMoves(moves))
+                Console.WriteLine("wrong moves");
+            else
+            {
+                int total = 0;
+                RecList rl = GetRecList(moves);
+                if (rl.Count == 0)
+                    Console.WriteLine("no moves found");
+                else
+                {
+                    rl.SortGames();
+                    string mask = "{0,2} {1,-4} {2,6}";
+                    Console.WriteLine();
+                    Console.WriteLine(mask, "id", "move", "games");
+                    int i = 0;
+                    foreach (ERec r in rl)
+                    {
+                        total += r.games;
+                        Console.WriteLine(String.Format(mask, ++i, r.move, r.games));
+                    }
+                    Console.WriteLine($"total {total:N0}");
+                }
+            }
+        }
+
         public void ShowInfo()
         {
-            if (moves.Count == 0)
+            if (Count == 0)
             {
                 Console.WriteLine("no records");
                 return;
@@ -279,7 +322,7 @@ namespace NSProgram
             int minM = 0;
             int maxM = 0;
             double sum = 0;
-            foreach (string l in moves)
+            foreach (string l in this)
             {
                 sum += l.Length + 1;
                 if (minL > l.Length)
@@ -293,13 +336,14 @@ namespace NSProgram
                     maxM = l.Split().Length;
                 }
             }
-            sum /= (moves.Count * 5);
+            sum /= (Count * 5);
             string frm = "{0,8:N0}";
             Console.WriteLine();
-            Console.WriteLine($"games     {frm}",moves.Count);
+            Console.WriteLine($"games     {frm}",Count);
             Console.WriteLine($"depth avg {frm}",sum);
             Console.WriteLine($"depth min {frm}",minM);
             Console.WriteLine($"depth max {frm}",maxM);
+            InfoMoves();
         }
 
     }

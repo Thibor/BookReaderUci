@@ -424,9 +424,8 @@ namespace NSProgram
         void AccuracyLine()
         {
             double accuracy = Program.accuracy.GetAccuracy();
-            double weight = Program.accuracy.GetWeight();
             double progress = Program.accuracy.GetProgress();
-            ConsoleWrite($"\rprogress {progress:N2}% accuracy {accuracy:N2}% weight {weight:N2}% blunders {Program.accuracy.blunders} mistakes {Program.accuracy.mistakes} inaccuracies {Program.accuracy.inaccuracies}");
+            ConsoleWrite($"\rprogress {progress:N2}% accuracy {accuracy:N2}% blunders {Program.accuracy.blunders} mistakes {Program.accuracy.mistakes} inaccuracies {Program.accuracy.inaccuracies} total {Program.accuracy.index}");
         }
 
         public double AccuracyStudent()
@@ -475,8 +474,7 @@ namespace NSProgram
             int winChanceSou = Convert.ToInt32(MSLine.WiningChances(Program.accuracy.badFen.bstScore) * 100.0);
             int winChanceDes = Convert.ToInt32(MSLine.WiningChances(Program.accuracy.badFen.badScore) * 100.0);
             double accuracy = Program.accuracy.GetAccuracy();
-            double weight = Program.accuracy.GetWeight();
-            Program.accuracy.log.Add($"accuracy {accuracy:N2}% weight {weight:N2} count {Program.accuracy.index} {name} blunders {Program.accuracy.blunders} mistakes {Program.accuracy.mistakes} inaccuracies {Program.accuracy.inaccuracies} {Program.accuracy.badFen.fen} ({Program.accuracy.badFen.bstMove} => {Program.accuracy.badFen.badMove}) ({Program.accuracy.badFen.bstScore} => {Program.accuracy.badFen.badScore}) ({winChanceSou} => {winChanceDes})");
+            Program.accuracy.log.Add($"{name} accuracy {accuracy:N2}% {Program.accuracy.blunders} {Program.accuracy.mistakes} {Program.accuracy.index} {Program.accuracy.Count} {Program.accuracy.badFen.fen} ({Program.accuracy.badFen.bstMove} => {Program.accuracy.badFen.badMove}) ({Program.accuracy.badFen.bstScore} => {Program.accuracy.badFen.badScore}) ({winChanceSou} => {winChanceDes})");
             StudentTerminate();
         }
 

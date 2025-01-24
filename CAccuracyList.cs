@@ -147,12 +147,12 @@ namespace NSProgram
             int curScore = msl.GetScore(curMove);
             double bstWC = MSLine.WiningChances(bstScore);
             double curWC = MSLine.WiningChances(curScore);
-            double curAccuracy = MSLine.GetAccuracy(bstWC, curWC);
+            double curAccuracy = Math.Max(10.0,MSLine.GetAccuracy(bstWC, curWC));
             double loss = bstWC - curWC;
             totalLossBst += msl.loss;
             msl.loss = loss;
             totalCount++;
-            totalAccuracy += curAccuracy;
+            totalAccuracy += 1.0/curAccuracy;
             totalLoss += loss;
             totalWeight += (loss + 1) * curAccuracy;
             if (loss >= Constants.blunder)
@@ -246,7 +246,7 @@ namespace NSProgram
         {
             if(totalCount==0)
                 return 0;
-            return totalAccuracy / totalCount;
+            return totalCount/totalAccuracy;
         }
 
         public int GetEloAccuracy(double accuracy, out int del)

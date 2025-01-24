@@ -171,7 +171,6 @@ namespace NSProgram
                 bookFile = Constants.bookFile;
             Console.WriteLine($"idbook name {CHeader.name}");
             Console.WriteLine($"idbook version {CHeader.version}");
-            Console.WriteLine($"idbook extension {CHeader.extension}");
             Process myProcess = new Process();
             if (File.Exists(engineFile))
             {
@@ -209,7 +208,7 @@ namespace NSProgram
                 string msg = String.IsNullOrEmpty(Constants.command) ? Console.ReadLine().Trim() : Constants.command;
                 Constants.command = String.Empty;
                 uci.SetMsg(msg);
-                int count = book.moves.Count;
+                int count = book.Count;
                 bool done = true;
                 if (help || String.IsNullOrEmpty(msg) || (msg == "help") || (msg == "book"))
                 {
@@ -353,14 +352,14 @@ namespace NSProgram
                                     if (!book.AddFile(uci.GetValue("addfile")))
                                         Console.WriteLine("File not found");
                                     else
-                                        Console.WriteLine($"{book.moves.Count - count:N0} lines have been added");
+                                        Console.WriteLine($"{book.Count - count:N0} lines have been added");
                                     break;
                                 case "adduci":
-                                    book.moves.Add(uci.GetValue("adduci"));
-                                    Console.WriteLine($"{book.moves.Count - count:N0} lines have been added");
+                                    book.Add(uci.GetValue("adduci"));
+                                    Console.WriteLine($"{book.Count - count:N0} lines have been added");
                                     break;
                                 case "clear":
-                                    book.moves.Clear();
+                                    book.Clear();
                                     Console.WriteLine("Book is empty");
                                     break;
                                 case "delete":
@@ -371,23 +370,30 @@ namespace NSProgram
                                     if (!book.LoadFromFile(uci.GetValue("load")))
                                         Console.WriteLine("File not found");
                                     else
-                                        Console.WriteLine($"{book.moves.Count:N0} lines in the book");
+                                        Console.WriteLine($"{book.Count:N0} lines in the book");
                                     break;
                                 case "save":
                                     book.Save(uci.GetValue("save"));
                                     Console.WriteLine("The book has been saved");
+                                    break;
+                                case "sort":
+                                    book.Sort();
+                                    Console.WriteLine("The book has been sorted");
+                                    break;
+                                case "moves":
+                                    book.InfoMoves(uci.GetValue("moves"));
                                     break;
                                 case "info":
                                     book.ShowInfo();
                                     break;
                                 case "getoption":
                                     Console.WriteLine($"option name book_file type string default book{CBook.defExt}");
-                                    Console.WriteLine($"option name Write type check default false");
-                                    Console.WriteLine($"option name Log type check default false");
-                                    Console.WriteLine($"option name Limit read moves type spin default {bookLimitR} min 0 max 100");
-                                    Console.WriteLine($"option name Limit write moves type spin default {bookLimitW} min 0 max 100");
-                                    Console.WriteLine($"option name Limit games type string default 1k");
-                                    Console.WriteLine($"option name Random type spin default {random} min 0 max 10");
+                                    Console.WriteLine($"option name write type check default false");
+                                    Console.WriteLine($"option name log type check default false");
+                                    Console.WriteLine($"option name limit_ply_read type spin default {bookLimitR} min 0 max 100");
+                                    Console.WriteLine($"option name limit_ply_write type spin default {bookLimitW} min 0 max 100");
+                                    Console.WriteLine($"option name limit_games type string default 1k");
+                                    Console.WriteLine($"option name random type spin default {random} min 0 max 10");
                                     Console.WriteLine("optionend");
                                     break;
                                 case "setoption":
@@ -402,13 +408,13 @@ namespace NSProgram
                                         case "log":
                                             isLog = uci.GetValue("value") == "true";
                                             break;
-                                        case "limit read":
+                                        case "limit_ply_read":
                                             bookLimitR = uci.GetInt("value");
                                             break;
-                                        case "limit write":
+                                        case "limit_ply_write":
                                             bookLimitW = uci.GetInt("value");
                                             break;
-                                        case "limit games":
+                                        case "limit_games":
                                             string limit = uci.GetValue("value");
                                             limit = limit.Replace("k", "000").Replace("m", "000000");
                                             limitGames = int.TryParse(limit, out int lg) ? lg : 0;
@@ -425,6 +431,9 @@ namespace NSProgram
                                     Console.WriteLine("book adduci [uci moves]           - add moves in uci format to the book");
                                     Console.WriteLine("book delete [number x]            - delete x games from the book");
                                     Console.WriteLine("book clear                        - remove all moves from the book");
+                                    Console.WriteLine("book sort                         - sort games");
+                                    Console.WriteLine("book moves [uci]                  - show possible continuations");
+                                    Console.WriteLine("book info                         - show extra informations of current book");
                                     Console.WriteLine("book getoption                    - show options");
                                     Console.WriteLine("book setoption name [option name] value [option value] - set option");
                                     break;
