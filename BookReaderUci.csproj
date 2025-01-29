@@ -94,7 +94,6 @@
     <Compile Include="CChessExt.cs" />
     <Compile Include="CEvaluationList.cs" />
     <Compile Include="CMod.cs" />
-    <Compile Include="CModList.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="CRapIni.cs" />
     <Compile Include="CRapLog.cs" />

@@ -18,6 +18,7 @@ namespace NSProgram
 
     internal class CAccuracyList : MSList
     {
+        public bool prepare = false;
         public int start = 0;
         public int limit = 0;
         public int index = 0;
@@ -43,6 +44,8 @@ namespace NSProgram
         int GetLimit()
         {
             if (!valid)
+                return Count;
+            if (prepare)
                 return Count;
             return Constants.limit < 1 ? Count : Math.Min(Constants.limit, Count);
         }
@@ -147,12 +150,13 @@ namespace NSProgram
             int curScore = msl.GetScore(curMove);
             double bstWC = MSLine.WiningChances(bstScore);
             double curWC = MSLine.WiningChances(curScore);
-            double curAccuracy = Math.Max(10.0,MSLine.GetAccuracy(bstWC, curWC));
+            double curAccuracy = Math.Max(10.0, MSLine.GetAccuracy(bstWC, curWC));
             double loss = bstWC - curWC;
             totalLossBst += msl.loss;
-            msl.loss = loss;
+            if (prepare)
+                msl.loss = loss;
             totalCount++;
-            totalAccuracy += 1.0/curAccuracy;
+            totalAccuracy += 1.0 / curAccuracy;
             totalLoss += loss;
             totalWeight += (loss + 1) * curAccuracy;
             if (loss >= Constants.blunder)
@@ -196,12 +200,12 @@ namespace NSProgram
 
         public double GeLoss()
         {
-            if (Count==0)
+            if (Count == 0)
                 return 0;
             double loss = 0;
             foreach (MSLine msl in this)
                 loss += msl.loss;
-            return loss/Count;
+            return loss / Count;
         }
 
         public double GetGain()
@@ -244,9 +248,9 @@ namespace NSProgram
 
         public double GetAccuracy()
         {
-            if(totalCount==0)
+            if (totalCount == 0)
                 return 0;
-            return totalCount/totalAccuracy;
+            return totalCount / totalAccuracy;
         }
 
         public int GetEloAccuracy(double accuracy, out int del)

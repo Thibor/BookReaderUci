@@ -351,7 +351,7 @@ namespace NSProgram
         bool AccuracyUpdatePrepare(CTData tds)
         {
             Program.chess.SetFen(tds.line.fen);
-            List<int> listEmo = Program.chess.GenerateValidMoves(out bool mate);
+            List<int> listEmo = Program.chess.GenerateLegalMoves(out bool mate);
             if (mate)
             {
                 Program.accuracy.DeleteFen(tds.line.fen);
@@ -510,11 +510,10 @@ namespace NSProgram
 
         void RenderLineMod()
         {
-            double margin = Program.modEpd.GetMargin();
-            double accuracy = Program.modEpd.GetAccuracy();
-            double weight = Program.modEpd.GetWeight();
-            double progress = Program.modEpd.GetProgress();
-            ConsoleWrite($"\rprogress {progress:N2}% accuracy {accuracy:N2}% weight {weight:N2}% margin {margin:N2} blunders {Program.modEpd.blunders} mistakes {Program.modEpd.mistakes} inaccuracies {Program.modEpd.inaccuracies}");
+            double margin = Program.accuracy.GetMargin();
+            double accuracy = Program.accuracy.GetAccuracy();
+            double progress = Program.accuracy.GetProgress();
+            ConsoleWrite($"\rprogress {progress:N2}% accuracy {accuracy:N2}% margin {margin:N2} blunders {Program.accuracy.blunders} mistakes {Program.accuracy.mistakes} inaccuracies {Program.accuracy.inaccuracies}");
         }
 
         public void ModStudent()
@@ -527,21 +526,21 @@ namespace NSProgram
                     continue;
                 if (tdg.prepared && tdg.done)
                 {
-                    Program.modEpd.AddScore(tdg.line.fen, tdg.bestMove);
+                    Program.accuracy.AddScore(tdg.line.fen, tdg.bestMove);
                     RenderLineMod();
                 }
-                if (Program.accuracy.valid && (mod.bstScore > 0) && !Program.modEpd.Procede() && (Program.modEpd.GetTotalGain() < mod.last.Min()))
+                if (Program.accuracy.valid && (mod.bstScore > 0) && !Program.accuracy.Procede() && (Program.accuracy.GetTotalGain() < mod.last.Min()))
                     break;
                 CTData tds = new CTData
                 {
                     prepared = true
                 };
-                if (!Program.modEpd.NextLine(out tds.line))
+                if (!Program.accuracy.NextLine(out tds.line))
                     break;
                 if (tds.line.depth < Constants.minDepth)
                     continue;
                 SetTData(tds);
-                Program.modEpd.his.Add(tds.line.fen);
+                Program.accuracy.his.Add(tds.line.fen);
                 StudentWriteLine("ucinewgame");
                 StudentWriteLine($"position fen {tds.line.fen}");
                 StudentWriteLine(Constants.go);
@@ -561,10 +560,10 @@ namespace NSProgram
             }
             string name = Path.GetFileNameWithoutExtension(student);
             Console.WriteLine($"{name} ready");
-            Console.WriteLine($"factors {mod.optionList.length} {mod.optionList.factor} fens {Program.modEpd.Count} gain {Program.teacher.mod.bstScore:N2}");
+            Console.WriteLine($"factors {mod.optionList.length} {mod.optionList.factor} fens {Program.accuracy.Count} gain {Program.teacher.mod.bstScore:N2}");
             while (true)
             {
-                Program.modEpd.Prolog();
+                Program.accuracy.Prolog();
                 if (Program.teacher.mod.bstScore == 0)
                     mod.optionList.BstToCur();
                 SetStudent(student);

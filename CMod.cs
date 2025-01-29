@@ -554,9 +554,9 @@ namespace NSProgram
 
         public bool SetScore()
         {
-            double score = Program.modEpd.GetAccuracy();
+            double score = Program.accuracy.GetAccuracy();
             bool lastAdd = false;
-            if (Program.modEpd.GetProgress() == 100)
+            if (Program.accuracy.GetProgress() == 100)
                 lastAdd = last.AddVal(score);
             if (lastAdd)
                 if (!string.IsNullOrEmpty(optionList.factor))
@@ -566,7 +566,7 @@ namespace NSProgram
                 extra--;
             if (bstScore < score)
             {
-                Program.modEpd.SaveToEpd();
+                Program.accuracy.SaveToEpd();
                 if ((bstScore > 0) && (extra == 0)&& optionList.Modified())
                     success++;
                 optionList.CurToBst();

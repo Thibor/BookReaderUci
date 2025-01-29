@@ -21,7 +21,6 @@ namespace NSProgram
 		public static string accuracyEpd = "accuracy.epd";
         public static string evalEpd = "evaluation.epd";
         public static string testEpd = "test.epd";
-        public static string modEpd = "mod.epd";
         public static string evalGo = "eval";
 		public static string testGo = "go movetime 1000";
 		public static string teacher = "teacher.exe";

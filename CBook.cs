@@ -265,7 +265,7 @@ namespace NSProgram
                     if (san == String.Empty)
                         break;
                     int number = (chess.halfMove >> 1) + 1;
-                    if (chess.whiteTurn)
+                    if (chess.WhiteTurn)
                         png += $" {number}. {san}";
                     else
                         png += $" {san}";

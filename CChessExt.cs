@@ -1,46 +1,110 @@
-﻿using System;
+﻿using NSChess;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NSChess;
 
 namespace NSProgram
 {
-	class CChessExt:CChess
-	{
-		public bool Is2ToEnd(out string myMov, out string enMov)
-		{
-			myMov = "";
-			enMov = "";
-			List<int> mu1 = GenerateValidMoves(out _);//my last move
-			foreach (int myMove in mu1)
-			{
-				bool myEscape = true;
-				MakeMove(myMove);
-				List<int> mu2 = GenerateValidMoves(out _);//enemy mat move
-				foreach (int enMove in mu2)
-				{
-					bool enAttack = false;
-					MakeMove(enMove);
-					List<int> mu3 = GenerateValidMoves(out bool mate);//my illegal move
-					if (mate)
-					{
-						myEscape = false;
-						enAttack = true;
-						myMov = EmoToUmo(myMove);
-						enMov = EmoToUmo(enMove);
-					}
-					UnmakeMove(enMove);
-					if (enAttack)
-						continue;
-				}
-				UnmakeMove(myMove);
-				if (myEscape)
-					return false;
-			}
-			return true;
-		}
+    class CChessExt : CChess
+    {
+        int[] material = { 0, 100, 320, 330, 500, 900, 0 };
 
-	}
+        public bool Is2ToEnd(out string myMov, out string enMov)
+        {
+            myMov = "";
+            enMov = "";
+            List<int> mu1 = GenerateLegalMoves(out _);//my last move
+            foreach (int myMove in mu1)
+            {
+                bool myEscape = true;
+                MakeMove(myMove);
+                List<int> mu2 = GenerateLegalMoves(out _);//enemy mat move
+                foreach (int enMove in mu2)
+                {
+                    bool enAttack = false;
+                    MakeMove(enMove);
+                    List<int> mu3 = GenerateLegalMoves(out bool mate);//my illegal move
+                    if (mate)
+                    {
+                        myEscape = false;
+                        enAttack = true;
+                        myMov = EmoToUmo(myMove);
+                        enMov = EmoToUmo(enMove);
+                    }
+                    UnmakeMove(enMove);
+                    if (enAttack)
+                        continue;
+                }
+                UnmakeMove(myMove);
+                if (myEscape)
+                    return false;
+            }
+            return true;
+        }
+
+        int Eval()
+        {
+            int score = 0;
+            foreach (int piece in board)
+            {
+                int pt = PieceType(piece);
+                if (pt == 0)
+                    continue;
+                int m = material[pt];
+                if (PieceWhite(piece))
+                    score += m;
+                else
+                    score -= m;
+            }
+            return WhiteTurn ? score : -score;
+        }
+
+        int QSearch(int alpha, int beta)
+        {
+            List<int> moves = GenerateAllMoves(WhiteTurn, true);
+            if (inCheck)
+                return 0xffff;
+            int score = Eval();
+            if (score >= beta)
+                return beta;
+            if (score > alpha)
+                alpha = score;
+            foreach (int move in moves)
+            {
+                MakeMove(move);
+                score = -QSearch(-beta, -alpha);
+                UnmakeMove(move);
+                if (score >= beta)
+                    return beta;
+                if (score > alpha)
+                    alpha = score;
+            }
+            return alpha;
+        }
+
+        public string GetUmo()
+        {
+            int bestScore = -0xffff;
+            List<int> best = new List<int>();
+            List<int> moves = GenerateAllMoves(WhiteTurn, false);
+            if (inCheck)
+                return string.Empty;
+            foreach (int move in moves)
+            {
+                MakeMove(move);
+                int score = QSearch(-0xffff, 0xffff);
+                if (bestScore < score)
+                {
+                    bestScore = score;
+                    best.Clear();
+                }
+                if (score == bestScore)
+                    best.Add(move);
+                UnmakeMove(move);
+            }
+            if (best.Count == 0)
+                return string.Empty;
+            int r = rnd.Next(best.Count);
+            return EmoToUmo(best[r]);
+        }
+
+    }
 }

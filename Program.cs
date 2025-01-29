@@ -14,9 +14,9 @@ namespace NSProgram
     {
         public static bool isLog = false;
         public static bool isW = false;
+        public static bool isSmart = true;
         public static CChessExt chess = new CChessExt();
         public static CAccuracyList accuracy = new CAccuracyList();
-        public static CModList modEpd = new CModList();
         public static CEvaluationList evaluation = new CEvaluationList();
         public static CTestList test = new CTestList();
         public static CTeacher teacher = new CTeacher();
@@ -203,6 +203,7 @@ namespace NSProgram
                 Console.WriteLine("info string fen on");
             bool bookLoaded = SetBookFile(bookFile);
             bool help = false;
+
             do
             {
                 string msg = String.IsNullOrEmpty(Constants.command) ? Console.ReadLine().Trim() : Constants.command;
@@ -283,14 +284,16 @@ namespace NSProgram
                         accuracy.PrintInfo();
                         break;
                     case "mod":
-                        modEpd.LoadFromEpd();
-                        if (modEpd.Count == 0)
-                            Console.WriteLine($"file \"{Constants.modEpd}\" unavabile");
+                        accuracy.LoadFromFile();
+                        if (accuracy.Count == 0)
+                            Console.WriteLine($"file \"{Constants.accuracyEpd}\" unavabile");
                         if (uci.tokens.Length > 1)
                             switch (uci.tokens[1])
                             {
-                                case "add":
-                                    modEpd.AddEpd(uci.GetInt("add"));
+                                case "prepare":
+                                    accuracy.prepare = true;
+                                    teacher.AccuracyStart();
+                                    accuracy.prepare = false;
                                     break;
                                 case "start":
                                     teacher.ModStart();
@@ -389,6 +392,7 @@ namespace NSProgram
                                 case "getoption":
                                     Console.WriteLine($"option name book_file type string default book{CBook.defExt}");
                                     Console.WriteLine($"option name write type check default false");
+                                    Console.WriteLine($"option name smart type check default true");
                                     Console.WriteLine($"option name log type check default false");
                                     Console.WriteLine($"option name limit_ply_read type spin default {bookLimitR} min 0 max 100");
                                     Console.WriteLine($"option name limit_ply_write type spin default {bookLimitW} min 0 max 100");
@@ -407,6 +411,9 @@ namespace NSProgram
                                             break;
                                         case "log":
                                             isLog = uci.GetValue("value") == "true";
+                                            break;
+                                        case "smart":
+                                            isSmart = uci.GetValue("value") == "true";
                                             break;
                                         case "limit_ply_read":
                                             bookLimitR = uci.GetInt("value");
@@ -489,19 +496,30 @@ namespace NSProgram
                         break;
                     case "go":
                         string move = String.Empty;
-                        if ((random - 1) >= (chess.halfMove >> 1))
+                        if (random >= chess.MoveNumber)
                         {
-                            List<int> lm = chess.GenerateValidMoves(out _);
-                            int m = lm[CChess.rnd.Next(lm.Count)];
-                            move = chess.EmoToUmo(m);
+                            if (isSmart)
+                                move = chess.GetUmo();
+                            else
+                            {
+                                List<int> lm = chess.GenerateLegalMoves(out _);
+                                if (lm.Count > 0)
+                                {
+                                    int r = CChess.rnd.Next(lm.Count);
+                                    move = chess.EmoToUmo(lm[r]);
+                                }
+                            }
                         }
-                        else if (bookRead && ((chess.halfMove < bookLimitR) || (bookLimitR == 0)))
-                        {
-                            move = book.GetMove(lastMoves);
-                            if ((String.IsNullOrEmpty(move)) && (missingIndex == 0))
-                                missingIndex = chess.halfMove + 1;
-                        }
-                        if (move != String.Empty)
+                        if (string.IsNullOrEmpty(move))
+                            if ((bookLimitR == 0) || (bookLimitR >= chess.MoveNumber))
+                                if (bookRead)
+                                {
+                                    move = book.GetMove(lastMoves);
+                                    if ((String.IsNullOrEmpty(move)) && (missingIndex == 0))
+                                        missingIndex = chess.halfMove + 1;
+                                }
+
+                        if (!string.IsNullOrEmpty(move))
                             Console.WriteLine($"bestmove {move}");
                         else if (engineFile == String.Empty)
                             Console.WriteLine("enginemove");
