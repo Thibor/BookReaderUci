@@ -1,5 +1,7 @@
 ﻿using NSChess;
+using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace NSProgram
 {
@@ -80,25 +82,51 @@ namespace NSProgram
             return alpha;
         }
 
+        int Search(int depth, int alpha, int beta)
+        {
+            GenerateAllMoves(!WhiteTurn, true);
+            if (inCheck)
+                depth++;
+            if (depth <= 0)
+                return QSearch(alpha, beta);
+            int bestScore = -0xffff;
+            List<int> moves = GenerateLegalMoves(out _);
+            foreach (int move in moves)
+            {
+                MakeMove(move);
+                int score = -Search(depth - 1, -beta, -alpha);
+                UnmakeMove(move);
+                if (bestScore < score)
+                    bestScore = score;
+                if (score >= beta)
+                    break;
+                if (score > alpha)
+                    alpha = score;
+            }
+            return bestScore;
+        }
+
         public string GetUmo()
         {
             int bestScore = -0xffff;
             List<int> best = new List<int>();
-            List<int> moves = GenerateAllMoves(WhiteTurn, false);
-            if (inCheck)
+            List<int> moves = GenerateLegalMoves(out _);
+            if (moves.Count == 0)
                 return string.Empty;
             foreach (int move in moves)
             {
                 MakeMove(move);
-                int score = QSearch(-0xffff, 0xffff);
+                int score = -Search(2, -0xffff, 0xffff);
+                UnmakeMove(move);
+                //Console.WriteLine($"string info score {EmoToUmo(move)} {score}");
                 if (bestScore < score)
                 {
+                    //Console.WriteLine($"string info best {EmoToUmo(move)} {score}");
                     bestScore = score;
                     best.Clear();
                 }
-                if (score == bestScore)
+                if (bestScore == score)
                     best.Add(move);
-                UnmakeMove(move);
             }
             if (best.Count == 0)
                 return string.Empty;

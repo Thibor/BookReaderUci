@@ -18,6 +18,7 @@ namespace NSProgram
 
     internal class CAccuracyList : MSList
     {
+        public bool check = false;
         public bool prepare = false;
         public int start = 0;
         public int limit = 0;
@@ -46,6 +47,8 @@ namespace NSProgram
             if (!valid)
                 return Count;
             if (prepare)
+                return Count;
+            if (check)
                 return Count;
             return Constants.limit < 1 ? Count : Math.Min(Constants.limit, Count);
         }
@@ -162,7 +165,7 @@ namespace NSProgram
             if (loss >= Constants.blunder)
             {
                 blunders++;
-                if (Constants.teacher == Constants.student)
+                if (check)
                     DeleteFen(fen);
             }
             if (loss >= Constants.mistake)

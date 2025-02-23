@@ -594,7 +594,7 @@ namespace NSChess
                 moves.Add(MakeEmo(fr,to,flag));
         }
 
-        public List<int> GenerateLegalMoves(out bool mate, bool repetytion = false)
+        public List<int> GenerateLegalMoves(out bool mate, bool repetytion = true)
         {
             mate = false;
             int count = 0;
@@ -608,7 +608,7 @@ namespace NSChess
                     if (!inCheck)
                     {
                         count++;
-                        if (!repetytion || !IsRepetition())
+                        if (repetytion || !IsRepetition())
                             moves.Add(m);
                     }
                     UnmakeMove(m);

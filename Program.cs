@@ -277,6 +277,11 @@ namespace NSProgram
                                 case "start":
                                     teacher.AccuracyStart();
                                     break;
+                                case "check":
+                                    accuracy.check = true;
+                                    teacher.AccuracyStart();
+                                    accuracy.check = false;
+                                    break;
                                 default:
                                     Console.WriteLine($"Unknown command [{uci.tokens[1]}]");
                                     break;
@@ -305,7 +310,7 @@ namespace NSProgram
                                     teacher.mod.Zero();
                                     break;
                                 case "best":
-                                    teacher.mod.optionList.PrintBest();
+                                    Console.WriteLine(teacher.mod.optionList.OptionsBst());
                                     break;
                                 default:
                                     Console.WriteLine($"Unknown command [{uci.tokens[1]}]");
@@ -394,8 +399,8 @@ namespace NSProgram
                                     Console.WriteLine($"option name write type check default false");
                                     Console.WriteLine($"option name smart type check default true");
                                     Console.WriteLine($"option name log type check default false");
-                                    Console.WriteLine($"option name limit_ply_read type spin default {bookLimitR} min 0 max 100");
-                                    Console.WriteLine($"option name limit_ply_write type spin default {bookLimitW} min 0 max 100");
+                                    Console.WriteLine($"option name ply_read type spin default {bookLimitR} min 0 max 100");
+                                    Console.WriteLine($"option name ply_write type spin default {bookLimitW} min 0 max 100");
                                     Console.WriteLine($"option name limit_games type string default 1k");
                                     Console.WriteLine($"option name random type spin default {random} min 0 max 10");
                                     Console.WriteLine("optionend");
@@ -415,10 +420,10 @@ namespace NSProgram
                                         case "smart":
                                             isSmart = uci.GetValue("value") == "true";
                                             break;
-                                        case "limit_ply_read":
+                                        case "ply_read":
                                             bookLimitR = uci.GetInt("value");
                                             break;
-                                        case "limit_ply_write":
+                                        case "ply_write":
                                             bookLimitW = uci.GetInt("value");
                                             break;
                                         case "limit_games":
@@ -464,6 +469,8 @@ namespace NSProgram
                 switch (uci.command)
                 {
                     case "position":
+                        //chess.SetFen("rnbq1bnr/pppp1kpp/4pp2/8/3N2P1/8/PPPPPP1P/RNBQKB1R w KQ - 2 4");
+                        //Console.WriteLine(chess.GetUmo());
                         lastFen = uci.GetValue("fen", "moves");
                         lastMoves = uci.GetValue("moves", "fen");
                         chess.SetFen(lastFen);

@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
-using RapIni;
+﻿using RapIni;
 using RapLog;
+using System;
+using System.Collections.Generic;
 
 namespace NSProgram
 {
@@ -190,6 +187,7 @@ namespace NSProgram
 
     class COption
     {
+        public bool enabled = false;
         public string cur = "0";
         public int min = -50;
         public int max = 50;
@@ -202,8 +200,18 @@ namespace NSProgram
             name = s;
         }
 
+        string BstToEle()
+        {
+            string result = string.Empty;
+            string[] tokens = bst.Trim().Split();
+            for (int i = 0; i < tokens.Length; i++)
+                result += $" {i + 1}={tokens[i]}";
+            return result.Trim();
+        }
+
         public void LoadFromIni(CRapIni ini)
         {
+            enabled = ini.ReadBool($"option>{name}>enabled", true);
             oType = CMod.StrToType(ini.Read($"option>{name}>type"));
             if (oType == EOptionType.eCheck)
             {
@@ -218,49 +226,52 @@ namespace NSProgram
 
         public void SaveToIni(CRapIni ini)
         {
+            ini.Write($"option>{name}>enabled", enabled);
             ini.Write($"option>{name}>type", CMod.TypeToStr(oType));
             ini.Write($"option>{name}>min", min);
             ini.Write($"option>{name}>max", max);
             ini.Write($"option>{name}>cur", cur);
             ini.Write($"option>{name}>bst", bst);
+            ini.Write($"option>{name}>ele", BstToEle());
         }
 
         public bool Modify(int sub, int del)
         {
             int val;
-            switch (oType)
-            {
-                case EOptionType.eCheck:
-                    if ((del == 1) && (cur != "true"))
-                    {
-                        cur = "true";
+            if (enabled)
+                switch (oType)
+                {
+                    case EOptionType.eCheck:
+                        if ((del == 1) && (cur != "true"))
+                        {
+                            cur = "true";
+                            return true;
+                        }
+                        else if ((del == -1) && (cur != "false"))
+                        {
+                            cur = "false";
+                            return true;
+                        }
+                        break;
+                    case EOptionType.eString:
+                        string[] tokens = cur.Trim().Split();
+                        if (!int.TryParse(tokens[sub], out val))
+                            val = 0;
+                        val += del;
+                        if ((val < min) || (val > max))
+                            return false;
+                        tokens[sub] = val.ToString();
+                        cur = string.Join(" ", tokens);
                         return true;
-                    }
-                    else if ((del == -1) && (cur != "false"))
-                    {
-                        cur = "false";
+                    default:
+                        if (!int.TryParse(cur, out val))
+                            val = (min + max) / 2;
+                        val += del;
+                        if ((val < min) || (val > max))
+                            return false;
+                        cur = val.ToString();
                         return true;
-                    }
-                    break;
-                case EOptionType.eString:
-                    string[] tokens = cur.Trim().Split();
-                    if (!int.TryParse(tokens[sub], out val))
-                        val = 0;
-                    val += del;
-                    if ((val < min) || (val > max))
-                        return false;
-                    tokens[sub] = val.ToString();
-                    cur = string.Join(" ", tokens);
-                    return true;
-                default:
-                    if (!int.TryParse(cur, out val))
-                        val = (min + max) / 2;
-                    val += del;
-                    if ((val < min) || (val > max))
-                        return false;
-                    cur = val.ToString();
-                    return true;
-            }
+                }
             return false;
         }
 
@@ -309,7 +320,7 @@ namespace NSProgram
 
         public void Init()
         {
-            int len = Length();
+            int len = CountFactors();
             mix.SetLen(len);
         }
 
@@ -331,24 +342,25 @@ namespace NSProgram
             {
                 COption option = new COption(name);
                 option.LoadFromIni(ini);
-                Add(option);
+                if (option.enabled)
+                    Add(option);
             }
             index = ini.ReadInt("mod>index");
             delta = ini.ReadInt("mod>delta");
             factor = ini.Read("factor>last");
             mix.SetList(ini.ReadListInt("mod>mix"));
-            length = Length();
+            length = CountFactors();
             if (mix.Count != length * 2)
                 mix.SetLen(length);
         }
 
-        public int Length()
+        public int CountFactors()
         {
             int l = 0;
             foreach (COption option in this)
-                if (option.oType == EOptionType.eString)
-                    l += option.cur.Split().Length;
-                else l++;
+                    if (option.oType == EOptionType.eString)
+                        l += option.cur.Split().Length;
+                    else l++;
             return l;
         }
 
@@ -387,7 +399,7 @@ namespace NSProgram
         {
             string mod = string.Empty;
             foreach (COption opt in this)
-                mod += $" {opt.name} {opt.cur}";
+                    mod += $" {opt.name} {opt.cur}";
             return mod;
         }
 
@@ -395,7 +407,7 @@ namespace NSProgram
         {
             string mod = string.Empty;
             foreach (COption opt in this)
-                mod += $" {opt.name} {opt.bst}";
+                    mod += $" {opt.name} {opt.bst}";
             return mod;
         }
 
@@ -441,10 +453,10 @@ namespace NSProgram
                     delta = -delta;
                 index = value % length;
             }
-             else if (delta < 0)
-                    delta--;
-                else
-                    delta++;
+            else if (delta < 0)
+                delta--;
+            else
+                delta++;
             GetIndexSub(index, out int idx, out int sub);
             COption opt = this[idx];
             if (opt.Modify(sub, delta))
@@ -460,13 +472,6 @@ namespace NSProgram
             }
             return false;
         }
-
-        public void PrintBest()
-        {
-            foreach (COption op in this)
-                Console.WriteLine($" {op.name} {op.GetElements()}");
-        }
-
 
     }
 
@@ -566,8 +571,7 @@ namespace NSProgram
                 extra--;
             if (bstScore < score)
             {
-                Program.accuracy.SaveToEpd();
-                if ((bstScore > 0) && (extra == 0)&& optionList.Modified())
+                if ((bstScore > 0) && (extra == 0) && optionList.Modified())
                     success++;
                 optionList.CurToBst();
                 bstScore = score;

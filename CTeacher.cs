@@ -107,6 +107,13 @@ namespace NSProgram
         bool PrepareStudents()
         {
             students.Clear();
+            if (Program.accuracy.check)
+            {
+                if (!PrepareTeachers())
+                    return false;
+                students.Add(teachers[0]);
+                return true;
+            }
             if (File.Exists(Program.studentFile))
             {
                 students.Add(Program.studentFile);
@@ -463,18 +470,18 @@ namespace NSProgram
         void AccuracyStart(string student)
         {
             string name = Path.GetFileNameWithoutExtension(student);
-            Console.WriteLine(name);
             if (!SetStudent(student))
             {
                 Console.WriteLine($"{student} not avabile");
                 return;
             }
+            Console.WriteLine($"{name} ready");
             Program.accuracy.his.Add($"start {name}");
             AccuracyStudent();
             int winChanceSou = Convert.ToInt32(MSLine.WiningChances(Program.accuracy.badFen.bstScore) * 100.0);
             int winChanceDes = Convert.ToInt32(MSLine.WiningChances(Program.accuracy.badFen.badScore) * 100.0);
             double accuracy = Program.accuracy.GetAccuracy();
-            Program.accuracy.log.Add($"{name} accuracy {accuracy:N2}% {Program.accuracy.blunders} {Program.accuracy.mistakes} {Program.accuracy.index} {Program.accuracy.Count} {Program.accuracy.badFen.fen} ({Program.accuracy.badFen.bstMove} => {Program.accuracy.badFen.badMove}) ({Program.accuracy.badFen.bstScore} => {Program.accuracy.badFen.badScore}) ({winChanceSou} => {winChanceDes})");
+            Program.accuracy.log.Add($"{name} accuracy {accuracy:N2}% ({Program.accuracy.blunders} {Program.accuracy.mistakes} {Program.accuracy.inaccuracies} {Program.accuracy.index}) < {Program.accuracy.Count} {Program.accuracy.badFen.fen} ({Program.accuracy.badFen.bstMove} => {Program.accuracy.badFen.badMove}) ({Program.accuracy.badFen.bstScore} => {Program.accuracy.badFen.badScore}) ({winChanceSou} => {winChanceDes})");
             StudentTerminate();
         }
 
@@ -496,8 +503,9 @@ namespace NSProgram
             foreach (string l in list)
             {
                 uci.SetMsg(l);
-                Console.WriteLine(uci.GetValue(0, 8));
-                if (++count > 8)
+                int i = uci.GetIndex("<") - 1;
+                Console.WriteLine(uci.GetValue(0, i));
+                if (++count > 16)
                     break;
             }
             Console.WriteLine("finish");
@@ -560,7 +568,7 @@ namespace NSProgram
             }
             string name = Path.GetFileNameWithoutExtension(student);
             Console.WriteLine($"{name} ready");
-            Console.WriteLine($"factors {mod.optionList.length} {mod.optionList.factor} fens {Program.accuracy.Count} gain {Program.teacher.mod.bstScore:N2}");
+            Console.WriteLine($"factors {mod.optionList.CountFactors()} {mod.optionList.factor} fens {Program.accuracy.Count} accuracy {Program.teacher.mod.bstScore:N2}");
             while (true)
             {
                 Program.accuracy.Prolog();
@@ -568,7 +576,8 @@ namespace NSProgram
                     mod.optionList.BstToCur();
                 SetStudent(student);
                 foreach (COption opt in mod.optionList)
-                    StudentWriteLine($"setoption name {opt.name} value {opt.cur}");
+                    if (opt.enabled)
+                        StudentWriteLine($"setoption name {opt.name} value {opt.cur}");
                 Console.WriteLine(mod.optionList.OptionsCur());
                 ModStudent();
                 if (!mod.SetScore())
