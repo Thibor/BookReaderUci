@@ -312,6 +312,9 @@ namespace NSProgram
                                 case "best":
                                     Console.WriteLine(teacher.mod.optionList.OptionsBst());
                                     break;
+                                case "confirm":
+                                    teacher.ModStart(true);
+                                    break;
                                 default:
                                     Console.WriteLine($"Unknown command [{uci.tokens[1]}]");
                                     break;

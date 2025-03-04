@@ -1,8 +1,7 @@
-﻿using System;
-using System.IO;
+﻿using RapLog;
+using System;
 using System.Collections.Generic;
-using RapLog;
-using RapIni;
+using System.IO;
 
 namespace NSProgram
 {
@@ -39,10 +38,10 @@ namespace NSProgram
 
         public bool IsLimit()
         {
-            return GetLimit() < Count;
+            return GetLimitCount() < Count;
         }
 
-        int GetLimit()
+        public int GetLimitCount()
         {
             if (!valid)
                 return Count;
@@ -61,13 +60,13 @@ namespace NSProgram
 
         public double GetProgress()
         {
-            return index * 100.0 / GetLimit();
+            return index * 100.0 / GetLimitCount();
         }
 
         public double GetLastGain()
         {
             start = GetStart();
-            limit = GetLimit();
+            limit = GetLimitCount();
             double loss = 0;
             for (int n = 0; n < limit; n++)
                 loss += this[start + n].loss;
@@ -79,7 +78,7 @@ namespace NSProgram
             LoadFromEpd();
             SortLoss();
             start = GetStart();
-            limit = GetLimit();
+            limit = GetLimitCount();
             index = 0;
             inaccuracies = 0;
             mistakes = 0;
@@ -190,7 +189,7 @@ namespace NSProgram
 
         public bool Procede()
         {
-            int limit = GetLimit();
+            int limit = GetLimitCount();
             return GetMargin() > (-128 * (limit - index) / limit);
         }
 

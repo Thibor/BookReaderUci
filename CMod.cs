@@ -148,6 +148,55 @@ namespace NSProgram
 
     }
 
+    class CReject : List<double>
+    {
+        public int index = 0;
+        public int limit = 0;
+
+        public bool IsRejected(double v)
+        { 
+            double min = 100;
+            double max = 0;
+            int cmin = 0;
+            foreach (double d in this)
+            {
+                if ((d > v) && (d < max))
+                    max = d;
+                if (d < v) {
+                    cmin++;
+                    if (d > min)
+                        min = d;
+                }
+            }
+            Add(v);
+            if (Count > 10)
+                RemoveRange(0, Count - 10);
+            else
+                return false;
+            if (cmin > limit / 10)
+                return false;
+            if(cmin < limit/10)
+                return true;
+            return v < min+((max-min)*(limit % 10))/10;
+        }
+
+        public void FromSl(List<string> sl)
+        {
+            Clear();
+            for (int n = 0; n < sl.Count; n++)
+                Add(Convert.ToDouble(sl[n]));
+        }
+
+        public List<string> ToSl()
+        {
+            List<string> sl = new List<string>();
+            for (int n = 0; n < Count; n++)
+                sl.Add(this[n].ToString());
+            return sl;
+        }
+
+    }
+
     class CMix : List<int>
     {
         static readonly Random rnd = new Random();
@@ -483,6 +532,7 @@ namespace NSProgram
         public double bstScore = 0;
         public CLast last = new CLast();
         readonly CHisList hl = new CHisList();
+        public CReject reject = new CReject();
         public readonly COptionList optionList = new COptionList();
         public static readonly CRapLog log = new CRapLog("mod.log");
         readonly CRapIni ini = new CRapIni(@"mod.ini");
@@ -529,6 +579,9 @@ namespace NSProgram
             bstScore = ini.ReadDouble("mod>score");
             hl.FromSl(ini.ReadListStr("mod>his", "|"));
             last.FromSl(ini.ReadListStr("mod>last", "|"));
+            reject.FromSl(ini.ReadListStr("mod>reject>list","|"));
+            reject.index = ini.ReadInt("mod>reject>index");
+            reject.limit = ini.ReadInt("mod>reject>limit");
         }
 
         public void SaveToIni()
@@ -540,6 +593,7 @@ namespace NSProgram
             ini.Write("mod>score", bstScore);
             ini.Write("mod>his", hl.ToSl(), "|");
             ini.Write("mod>last", last.ToSl(), "|");
+            ini.Write("mod>reject>list",reject.ToSl(),"|");
             ini.Save();
         }
 
@@ -633,6 +687,7 @@ namespace NSProgram
             success = 0;
             bstScore = 0;
             hl.Clear();
+            reject.Clear();
             SaveToIni();
             Console.WriteLine(optionList.OptionsCur());
         }
