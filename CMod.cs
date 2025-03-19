@@ -154,7 +154,7 @@ namespace NSProgram
         public int limit = 0;
 
         public bool IsRejected(double v)
-        { 
+        {
             double min = 100;
             double max = 0;
             int cmin = 0;
@@ -162,7 +162,8 @@ namespace NSProgram
             {
                 if ((d > v) && (d < max))
                     max = d;
-                if (d < v) {
+                if (d < v)
+                {
                     cmin++;
                     if (d > min)
                         min = d;
@@ -175,9 +176,9 @@ namespace NSProgram
                 return false;
             if (cmin > limit / 10)
                 return false;
-            if(cmin < limit/10)
+            if (cmin < limit / 10)
                 return true;
-            return v < min+((max-min)*(limit % 10))/10;
+            return v < min + ((max - min) * (limit % 10)) / 10;
         }
 
         public void FromSl(List<string> sl)
@@ -213,10 +214,8 @@ namespace NSProgram
         public void SetLen(int len)
         {
             Clear();
-            int v = 0;
             for (int n = 0; n < len; n++)
-                for (int m = 0; m < 2; m++)
-                    Add(v++);
+                Add(n);
             Shuffle();
         }
 
@@ -363,14 +362,13 @@ namespace NSProgram
     {
         public int index = 0;
         public int delta = 0;
-        public int length = 0;
         public CMix mix = new CMix();
         public string factor = string.Empty;
 
         public void Init()
         {
-            int len = CountFactors();
-            mix.SetLen(len);
+            int length = CountFactors();
+            mix.SetLen(length * 2);
         }
 
         public void SaveToIni(CRapIni ini)
@@ -381,6 +379,7 @@ namespace NSProgram
             ini.Write("mod>delta", delta);
             ini.Write("mod>factor", factor);
             ini.Write("mod>mix", mix);
+            ini.Save();
         }
 
         public void LoadFromIni(CRapIni ini)
@@ -391,26 +390,41 @@ namespace NSProgram
             {
                 COption option = new COption(name);
                 option.LoadFromIni(ini);
-                if (option.enabled)
-                    Add(option);
+                Add(option);
             }
             index = ini.ReadInt("mod>index");
             delta = ini.ReadInt("mod>delta");
             factor = ini.Read("factor>last");
             mix.SetList(ini.ReadListInt("mod>mix"));
-            length = CountFactors();
+            int length = CountFactors();
             if (mix.Count != length * 2)
-                mix.SetLen(length);
+                mix.SetLen(length * 2);
+        }
+
+        public int CountEnabled()
+        {
+            int r = 0;
+            foreach (COption option in this)
+                if (option.enabled)
+                    r++;
+            return r;
         }
 
         public int CountFactors()
         {
             int l = 0;
             foreach (COption option in this)
+                if (option.enabled)
                     if (option.oType == EOptionType.eString)
                         l += option.cur.Split().Length;
                     else l++;
             return l;
+        }
+
+        public void Enabled(bool v)
+        {
+            foreach (COption option in this)
+                option.enabled = v;
         }
 
         public COption GetOption(int i)
@@ -427,13 +441,14 @@ namespace NSProgram
             if (Count == 0)
                 return false;
             int l = 0;
-            i %= length;
+            i %= CountFactors();
             for (int n = 0; n < Count; n++)
             {
                 COption opt = this[n];
-                if (opt.oType == EOptionType.eString)
-                    l += opt.cur.Split().Length;
-                else l++;
+                if (opt.enabled)
+                    if (opt.oType == EOptionType.eString)
+                        l += opt.cur.Split().Length;
+                    else l++;
                 if (l > i)
                 {
                     index = n;
@@ -448,7 +463,7 @@ namespace NSProgram
         {
             string mod = string.Empty;
             foreach (COption opt in this)
-                    mod += $" {opt.name} {opt.cur}";
+                mod += $" {opt.name} {opt.cur}";
             return mod;
         }
 
@@ -456,7 +471,7 @@ namespace NSProgram
         {
             string mod = string.Empty;
             foreach (COption opt in this)
-                    mod += $" {opt.name} {opt.bst}";
+                mod += $" {opt.name} {opt.bst}";
             return mod;
         }
 
@@ -485,7 +500,7 @@ namespace NSProgram
 
         public bool Modify(int i, int d)
         {
-            i = i % length;
+            i = i % CountFactors();
             GetIndexSub(i, out int idx, out int sub);
             return this[idx].Modify(sub, d);
         }
@@ -494,6 +509,7 @@ namespace NSProgram
         {
             if (Count == 0)
                 return false;
+            int length = CountFactors();
             if (success == 0)
             {
                 int value = mix.GetVal(fail);
@@ -529,6 +545,7 @@ namespace NSProgram
         int fail = 0;
         int success = 0;
         int extra = 0;
+        public int blunderLimit = 0;
         public double bstScore = 0;
         public CLast last = new CLast();
         readonly CHisList hl = new CHisList();
@@ -579,9 +596,10 @@ namespace NSProgram
             bstScore = ini.ReadDouble("mod>score");
             hl.FromSl(ini.ReadListStr("mod>his", "|"));
             last.FromSl(ini.ReadListStr("mod>last", "|"));
-            reject.FromSl(ini.ReadListStr("mod>reject>list","|"));
+            reject.FromSl(ini.ReadListStr("mod>reject>list", "|"));
             reject.index = ini.ReadInt("mod>reject>index");
             reject.limit = ini.ReadInt("mod>reject>limit");
+            blunderLimit = ini.ReadInt("mod>blunder>limit");
         }
 
         public void SaveToIni()
@@ -593,8 +611,25 @@ namespace NSProgram
             ini.Write("mod>score", bstScore);
             ini.Write("mod>his", hl.ToSl(), "|");
             ini.Write("mod>last", last.ToSl(), "|");
-            ini.Write("mod>reject>list",reject.ToSl(),"|");
+            ini.Write("mod>reject>list", reject.ToSl(), "|");
+            ini.Write("mod>blunder>limit", blunderLimit);
             ini.Save();
+        }
+
+        public void Enabled(bool v)
+        {
+            optionList.Enabled(v);
+            optionList.SaveToIni(ini);
+            ini.Save();
+        }
+
+        public void ShowBest()
+        {
+            foreach (var option in optionList)
+                if (option.enabled)
+                {
+                    Console.WriteLine($"{option.name} {option.bst}");
+                }
         }
 
         bool Modify(int probe = 0)
@@ -623,6 +658,8 @@ namespace NSProgram
             int oldExtra = extra;
             if (extra > 0)
                 extra--;
+            if ((blunderLimit == 0) || (blunderLimit > Program.accuracy.blunders + 1) || (bstScore < score))
+                blunderLimit = Program.accuracy.blunders + 1;
             if (bstScore < score)
             {
                 if ((bstScore > 0) && (extra == 0) && optionList.Modified())
@@ -675,12 +712,12 @@ namespace NSProgram
                 else
                     fail++;
             }
-            SaveToIni();
             return Modify(0);
         }
 
         public void Reset()
         {
+            blunderLimit = 0;
             optionList.Init();
             optionList.BstToCur();
             fail = 0;

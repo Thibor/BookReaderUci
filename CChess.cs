@@ -152,7 +152,7 @@ namespace NSChess
         const int maskColor = colorBlack | colorWhite;
         public CastleRights castleRights = new CastleRights();
         ulong hash = 0;
-        protected int passing = -1;
+        protected int passing = 64;
         public int move50 = 0;
         public int halfMove = 0;
         public bool inCheck = false;
@@ -196,8 +196,8 @@ namespace NSChess
                 int yc = passing >> 3;
                 if (yc != yb)
                     return "-";
-                int del = WhiteTurn ? 1 : -1;
-                if ((board[passing + 7 * del] == myPiece) || (board[passing + 9 * del] == myPiece))
+                int del = WhiteTurn ? 8 : -8;
+                if ((board[passing + del - 1] == myPiece) || (board[passing + del + 1] == myPiece))
                     return IndexToSquare(passing);
                 return "-";
             }
@@ -449,7 +449,7 @@ namespace NSChess
             for (int n = 0; n < 64; n++)
                 board[n] = colorEmpty;
             fen = fen.Trim();
-            List<string> chunks= new List<string>(fen.Trim().Split());
+            List<string> chunks = new List<string>(fen.Trim().Split());
             if (chunks.Count < 2)
                 chunks.Add("w");
             if (chunks.Count < 3)
@@ -486,7 +486,7 @@ namespace NSChess
                     col++;
                 }
             }
-            if(row<7)
+            if (row < 7)
                 return false;
             string s1 = chunks[1];
             if ((s1 != "w") && (s1 != "b"))
@@ -591,7 +591,7 @@ namespace NSChess
             if (((board[to] & 7) == pieceKing) || (((boardCheck[to] & lastCastle) == lastCastle) && ((lastCastle & maskCastle) > 0)))
                 inCheck = true;
             if (add)
-                moves.Add(MakeEmo(fr,to,flag));
+                moves.Add(MakeEmo(fr, to, flag));
         }
 
         public List<int> GenerateLegalMoves(out bool mate, bool repetytion = true)
@@ -651,7 +651,7 @@ namespace NSChess
                                 if ((y == d) && (board[to + del * 8] & colorEmpty) > 0)
                                     GeneratePwnMoves(moves, fr, to + del * 8, !onlyAattack, 0);
                             }
-                            if (GetBoard(x - 1, y + del, out sq))
+                            if (GetSquare(x - 1, y + del, out sq))
                             {
                                 if ((sq & enColor) > 0)
                                     GeneratePwnMoves(moves, fr, to - 1, true, 0);
@@ -660,7 +660,7 @@ namespace NSChess
                                 else if ((sq & colorEmpty) > 0)
                                     GeneratePwnMoves(moves, fr, to - 1, false, 0);
                             }
-                            if (GetBoard(x + 1, y + del, out sq))
+                            if (GetSquare(x + 1, y + del, out sq))
                             {
                                 if ((sq & enColor) > 0)
                                     GeneratePwnMoves(moves, fr, to + 1, true, 0);
@@ -732,7 +732,7 @@ namespace NSChess
                     D2 d = dir[n];
                     dx += d.x;
                     dy += d.y;
-                    if (!GetBoard(dx, dy, out int sq))
+                    if (!GetSquare(dx, dy, out int sq))
                         break;
                     int to = dy * 8 + dx;
                     if ((sq & colorEmpty) > 0)
@@ -821,7 +821,7 @@ namespace NSChess
             }
             undo.captured = captured;
             hash ^= hashBoard[fr, piece];
-            passing = -1;
+            passing = 64;
             if ((captured & maskRank) > 0)
                 move50 = 0;
             else if ((piece & 7) == piecePawn)
@@ -1006,16 +1006,16 @@ namespace NSChess
             }
         }
 
-        bool GetBoard(int x, int y, out int v)
+        bool GetSquare(int x, int y, out int sq)
         {
-            v = 0;
+            sq = 0;
             if ((x < 0) || (y < 0) || (x > 7) || (y > 7))
                 return false;
-            v = board[y * 8 + x];
+            sq = board[y * 8 + x];
             return true;
         }
 
-        public static int MakeEmo(int fr,int to,int flag)
+        public static int MakeEmo(int fr, int to, int flag)
         {
             return fr | (to << 8) | flag;
         }
@@ -1032,7 +1032,7 @@ namespace NSChess
 
         public int GetCapturedPiece(int emo)
         {
-            return board[EmoTo(emo)];   
+            return board[EmoTo(emo)];
         }
 
         public int GetMovingPiece(int emo)

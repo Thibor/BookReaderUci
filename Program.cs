@@ -310,10 +310,14 @@ namespace NSProgram
                                     teacher.mod.Zero();
                                     break;
                                 case "best":
-                                    Console.WriteLine(teacher.mod.optionList.OptionsBst());
+                                    teacher.mod.ShowBest();
                                     break;
                                 case "confirm":
                                     teacher.ModStart(true);
+                                    break;
+                                case "enabled":
+                                    teacher.mod.Enabled(uci.GetValue("enabled") == "on");
+                                    Console.WriteLine($"enabled {teacher.mod.optionList.CountEnabled()}");
                                     break;
                                 default:
                                     Console.WriteLine($"Unknown command [{uci.tokens[1]}]");

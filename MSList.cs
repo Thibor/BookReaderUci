@@ -416,10 +416,7 @@ namespace NSProgram
                     if (msl.LoadFromStr(line))
                         Add(msl);
                     if (!msl.Valid())
-                    {
-                        msl.Valid();
                         valid = false;
-                    }
                 }
             }
             return Count > 0;

@@ -116,7 +116,7 @@ namespace NSProgram
             foreach (int move in moves)
             {
                 MakeMove(move);
-                int score = -Search(2, -0xffff, 0xffff);
+                int score = -Search(3, -0xffff, 0xffff);
                 UnmakeMove(move);
                 //Console.WriteLine($"string info score {EmoToUmo(move)} {score}");
                 if (bestScore < score)

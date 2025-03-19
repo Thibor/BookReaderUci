@@ -521,10 +521,10 @@ namespace NSProgram
             double margin = Program.accuracy.GetMargin();
             double accuracy = Program.accuracy.GetAccuracy();
             double progress = Program.accuracy.GetProgress();
-            ConsoleWrite($"\rprogress {progress:N2}% accuracy {accuracy:N2}% margin {margin:N2} blunders {Program.accuracy.blunders} mistakes {Program.accuracy.mistakes} inaccuracies {Program.accuracy.inaccuracies}");
+            ConsoleWrite($"\rprogress {progress:N2}% accuracy {accuracy:N2}% blunders {Program.accuracy.blunders} mistakes {Program.accuracy.mistakes} inaccuracies {Program.accuracy.inaccuracies}");
         }
 
-        public void ModStudent()
+        public void ModStudent(bool confirm = false)
         {
             SetTData(new CTData());
             while (true)
@@ -539,9 +539,9 @@ namespace NSProgram
                 }
                 //if (Program.accuracy.valid && (mod.bstScore > 0) && !Program.accuracy.Procede() && (Program.accuracy.GetTotalGain() < mod.last.Min()))break;
                 //if ((mod.bstBlunder > 0) && (Program.accuracy.blunders > mod.bstBlunder))break;
-                double accuracy = Program.accuracy.GetAccuracy();
-                if (Program.accuracy.index == mod.reject.index)
-                    if (mod.reject.IsRejected(accuracy))
+                //double accuracy = Program.accuracy.GetAccuracy();
+                if (!confirm && (mod.blunderLimit>0) && (Program.accuracy.blunders > mod.blunderLimit))
+                    //if (mod.reject.IsRejected(accuracy))
                         break;
                 CTData tds = new CTData
                 {
@@ -572,7 +572,7 @@ namespace NSProgram
             }
             string name = Path.GetFileNameWithoutExtension(student);
             Console.WriteLine($"{name} ready");
-            Console.WriteLine($"factors {mod.optionList.CountFactors()} {mod.optionList.factor} fens {Program.accuracy.Count} limit {Program.accuracy.GetLimitCount()} accuracy {Program.teacher.mod.bstScore:N2}");
+            Console.WriteLine($"factors {mod.optionList.CountFactors()} {mod.optionList.factor} fens {Program.accuracy.Count} limit {Program.accuracy.GetLimitCount()} accuracy {Program.teacher.mod.bstScore:N2} blunders {Program.teacher.mod.blunderLimit}");
             while (true)
             {
                 Program.accuracy.Prolog();
@@ -581,14 +581,18 @@ namespace NSProgram
                 SetStudent(student);
                 foreach (COption opt in mod.optionList)
                     if (opt.enabled)
-                        if(confirm)
+                        if (confirm)
                             StudentWriteLine($"setoption name {opt.name} value {opt.bst}");
                         else
                             StudentWriteLine($"setoption name {opt.name} value {opt.cur}");
-                Console.WriteLine(mod.optionList.OptionsCur());
-                ModStudent();
+                if(confirm)
+                    Console.WriteLine(mod.optionList.OptionsBst());
+                else
+                    Console.WriteLine(mod.optionList.OptionsCur());
+                ModStudent(confirm);
                 if (confirm || !mod.SetScore())
                     break;
+                mod.SaveToIni();
             }
             Console.Beep();
             Console.WriteLine("finish");
