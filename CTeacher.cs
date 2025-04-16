@@ -228,7 +228,8 @@ namespace NSProgram
                         td.bestScore = (short)v;
                         SetTData(td);
                         return;
-                    };
+                    }
+                    ;
                 }
             }
             catch { }
@@ -508,6 +509,8 @@ namespace NSProgram
                 if (++count > 16)
                     break;
             }
+            if (Program.accuracy.ignoreLimit)
+                Program.accuracy.SaveToEpd();
             Console.WriteLine("finish");
             Console.Beep();
         }
@@ -518,13 +521,13 @@ namespace NSProgram
 
         void RenderLineMod()
         {
-            double margin = Program.accuracy.GetMargin();
             double accuracy = Program.accuracy.GetAccuracy();
             double progress = Program.accuracy.GetProgress();
-            ConsoleWrite($"\rprogress {progress:N2}% accuracy {accuracy:N2}% blunders {Program.accuracy.blunders} mistakes {Program.accuracy.mistakes} inaccuracies {Program.accuracy.inaccuracies}");
+            double avg = mod.GetAvgProgress();
+            ConsoleWrite($"\rprogress {progress:N2}% avg {avg:N2}% accuracy {accuracy:N2}% blunders {Program.accuracy.blunders} mistakes {Program.accuracy.mistakes} inaccuracies {Program.accuracy.inaccuracies} total {Program.accuracy.index}");
         }
 
-        public void ModStudent(bool confirm = false)
+        public void ModStudent(bool prepare, bool confirm)
         {
             SetTData(new CTData());
             while (true)
@@ -537,12 +540,8 @@ namespace NSProgram
                     Program.accuracy.AddScore(tdg.line.fen, tdg.bestMove);
                     RenderLineMod();
                 }
-                //if (Program.accuracy.valid && (mod.bstScore > 0) && !Program.accuracy.Procede() && (Program.accuracy.GetTotalGain() < mod.last.Min()))break;
-                //if ((mod.bstBlunder > 0) && (Program.accuracy.blunders > mod.bstBlunder))break;
-                //double accuracy = Program.accuracy.GetAccuracy();
-                if (!confirm && (mod.blunderLimit>0) && (Program.accuracy.blunders > mod.blunderLimit))
-                    //if (mod.reject.IsRejected(accuracy))
-                        break;
+                if (!prepare && !confirm && (mod.blunderLimit > 0) && (Program.accuracy.BlunderLimit() > mod.blunderLimit))
+                    break;
                 CTData tds = new CTData
                 {
                     prepared = true
@@ -557,10 +556,11 @@ namespace NSProgram
                 StudentWriteLine($"position fen {tds.line.fen}");
                 StudentWriteLine(Constants.go);
             }
+            mod.SetAvgProgress();
             Console.WriteLine();
         }
 
-        public void ModStart(bool confirm=false)
+        public void ModStart(bool prepare, bool confirm)
         {
             if (!PrepareStudents())
                 return;
@@ -570,9 +570,11 @@ namespace NSProgram
                 Console.WriteLine($"{student} not avabile");
                 return;
             }
+            Program.accuracy.ignoreLimit = prepare;
             string name = Path.GetFileNameWithoutExtension(student);
             Console.WriteLine($"{name} ready");
-            Console.WriteLine($"factors {mod.optionList.CountFactors()} {mod.optionList.factor} fens {Program.accuracy.Count} limit {Program.accuracy.GetLimitCount()} accuracy {Program.teacher.mod.bstScore:N2} blunders {Program.teacher.mod.blunderLimit}");
+            Console.WriteLine($"factors {mod.optionList.CountFactors()} {mod.optionList.factor} fens {Program.accuracy.Count} limit {Program.accuracy.GetLimit()} accuracy {Program.teacher.mod.bstScore:N2}");
+            mod.PrintBlunderLimit();
             while (true)
             {
                 Program.accuracy.Prolog();
@@ -581,19 +583,21 @@ namespace NSProgram
                 SetStudent(student);
                 foreach (COption opt in mod.optionList)
                     if (opt.enabled)
-                        if (confirm)
+                        if (prepare || confirm)
                             StudentWriteLine($"setoption name {opt.name} value {opt.bst}");
                         else
                             StudentWriteLine($"setoption name {opt.name} value {opt.cur}");
-                if(confirm)
+                if (prepare || confirm)
                     Console.WriteLine(mod.optionList.OptionsBst());
                 else
                     Console.WriteLine(mod.optionList.OptionsCur());
-                ModStudent(confirm);
-                if (confirm || !mod.SetScore())
+                ModStudent(prepare, confirm);
+                Program.accuracy.SaveToEpd();
+                if (prepare || confirm || !mod.SetScore())
                     break;
                 mod.SaveToIni();
             }
+            Program.accuracy.ignoreLimit = false;
             Console.Beep();
             Console.WriteLine("finish");
         }

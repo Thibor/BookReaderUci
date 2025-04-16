@@ -2,6 +2,8 @@
 using RapLog;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 
 namespace NSProgram
 {
@@ -57,13 +59,14 @@ namespace NSProgram
 
         public string ToStr()
         {
-            return $"{score} {index} {delta}";
+            string s = score.ToString(CultureInfo.InvariantCulture);
+            return $"{s} {index} {delta}";
         }
 
         public void FromStr(string s)
         {
             string[] a = s.Split();
-            score = Convert.ToDouble(a[0]);
+            score = Convert.ToDouble(a[0], CultureInfo.InvariantCulture);
             index = Convert.ToInt32(a[1]);
             delta = Convert.ToInt32(a[2]);
         }
@@ -248,6 +251,29 @@ namespace NSProgram
             name = s;
         }
 
+        public int GetMax(int v)
+        {
+            return v + (Math.Abs(v) + 1) * 4;
+        }
+
+        public int GetMin(int v)
+        {
+            return v - (Math.Abs(v) + 1) * 4;
+        }
+
+        public int GetBst()
+        {
+            int.TryParse(bst, out int val);
+            return val;
+        }
+
+        public int GetBst(int sub)
+        {
+            string[] tokens = bst.Trim().Split();
+            int.TryParse(tokens[sub], out int val);
+            return val;
+        }
+
         string BstToEle()
         {
             string result = string.Empty;
@@ -285,7 +311,7 @@ namespace NSProgram
 
         public bool Modify(int sub, int del)
         {
-            int val;
+            int vBst, vCur;
             if (enabled)
                 switch (oType)
                 {
@@ -302,59 +328,43 @@ namespace NSProgram
                         }
                         break;
                     case EOptionType.eString:
-                        string[] tokens = cur.Trim().Split();
-                        if (!int.TryParse(tokens[sub], out val))
-                            val = 0;
-                        val += del;
-                        if ((val < min) || (val > max))
+                        vBst = GetBst(sub);
+                        vCur = vBst + del;
+                        if ((vCur < GetMin(vBst)) || (vCur > GetMax(vBst)))
                             return false;
-                        tokens[sub] = val.ToString();
+                        string[] tokens = bst.Trim().Split();
+                        tokens[sub] = vCur.ToString();
                         cur = string.Join(" ", tokens);
                         return true;
                     default:
-                        if (!int.TryParse(cur, out val))
-                            val = (min + max) / 2;
-                        val += del;
-                        if ((val < min) || (val > max))
+                        vBst = GetBst();
+                        vCur = vBst + del;
+                        if ((vCur < GetMin(vBst)) || (vCur > GetMax(vBst)))
                             return false;
-                        cur = val.ToString();
+                        cur = vCur.ToString();
                         return true;
                 }
             return false;
         }
 
-        public void Zero()
+        public string GetCode()
         {
+            string code = string.Empty;
             switch (oType)
             {
                 case EOptionType.eCheck:
-                    bst = "false";
+                    code = $"bool {name} = {bst};";
                     break;
                 case EOptionType.eString:
-                    string[] tokens = cur.Trim().Split();
-                    for (int n = 0; n < tokens.Length; n++)
-                        tokens[n] = "0";
-                    bst = string.Join(" ", tokens);
+                    code = $"string {name} = \"{bst}\";";
                     break;
                 default:
-                    int mid = (min + max) / 2;
-                    bst = mid.ToString();
+                    code = $"int {name} = {bst};";
                     break;
             }
+            return code;
         }
 
-        public string GetElements()
-        {
-            if (oType == EOptionType.eString)
-            {
-                string result = string.Empty;
-                string[] tokens = bst.Trim().Split();
-                for (int n = 0; n < tokens.Length; n++)
-                    result += $" {n + 1}={tokens[n]}";
-                return result.Trim();
-            }
-            return bst;
-        }
 
     }
 
@@ -399,6 +409,15 @@ namespace NSProgram
             int length = CountFactors();
             if (mix.Count != length * 2)
                 mix.SetLen(length * 2);
+        }
+
+        public void SaveToCode()
+        {
+            List<string> sl = new List<string>();
+            foreach (COption option in this)
+                sl.Add(option.GetCode());
+            sl.Sort();
+            File.WriteAllLines("mod.cod", sl);
         }
 
         public int CountEnabled()
@@ -463,7 +482,8 @@ namespace NSProgram
         {
             string mod = string.Empty;
             foreach (COption opt in this)
-                mod += $" {opt.name} {opt.cur}";
+                if (opt.enabled)
+                    mod += $" {opt.name} {opt.cur}";
             return mod;
         }
 
@@ -471,7 +491,8 @@ namespace NSProgram
         {
             string mod = string.Empty;
             foreach (COption opt in this)
-                mod += $" {opt.name} {opt.bst}";
+                if (opt.enabled)
+                    mod += $" {opt.name} {opt.bst}";
             return mod;
         }
 
@@ -547,6 +568,7 @@ namespace NSProgram
         int extra = 0;
         public int blunderLimit = 0;
         public double bstScore = 0;
+        public double avgProgress = 0;
         public CLast last = new CLast();
         readonly CHisList hl = new CHisList();
         public CReject reject = new CReject();
@@ -594,6 +616,7 @@ namespace NSProgram
             fail = ini.ReadInt("mod>fail");
             success = ini.ReadInt("mod>success", success);
             bstScore = ini.ReadDouble("mod>score");
+            avgProgress = ini.ReadDouble("mod>progress>avg");
             hl.FromSl(ini.ReadListStr("mod>his", "|"));
             last.FromSl(ini.ReadListStr("mod>last", "|"));
             reject.FromSl(ini.ReadListStr("mod>reject>list", "|"));
@@ -609,6 +632,7 @@ namespace NSProgram
             ini.Write("mod>fail", fail);
             ini.Write("mod>success", success);
             ini.Write("mod>score", bstScore);
+            ini.Write("mod>progress>avg", avgProgress);
             ini.Write("mod>his", hl.ToSl(), "|");
             ini.Write("mod>last", last.ToSl(), "|");
             ini.Write("mod>reject>list", reject.ToSl(), "|");
@@ -646,6 +670,17 @@ namespace NSProgram
             return false;
         }
 
+        public void PrintBlunderLimit()
+        {
+            int bl = blunderLimit;
+            int count = Program.accuracy.Count;
+            int b = bl / (count * count);
+            bl = bl - b * count * count;
+            int m = bl / count;
+            int i = bl - m * count;
+            Console.WriteLine($"limit blunders {b} mistakes {m} inaccuracies {i}");
+        }
+
         public bool SetScore()
         {
             double score = Program.accuracy.GetAccuracy();
@@ -658,13 +693,17 @@ namespace NSProgram
             int oldExtra = extra;
             if (extra > 0)
                 extra--;
-            if ((blunderLimit == 0) || (blunderLimit > Program.accuracy.blunders + 1) || (bstScore < score))
-                blunderLimit = Program.accuracy.blunders + 1;
+            if ((blunderLimit == 0) || (bstScore < score) || (blunderLimit > Program.accuracy.BlunderLimit()))
+            {
+                blunderLimit = Program.accuracy.BlunderLimit();
+                PrintBlunderLimit();
+            }
             if (bstScore < score)
             {
                 if ((bstScore > 0) && (extra == 0) && optionList.Modified())
                     success++;
                 optionList.CurToBst();
+                optionList.SaveToCode();
                 bstScore = score;
                 extra = 0;
                 fail = 0;
@@ -717,6 +756,7 @@ namespace NSProgram
 
         public void Reset()
         {
+            avgProgress = 0;
             blunderLimit = 0;
             optionList.Init();
             optionList.BstToCur();
@@ -729,11 +769,15 @@ namespace NSProgram
             Console.WriteLine(optionList.OptionsCur());
         }
 
-        public void Zero()
+        public double GetAvgProgress()
         {
-            foreach (COption opt in optionList)
-                opt.Zero();
-            Reset();
+            double progress = Program.accuracy.GetProgress();
+            return avgProgress * 0.9 + progress * 0.1;
+        }
+
+        public void SetAvgProgress()
+        {
+            avgProgress = GetAvgProgress();
         }
 
     }

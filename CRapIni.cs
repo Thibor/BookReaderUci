@@ -73,7 +73,7 @@ namespace RapIni
 
         public void Write(string key, double value)
         {
-            Write(key, Convert.ToString(value, CultureInfo.InvariantCulture.NumberFormat));
+            Write(key, Convert.ToString(value, CultureInfo.InvariantCulture));
         }
 
         public void Write(string key, DateTime dt)
@@ -162,8 +162,8 @@ namespace RapIni
         {
             if (restore)
                 return def;
-            string s = Read(key, Convert.ToString(def, CultureInfo.InvariantCulture.NumberFormat));
-            double.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture.NumberFormat, out double result);
+            string s = Read(key, Convert.ToString(def, CultureInfo.InvariantCulture));
+            double.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out double result);
             return result;
         }
 

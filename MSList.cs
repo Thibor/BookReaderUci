@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Windows.Forms.VisualStyles;
 
 namespace NSProgram
 {
@@ -176,7 +175,7 @@ namespace NSProgram
         {
             string moves = GetMoves();
             string l = Convert.ToString(loss, CultureInfo.InvariantCulture.NumberFormat);
-            return $"{fen} acd {depth} loss {l} {moves}".Trim();
+            return $"{fen} acd {depth} {moves}".Trim();
         }
 
         public bool LoadFromStr(string line)
@@ -205,9 +204,6 @@ namespace NSProgram
                 {
                     case "acd":
                         depth = Convert.ToInt32(s);
-                        break;
-                    case "loss":
-                        double.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture.NumberFormat, out loss);
                         break;
                     case "bm":
                         move = s;
@@ -388,8 +384,7 @@ namespace NSProgram
 
         public void SaveToEpd()
         {
-            SortFen();
-            using (FileStream fs = File.Open(fileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
+            using (FileStream fs = File.Open(fileName, FileMode.Create, FileAccess.Write, FileShare.None))
             using (StreamWriter sw = new StreamWriter(fs))
             {
                 foreach (MSLine msl in this)
@@ -542,6 +537,13 @@ namespace NSProgram
                 if (msl.loss == 100)
                     return false;
             return true;
+        }
+
+        public void Swap(int fr,int to)
+        {
+            MSLine msl = this[fr];
+            RemoveAt(fr);
+            Insert(to, msl);
         }
 
     }

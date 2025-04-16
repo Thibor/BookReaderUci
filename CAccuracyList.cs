@@ -18,15 +18,13 @@ namespace NSProgram
     internal class CAccuracyList : MSList
     {
         public bool check = false;
-        public bool prepare = false;
-        public int start = 0;
+        public bool ignoreLimit = false;
         public int limit = 0;
         public int index = 0;
         int totalCount = 0;
         public double totalLoss = 0;
         public double totalLossBst = 0;
         double totalAccuracy = 0;
-        double totalWeight = 0;
         public int inaccuracies = 0;
         public int mistakes = 0;
         public int blunders = 0;
@@ -36,49 +34,31 @@ namespace NSProgram
         public CRapLog his = new CRapLog("accuracy.his");
         readonly static Random rnd = new Random();
 
-        public bool IsLimit()
+        public int BlunderLimit()
         {
-            return GetLimitCount() < Count;
+            return blunders * Count * Count + mistakes * Count + inaccuracies;
         }
 
-        public int GetLimitCount()
+        public int GetLimit()
         {
             if (!valid)
                 return Count;
-            if (prepare)
+            if (ignoreLimit)
                 return Count;
             if (check)
                 return Count;
             return Constants.limit < 1 ? Count : Math.Min(Constants.limit, Count);
         }
 
-        int GetStart()
-        {
-            return 0;
-            //return (Count - GetLimit()) / 2;
-        }
-
         public double GetProgress()
         {
-            return index * 100.0 / GetLimitCount();
-        }
-
-        public double GetLastGain()
-        {
-            start = GetStart();
-            limit = GetLimitCount();
-            double loss = 0;
-            for (int n = 0; n < limit; n++)
-                loss += this[start + n].loss;
-            return 100.0 - loss / limit;
+            return index * 100.0 / GetLimit();
         }
 
         public void Prolog()
         {
             LoadFromEpd();
-            SortLoss();
-            start = GetStart();
-            limit = GetLimitCount();
+            limit = GetLimit();
             index = 0;
             inaccuracies = 0;
             mistakes = 0;
@@ -87,7 +67,6 @@ namespace NSProgram
             totalLoss = 0;
             totalLossBst = 0;
             totalAccuracy = 0;
-            totalWeight = 0;
             badFen = default;
             badFen.worstAccuracy = 100;
         }
@@ -101,6 +80,7 @@ namespace NSProgram
                 Console.WriteLine($"{c} errors fixed.");
                 SaveToEpd();
             }
+            LoadFromEpd();
         }
 
         public void PrintInfo()
@@ -155,22 +135,34 @@ namespace NSProgram
             double curAccuracy = Math.Max(10.0, MSLine.GetAccuracy(bstWC, curWC));
             double loss = bstWC - curWC;
             totalLossBst += msl.loss;
-            if (prepare)
+            if (ignoreLimit)
                 msl.loss = loss;
             totalCount++;
             totalAccuracy += 1.0 / curAccuracy;
             totalLoss += loss;
-            totalWeight += (loss + 1) * curAccuracy;
+            bool swap = true;
             if (loss >= Constants.blunder)
             {
+                Swap(index - 1, blunders);
+                swap = false;
                 blunders++;
                 if (check)
                     DeleteFen(fen);
             }
             if (loss >= Constants.mistake)
+            {
+                if (swap)
+                    Swap(index - 1, mistakes);
+                swap = false;
                 mistakes++;
+            }
             if (loss >= Constants.inaccuracy)
+            {
+                if (swap)
+                    Swap(index - 1, inaccuracies);
+                swap = false;
                 inaccuracies++;
+            }
             if (badFen.worstAccuracy > curAccuracy)
             {
                 badFen.worstAccuracy = curAccuracy;
@@ -187,39 +179,11 @@ namespace NSProgram
             return totalLossBst - totalLoss;
         }
 
-        public bool Procede()
-        {
-            int limit = GetLimitCount();
-            return GetMargin() > (-128 * (limit - index) / limit);
-        }
-
         public double GetTotalGain()
         {
             if (totalCount == 0)
                 return 0;
             return 100.0 - totalLoss / totalCount;
-        }
-
-        public double GeLoss()
-        {
-            if (Count == 0)
-                return 0;
-            double loss = 0;
-            foreach (MSLine msl in this)
-                loss += msl.loss;
-            return loss / Count;
-        }
-
-        public double GetGain()
-        {
-            return 100.0 - GetTotalLoss();
-        }
-
-        public double GetWeight()
-        {
-            if (totalCount == 0)
-                return 0;
-            return totalWeight / (totalLoss + totalCount);
         }
 
         public MSLine GetLine(string fen)
@@ -229,25 +193,6 @@ namespace NSProgram
             return null;
         }
 
-        public double GetTotalLoss()
-        {
-            if (totalCount == 0)
-                return 0;
-            return totalLoss / totalCount;
-        }
-
-        public int GetEloAccuracy(double accuracy)
-        {
-            accuracy /= 100.0;
-            return Convert.ToInt32(accuracy * Constants.maxElo);
-        }
-
-        public int GetEloWeight(double weight)
-        {
-            weight /= 100.0;
-            return Convert.ToInt32(weight * Constants.maxElo);
-        }
-
         public double GetAccuracy()
         {
             if (totalCount == 0)
@@ -255,20 +200,12 @@ namespace NSProgram
             return totalCount / totalAccuracy;
         }
 
-        public int GetEloAccuracy(double accuracy, out int del)
-        {
-            int eloMax = GetEloAccuracy(accuracy);
-            int eloMin = GetEloAccuracy(totalAccuracy / (totalCount + 1));
-            del = eloMax - eloMin;
-            return eloMax;
-        }
-
         public bool NextLine(out MSLine line)
         {
             line = null;
             if (index >= limit)
                 return false;
-            line = this[start + index];
+            line = this[index];
             index++;
             return true;
         }

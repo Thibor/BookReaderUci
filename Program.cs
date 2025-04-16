@@ -296,24 +296,19 @@ namespace NSProgram
                             switch (uci.tokens[1])
                             {
                                 case "prepare":
-                                    accuracy.prepare = true;
-                                    teacher.AccuracyStart();
-                                    accuracy.prepare = false;
+                                    teacher.ModStart(true,false);
                                     break;
                                 case "start":
-                                    teacher.ModStart();
+                                    teacher.ModStart(false,false);
                                     break;
                                 case "reset":
                                     teacher.mod.Reset();
-                                    break;
-                                case "zero":
-                                    teacher.mod.Zero();
                                     break;
                                 case "best":
                                     teacher.mod.ShowBest();
                                     break;
                                 case "confirm":
-                                    teacher.ModStart(true);
+                                    teacher.ModStart(false,true);
                                     break;
                                 case "enabled":
                                     teacher.mod.Enabled(uci.GetValue("enabled") == "on");
@@ -393,6 +388,7 @@ namespace NSProgram
                                     break;
                                 case "sort":
                                     book.Sort();
+                                    book.Save();
                                     Console.WriteLine("The book has been sorted");
                                     break;
                                 case "moves":
