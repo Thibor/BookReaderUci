@@ -1,12 +1,11 @@
 ﻿using NSUci;
+using RapLog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using RapLog;
 using System.Globalization;
+using System.IO;
 using System.Threading;
-using System.Linq;
 
 namespace NSProgram
 {
@@ -436,6 +435,17 @@ namespace NSProgram
             ConsoleWrite($"\rprogress {progress:N2}% accuracy {accuracy:N2}% blunders {Program.accuracy.blunders} mistakes {Program.accuracy.mistakes} inaccuracies {Program.accuracy.inaccuracies} total {Program.accuracy.index}");
         }
 
+        string EngineDate(string engine)
+        {
+            string date = string.Empty;
+            if (File.Exists(engine))
+            {
+                FileInfo fi = new FileInfo(engine);
+                date = fi.LastWriteTime.ToString("yyyy-MM-dd HH:mm:ss");
+            }
+            return date;
+        }
+
         public double AccuracyStudent()
         {
             Program.accuracy.Prolog();
@@ -482,7 +492,7 @@ namespace NSProgram
             int winChanceSou = Convert.ToInt32(MSLine.WiningChances(Program.accuracy.badFen.bstScore) * 100.0);
             int winChanceDes = Convert.ToInt32(MSLine.WiningChances(Program.accuracy.badFen.badScore) * 100.0);
             double accuracy = Program.accuracy.GetAccuracy();
-            Program.accuracy.log.Add($"{name} accuracy {accuracy:N2}% ({Program.accuracy.blunders} {Program.accuracy.mistakes} {Program.accuracy.inaccuracies} {Program.accuracy.index}) < {Program.accuracy.Count} {Program.accuracy.badFen.fen} ({Program.accuracy.badFen.bstMove} => {Program.accuracy.badFen.badMove}) ({Program.accuracy.badFen.bstScore} => {Program.accuracy.badFen.badScore}) ({winChanceSou} => {winChanceDes})");
+            Program.accuracy.log.Add($"{name} {EngineDate(student)} accuracy {accuracy:N2}% ({Program.accuracy.blunders} {Program.accuracy.mistakes} {Program.accuracy.inaccuracies} {Program.accuracy.index}) < {Program.accuracy.Count} {Program.accuracy.badFen.fen} ({Program.accuracy.badFen.bstMove} => {Program.accuracy.badFen.badMove}) ({Program.accuracy.badFen.bstScore} => {Program.accuracy.badFen.badScore}) ({winChanceSou} => {winChanceDes})");
             StudentTerminate();
         }
 
@@ -509,8 +519,7 @@ namespace NSProgram
                 if (++count > 16)
                     break;
             }
-            if (Program.accuracy.ignoreLimit)
-                Program.accuracy.SaveToEpd();
+            Program.accuracy.SaveToEpd();
             Console.WriteLine("finish");
             Console.Beep();
         }
@@ -527,7 +536,7 @@ namespace NSProgram
             ConsoleWrite($"\rprogress {progress:N2}% avg {avg:N2}% accuracy {accuracy:N2}% blunders {Program.accuracy.blunders} mistakes {Program.accuracy.mistakes} inaccuracies {Program.accuracy.inaccuracies} total {Program.accuracy.index}");
         }
 
-        public void ModStudent(bool prepare, bool confirm)
+        public void ModStudent()
         {
             SetTData(new CTData());
             while (true)
@@ -540,7 +549,7 @@ namespace NSProgram
                     Program.accuracy.AddScore(tdg.line.fen, tdg.bestMove);
                     RenderLineMod();
                 }
-                if (!prepare && !confirm && (mod.blunderLimit > 0) && (Program.accuracy.BlunderLimit() > mod.blunderLimit))
+                if (!Program.accuracy.confirm && (mod.blunderLimit > 0) && (Program.accuracy.BlunderLimit() > mod.blunderLimit))
                     break;
                 CTData tds = new CTData
                 {
@@ -560,7 +569,7 @@ namespace NSProgram
             Console.WriteLine();
         }
 
-        public void ModStart(bool prepare, bool confirm)
+        public void ModStart()
         {
             if (!PrepareStudents())
                 return;
@@ -570,10 +579,9 @@ namespace NSProgram
                 Console.WriteLine($"{student} not avabile");
                 return;
             }
-            Program.accuracy.ignoreLimit = prepare;
             string name = Path.GetFileNameWithoutExtension(student);
             Console.WriteLine($"{name} ready");
-            Console.WriteLine($"factors {mod.optionList.CountFactors()} {mod.optionList.factor} fens {Program.accuracy.Count} limit {Program.accuracy.GetLimit()} accuracy {Program.teacher.mod.bstScore:N2}");
+            Console.WriteLine($"factors {mod.optionList.CountFactors()} fens {Program.accuracy.Count} limit {Program.accuracy.GetLimit()} accuracy {Program.teacher.mod.codScore:N2}");
             mod.PrintBlunderLimit();
             while (true)
             {
@@ -583,21 +591,20 @@ namespace NSProgram
                 SetStudent(student);
                 foreach (COption opt in mod.optionList)
                     if (opt.enabled)
-                        if (prepare || confirm)
+                        if (Program.accuracy.confirm)
                             StudentWriteLine($"setoption name {opt.name} value {opt.bst}");
                         else
                             StudentWriteLine($"setoption name {opt.name} value {opt.cur}");
-                if (prepare || confirm)
+                if (Program.accuracy.confirm)
                     Console.WriteLine(mod.optionList.OptionsBst());
                 else
                     Console.WriteLine(mod.optionList.OptionsCur());
-                ModStudent(prepare, confirm);
+                ModStudent();
                 Program.accuracy.SaveToEpd();
-                if (prepare || confirm || !mod.SetScore())
+                if (Program.accuracy.confirm || !mod.SetScore())
                     break;
                 mod.SaveToIni();
             }
-            Program.accuracy.ignoreLimit = false;
             Console.Beep();
             Console.WriteLine("finish");
         }

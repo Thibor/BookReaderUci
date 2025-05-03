@@ -295,11 +295,8 @@ namespace NSProgram
                         if (uci.tokens.Length > 1)
                             switch (uci.tokens[1])
                             {
-                                case "prepare":
-                                    teacher.ModStart(true,false);
-                                    break;
                                 case "start":
-                                    teacher.ModStart(false,false);
+                                    teacher.ModStart();
                                     break;
                                 case "reset":
                                     teacher.mod.Reset();
@@ -308,14 +305,29 @@ namespace NSProgram
                                     teacher.mod.ShowBest();
                                     break;
                                 case "confirm":
-                                    teacher.ModStart(false,true);
+                                    accuracy.confirm = true;
+                                    teacher.ModStart();
+                                    accuracy.confirm = false;
                                     break;
                                 case "enabled":
                                     teacher.mod.Enabled(uci.GetValue("enabled") == "on");
                                     Console.WriteLine($"enabled {teacher.mod.optionList.CountEnabled()}");
                                     break;
+                                case "cod":
+                                    teacher.mod.optionList.LoadFromCode();
+                                    teacher.mod.Reset();
+                                    break;
+                                case "help":
+                                    Console.WriteLine("mod start   - start mod");
+                                    Console.WriteLine("mod reset   - reset mod");
+                                    Console.WriteLine("mod best    - show best options");
+                                    Console.WriteLine("mod confirm - test best options");
+                                    Console.WriteLine("mod enabled - on/off all options");
+                                    Console.WriteLine("mod cod     - load mod from code");
+                                    break;
                                 default:
                                     Console.WriteLine($"Unknown command [{uci.tokens[1]}]");
+                                    Console.WriteLine($"mod help - show mod commands");
                                     break;
                             }
                         break;
@@ -454,7 +466,7 @@ namespace NSProgram
                                     break;
                                 default:
                                     Console.WriteLine($"unknown command [{uci.tokens[1]}]");
-                                    Console.WriteLine($"book help - show console commands");
+                                    Console.WriteLine($"book help - show book commands");
                                     break;
                             }
                         break;

@@ -18,7 +18,7 @@ namespace NSProgram
     internal class CAccuracyList : MSList
     {
         public bool check = false;
-        public bool ignoreLimit = false;
+        public bool confirm = false;
         public int limit = 0;
         public int index = 0;
         int totalCount = 0;
@@ -43,7 +43,7 @@ namespace NSProgram
         {
             if (!valid)
                 return Count;
-            if (ignoreLimit)
+            if (confirm)
                 return Count;
             if (check)
                 return Count;
@@ -135,7 +135,7 @@ namespace NSProgram
             double curAccuracy = Math.Max(10.0, MSLine.GetAccuracy(bstWC, curWC));
             double loss = bstWC - curWC;
             totalLossBst += msl.loss;
-            if (ignoreLimit)
+            if (confirm)
                 msl.loss = loss;
             totalCount++;
             totalAccuracy += 1.0 / curAccuracy;
@@ -160,7 +160,6 @@ namespace NSProgram
             {
                 if (swap)
                     Swap(index - 1, inaccuracies);
-                swap = false;
                 inaccuracies++;
             }
             if (badFen.worstAccuracy > curAccuracy)
@@ -172,11 +171,6 @@ namespace NSProgram
                 badFen.bstScore = bstScore;
                 badFen.badScore = curScore;
             }
-        }
-
-        public double GetMargin()
-        {
-            return totalLossBst - totalLoss;
         }
 
         public double GetTotalGain()
