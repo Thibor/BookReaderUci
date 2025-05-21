@@ -515,30 +515,6 @@ namespace NSProgram
             return null;
         }
 
-        public MSLine GetRandomLine()
-        {
-            if (Count == 0)
-                return null;
-            int index = CChess.rnd.Next(Count);
-            return this[index];
-        }
-
-        public void ResetLoss()
-        {
-            foreach (MSLine line in this)
-                line.loss = 100;
-            SaveToEpd();
-            valid = false;
-        }
-
-        public bool GetValid()
-        {
-            foreach (MSLine msl in this)
-                if (msl.loss == 100)
-                    return false;
-            return true;
-        }
-
         public void Swap(int fr,int to)
         {
             MSLine msl = this[fr];

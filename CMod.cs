@@ -272,7 +272,7 @@ namespace NSProgram
             if(tn.Length != 2)
                 return false;   
             string type = tn[0];
-            string name = tn[1];
+            name = tn[1];
             bst = val;
             cur = val;
             if (type=="bool")
@@ -311,6 +311,7 @@ namespace NSProgram
 
         public void SaveToIni(CRapIni ini)
         {
+            ini.DeleteKey("option");
             foreach (COption option in this)
                 option.SaveToIni(ini);
             ini.Write("mod>index", index);
@@ -480,7 +481,6 @@ namespace NSProgram
         int factorIndex = 0;
         int factorDelta = 0;
         int totalProgress = 0;
-        int elapsed = 0;
         public int blunderLimit = 0;
         public double bstScore = 0;
         public double codScore = 0;
@@ -526,7 +526,6 @@ namespace NSProgram
         public void SaveToIni()
         {
             optionList.SaveToIni(ini);
-            ini.Write("mod>elapsed", elapsed);
             ini.Write("mod>extra", extra);
             ini.Write("mod>fail", fail);
             ini.Write("mod>factorIndex", factorIndex);
@@ -545,7 +544,6 @@ namespace NSProgram
         {
             ini.Load();
             optionList.LoadFromIni(ini);
-            elapsed = ini.ReadInt("mod>elapsed");
             extra = ini.ReadInt("mod>extra");
             fail = ini.ReadInt("mod>fail");
             factorIndex = ini.ReadInt("mod>factorIndex");
@@ -557,6 +555,12 @@ namespace NSProgram
             last.FromSl(ini.ReadListStr("mod>last", "|"));
             blunderLimit = ini.ReadInt("mod>blunder>limit");
             totalProgress = ini.ReadInt("mod>totalProgress");
+        }
+
+        public void Cod() {
+            log.Add("cod");
+            optionList.LoadFromCode();
+            Reset();
         }
 
         public void Enabled(bool v)
@@ -582,26 +586,25 @@ namespace NSProgram
             optionList.BstToCur();
             optionList.GetIndexSub(factorIndex, out int idx, out int sub);
             COption option = optionList[idx];
-            int delta = 1 << factorDelta / 2;
+            int delta = 1 << (factorDelta / 2);
             if ((factorDelta & 1) == 0)
                 delta = -delta;
             factorDelta++;
+            int countFactors = optionList.CountFactors();
+            int left = countFactors - totalProgress % countFactors;
             Console.WriteLine();
             if (option.Modify(sub, delta))
             {
-                Console.WriteLine($">> {codScore:N2} delta {delta} {option.name} {option.bst} >> {option.cur}");
+                Console.WriteLine($">> {codScore:N2} delta {delta} {option.name} {option.bst} >> {option.cur} left {left:N0}");
                 return true;
             }
-            blunderLimit = 0;
-            bstScore = 0;
+            //blunderLimit = 0;
+            //bstScore = 0;
             factorDelta = 0;
             totalProgress++;
-            factorIndex += 1 + rnd.Next(optionList.CountFactors() - 1);
-            if (++elapsed % optionList.CountFactors() == 0)
-            {
-                optionList.LoadFromCode();
-                Reset();
-            }
+            factorIndex += 1 + rnd.Next(countFactors - 1);
+            if (left == 0)
+                Cod();
             double pro = totalProgress * 100.0 / optionList.CountFactors();
             Console.WriteLine($">> {codScore:N2} {bstScore:N2} total {pro:N0}%");
             return true;
@@ -637,7 +640,7 @@ namespace NSProgram
                 optionList.CurToBst();
                 if (codScore < score)
                 {
-                    elapsed = 0;
+                    totalProgress = 0;
                     codScore = score;
                     optionList.SaveToCode();
                     log.Add($"!! {score:N2} ({Program.accuracy.blunders} {Program.accuracy.mistakes} {Program.accuracy.inaccuracies} {Program.accuracy.Count})");
@@ -691,7 +694,6 @@ namespace NSProgram
         {
             avgProgress = 0;
             blunderLimit = 0;
-            elapsed = 0;
             factorIndex=rnd.Next(optionList.CountFactors());
             totalProgress = 0;
             optionList.BstToCur();

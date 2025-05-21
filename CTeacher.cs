@@ -411,7 +411,6 @@ namespace NSProgram
                     }
                     else
                         Program.accuracy.ReplaceLine(tdg.line);
-                    Program.accuracy.SaveToEpd();
                 }
                 Program.accuracy.SortDepth();
                 MSLine msl = fail > 0 ? Program.accuracy.GetLineFail() : Program.accuracy.GetShallowLine();
@@ -424,6 +423,7 @@ namespace NSProgram
                 Console.WriteLine($"{c} depth {msl.depth} >> {Constants.minDepth} fen {msl.fen}");
                 AccuracyUpdatePrepare(tds);
             }
+            Program.accuracy.SaveToEpd();
             Console.Beep();
             Console.WriteLine("finish");
         }
@@ -500,17 +500,10 @@ namespace NSProgram
         {
             if (!PrepareStudents())
                 return;
-            int count = Program.accuracy.Count;
             foreach (string student in students)
                 AccuracyStart(student);
-            int del = count - Program.accuracy.Count;
-            if (del > 0)
-            {
-                Program.accuracy.SaveToEpd();
-                Console.WriteLine($"deleted {del}");
-            }
             List<string> list = Program.accuracy.log.List();
-            count = 0;
+            int count = 0;
             foreach (string l in list)
             {
                 uci.SetMsg(l);
@@ -600,10 +593,10 @@ namespace NSProgram
                 else
                     Console.WriteLine(mod.optionList.OptionsCur());
                 ModStudent();
-                Program.accuracy.SaveToEpd();
                 if (Program.accuracy.confirm || !mod.SetScore())
                     break;
                 mod.SaveToIni();
+                Program.accuracy.SaveToEpd();
             }
             Console.Beep();
             Console.WriteLine("finish");
