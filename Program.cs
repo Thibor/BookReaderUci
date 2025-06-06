@@ -282,8 +282,17 @@ namespace NSProgram
                                     teacher.AccuracyStart();
                                     accuracy.check = false;
                                     break;
+                                case "help":
+                                    Console.WriteLine("accuracy add [x]   - add x fens");
+                                    Console.WriteLine("accuracy check     - check accuracy");
+                                    Console.WriteLine("accuracy delete    - delete some fens");
+                                    Console.WriteLine("accuracy depth [x] - depth assignment for all records at x");
+                                    Console.WriteLine("accuracy start     - start of accuracy determination");
+                                    Console.WriteLine("accuracy update    - update accuracy");
+                                    break;
                                 default:
                                     Console.WriteLine($"Unknown command [{uci.tokens[1]}]");
+                                    Console.WriteLine($"accuracy help - show book commands");
                                     break;
                             }
                         accuracy.PrintInfo();
