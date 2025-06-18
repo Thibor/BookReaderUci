@@ -1,5 +1,4 @@
-﻿using NSChess;
-using NSUci;
+﻿using NSUci;
 using RapIni;
 using RapLog;
 using System;
@@ -14,7 +13,6 @@ namespace NSProgram
     {
         public static bool isLog = false;
         public static bool isW = false;
-        public static bool isSmart = true;
         public static CChessExt chess = new CChessExt();
         public static CAccuracyList accuracy = new CAccuracyList();
         public static CEvaluationList evaluation = new CEvaluationList();
@@ -420,7 +418,6 @@ namespace NSProgram
                                 case "getoption":
                                     Console.WriteLine($"option name book_file type string default book{CBook.defExt}");
                                     Console.WriteLine($"option name write type check default false");
-                                    Console.WriteLine($"option name smart type check default true");
                                     Console.WriteLine($"option name log type check default false");
                                     Console.WriteLine($"option name ply_read type spin default {bookLimitR} min 0 max 100");
                                     Console.WriteLine($"option name ply_write type spin default {bookLimitW} min 0 max 100");
@@ -439,9 +436,6 @@ namespace NSProgram
                                             break;
                                         case "log":
                                             isLog = uci.GetValue("value") == "true";
-                                            break;
-                                        case "smart":
-                                            isSmart = uci.GetValue("value") == "true";
                                             break;
                                         case "ply_read":
                                             bookLimitR = uci.GetInt("value");
@@ -526,18 +520,11 @@ namespace NSProgram
                         break;
                     case "go":
                         string move = String.Empty;
-                        if (random >= chess.MoveNumber)
+                        if (book.Count == 0)
                         {
-                            if (isSmart)
-                                move = chess.GetUmo();
-                            else
+                            if (bookLimitR >= chess.MoveNumber)
                             {
-                                List<int> lm = chess.GenerateLegalMoves(out _);
-                                if (lm.Count > 0)
-                                {
-                                    int r = CChess.rnd.Next(lm.Count);
-                                    move = chess.EmoToUmo(lm[r]);
-                                }
+                                    move = chess.GetUmo(random);
                             }
                         }
                         if (string.IsNullOrEmpty(move))
