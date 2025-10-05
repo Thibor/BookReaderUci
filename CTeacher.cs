@@ -247,6 +247,7 @@ namespace NSProgram
         {
             if (studentProcess.StartInfo.FileName != String.Empty)
             {
+                //Program.log.Add(c);
                 studentProcess.StandardInput.WriteLine(c);
                 Thread.Sleep(10);
             }
@@ -562,42 +563,48 @@ namespace NSProgram
             Console.WriteLine();
         }
 
-        public void ModStart()
+        void ModStart(string student)
         {
-            if (!PrepareStudents())
-                return;
-            string student = students[0];
-            if (!SetStudent(student))
-            {
-                Console.WriteLine($"{student} not avabile");
-                return;
-            }
             string name = Path.GetFileNameWithoutExtension(student);
-            Console.WriteLine($"{name} ready");
-            Console.WriteLine($"factors {mod.optionList.CountFactors()} fens {Program.accuracy.Count} limit {Program.accuracy.GetLimit()} accuracy {Program.teacher.mod.codScore:N2}");
+            Console.WriteLine($"start {name}");
+            Console.WriteLine($"factors {mod.optionList.CountFactors()} fens {Program.accuracy.Count} limit {Program.accuracy.GetLimit()} accuracy {mod.bstScore:N2}");
             mod.PrintBlunderLimit();
             while (true)
             {
                 Program.accuracy.Prolog();
                 if (Program.teacher.mod.bstScore == 0)
                     mod.optionList.BstToCur();
-                SetStudent(student);
+                if (!SetStudent(student))
+                {
+                    Console.WriteLine($"{name} not avabile");
+                    return;
+                }
                 foreach (COption opt in mod.optionList)
+                {
                     if (opt.enabled)
                         if (Program.accuracy.confirm)
                             StudentWriteLine($"setoption name {opt.name} value {opt.bst}");
                         else
                             StudentWriteLine($"setoption name {opt.name} value {opt.cur}");
-                if (Program.accuracy.confirm)
+                }
+                /* if(Program.accuracy.confirm)
                     Console.WriteLine(mod.optionList.OptionsBst());
                 else
-                    Console.WriteLine(mod.optionList.OptionsCur());
+                    Console.WriteLine(mod.optionList.OptionsCur());*/
                 ModStudent();
                 if (Program.accuracy.confirm || !mod.SetScore())
                     break;
                 mod.SaveToIni();
                 Program.accuracy.SaveToEpd();
             }
+        }
+
+        public void ModStart()
+        {
+            if (!PrepareStudents())
+                return;
+            foreach (string student in students)
+                ModStart(student);
             Console.Beep();
             Console.WriteLine("finish");
         }

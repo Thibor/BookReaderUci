@@ -321,7 +321,7 @@ namespace NSProgram
                                     Console.WriteLine($"enabled {teacher.mod.optionList.CountEnabled()}");
                                     break;
                                 case "cod":
-                                    teacher.mod.Cod();
+                                    teacher.mod.LoadFromCode();
                                     break;
                                 case "help":
                                     Console.WriteLine("mod start   - start mod");
