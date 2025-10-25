@@ -54,21 +54,21 @@ namespace NSProgram
     class CHis
     {
         public double score;
-        public int index;
-        public int delta;
+        public int factorIndex;
+        public int factorDelta;
 
         public string ToStr()
         {
             string s = score.ToString(CultureInfo.InvariantCulture);
-            return $"{s} {index} {delta}";
+            return $"{s} {factorIndex} {factorDelta}";
         }
 
         public void FromStr(string s)
         {
             string[] a = s.Split();
             score = Convert.ToDouble(a[0], CultureInfo.InvariantCulture);
-            index = Convert.ToInt32(a[1]);
-            delta = Convert.ToInt32(a[2]);
+            factorIndex = Convert.ToInt32(a[1]);
+            factorDelta = Convert.ToInt32(a[2]);
         }
 
     }
@@ -78,12 +78,12 @@ namespace NSProgram
 
         public bool AddHis(CHis his)
         {
-            if (his.delta == 0)
+            if (his.factorDelta == 0)
                 return false;
             for (int n = Count - 1; n >= 0; n--)
             {
                 CHis h = this[n];
-                if (h.index == his.index)
+                if (h.factorIndex == his.factorIndex)
                     if (h.score >= his.score)
                         return false;
                     else
@@ -123,8 +123,8 @@ namespace NSProgram
             CHis h = new CHis
             {
                 score = score,
-                index = index,
-                delta = delta
+                factorIndex = index,
+                factorDelta = delta
             };
             return AddHis(h);
         }
@@ -132,7 +132,7 @@ namespace NSProgram
         public bool RemoveIndex(int i)
         {
             for (int n = Count - 1; n >= 0; n--)
-                if (this[n].index == i)
+                if (this[n].factorIndex == i)
                 {
                     RemoveAt(n);
                     return true;
@@ -192,15 +192,6 @@ namespace NSProgram
             return val;
         }
 
-        string BstToEle()
-        {
-            string result = string.Empty;
-            string[] tokens = bst.Trim().Split();
-            for (int i = 0; i < tokens.Length; i++)
-                result += $" {i + 1}={tokens[i]}";
-            return result.Trim();
-        }
-
         public void SaveToIni(CRapIni ini)
         {
             ini.Write($"option>{name}>enabled", enabled);
@@ -208,7 +199,6 @@ namespace NSProgram
             ini.Write($"option>{name}>delta", delta);
             ini.Write($"option>{name}>cur", cur);
             ini.Write($"option>{name}>bst", bst);
-            ini.Write($"option>{name}>ele", BstToEle());
         }
 
         public void LoadFromIni(CRapIni ini)
@@ -306,16 +296,16 @@ namespace NSProgram
 
     class COptionList : List<COption>
     {
-        public int index = 0;
-        public int delta = 0;
+        public int factorIndex = 0;
+        public int factorDelta = 0;
 
         public void SaveToIni(CRapIni ini)
         {
             ini.DeleteKey("option");
             foreach (COption option in this)
                 option.SaveToIni(ini);
-            ini.Write("mod>index", index);
-            ini.Write("mod>delta", delta);
+            ini.Write("mod>factor>index", factorIndex);
+            ini.Write("mod>factor>delta", factorDelta);
             ini.Save();
         }
 
@@ -329,8 +319,8 @@ namespace NSProgram
                 option.LoadFromIni(ini);
                 Add(option);
             }
-            index = ini.ReadInt("mod>index");
-            delta = ini.ReadInt("mod>delta");
+            factorIndex = ini.ReadInt("mod>factor>index");
+            factorDelta = ini.ReadInt("mod>factor>delta");
         }
 
         public void LoadFromCode()
@@ -343,8 +333,8 @@ namespace NSProgram
                 if (option.LoadFromCode(line))
                     Add(option);
             }
-            index = 0;
-            delta = 0;
+            factorIndex = 0;
+            factorDelta = 0;
         }
 
         public void SaveToCode()
@@ -369,10 +359,9 @@ namespace NSProgram
         {
             int l = 0;
             foreach (COption option in this)
-                if (option.enabled)
-                    if (option.oType == EOptionType.eString)
-                        l += option.cur.Split().Length;
-                    else l++;
+                if (option.oType == EOptionType.eString)
+                    l += option.cur.Split().Length;
+                else l++;
             return l;
         }
 
@@ -382,31 +371,42 @@ namespace NSProgram
                 option.enabled = v;
         }
 
-        public COption GetOption(int i)
+        public COption GetOption(int optIndex)
         {
-            if ((i >= 0) && (i < Count))
-                return this[i];
+            if ((optIndex >= 0) && (optIndex < Count))
+                return this[optIndex];
             return null;
         }
 
-        public bool GetIndexSubIndex(int index, out int optionIndex, out int optionSubIndex)
+        public COption GetOption()
+        {
+            return FactorToOption(factorIndex);
+        }
+
+        public COption FactorToOption(int fi)
+        {
+            GetOptIndexOptDelta(fi, out int optIndex, out _);
+            return GetOption(optIndex);
+        }
+
+        public bool GetOptIndexOptDelta(int indexTotal, out int optionIndex, out int optionDelta)
         {
             optionIndex = 0;
-            optionSubIndex = 0;
+            optionDelta = 0;
             if (Count == 0)
                 return false;
             int l = 0;
-            index %= CountFactors();
+            indexTotal %= CountFactors();
             for (int n = 0; n < Count; n++)
             {
                 COption opt = this[n];
                 if (opt.oType == EOptionType.eString)
                     l += opt.cur.Split().Length;
                 else l++;
-                if (l > index)
+                if (l > indexTotal)
                 {
                     optionIndex = n;
-                    optionSubIndex = l - index - 1;
+                    optionDelta = l - indexTotal - 1;
                     break;
                 }
             }
@@ -443,10 +443,10 @@ namespace NSProgram
                 opt.bst = opt.cur;
         }
 
-        public void Modify()
+        public bool Modify()
         {
             BstToCur();
-            Modify(index, delta);
+            return Modify(factorIndex, factorDelta);
         }
 
         public bool Modified()
@@ -454,11 +454,11 @@ namespace NSProgram
             return OptionsBst() != OptionsCur();
         }
 
-        public bool Modify(int i, int d)
+        public bool Modify(int factorIndex, int factorDelta)
         {
-            i = i % CountFactors();
-            GetIndexSubIndex(i, out int idx, out int sub);
-            return this[idx].Modify(sub, d);
+            factorIndex = factorIndex % CountFactors();
+            GetOptIndexOptDelta(factorIndex, out int idx, out int sub);
+            return this[idx].Modify(sub, factorDelta);
         }
 
     }
@@ -498,16 +498,21 @@ namespace NSProgram
 
     }
 
-
     internal class CMod
     {
-        int sign = 0;
         int fail = 0;
         int extra = 0;
         int modIndex = 0;
-        public int blunderLimit = 0;
+        int margin = 0;
+        public int limitB = 0;
+        public int limitM = 0;
+        public int limitI = 0;
+        public int progressCount = 0;
+        int bestB = 0;
+        int bestM = 0;
+        int bestI = 0;
         public double bstScore = 0;
-        public double avgProgress = 0;
+        public double progressTotal = 0;
         public CMix mix = new CMix();
         public CLast last = new CLast();
         readonly CHisList historyList = new CHisList();
@@ -553,12 +558,15 @@ namespace NSProgram
             ini.Write("mod>extra", extra);
             ini.Write("mod>fail", fail);
             ini.Write("mod>modIndex", modIndex);
+            ini.Write("mod>margin", margin);
+            ini.Write("mod>bestB", bestB);
+            ini.Write("mod>bestM", bestM);
+            ini.Write("mod>bestI", bestI);
+            ini.Write("mod>progressCount", progressCount);
             ini.Write("mod>score", bstScore);
-            ini.Write("mod>progress>avg", avgProgress);
+            ini.Write("mod>progressTotal", progressTotal);
             ini.Write("mod>his", historyList.ToSl(), "|");
             ini.Write("mod>last", last.ToSl(), "|");
-            ini.Write("mod>blunder>limit", blunderLimit);
-            ini.Write("mod>sign", sign);
             ini.Write("mod>mix", mix);
             ini.Save();
         }
@@ -570,17 +578,43 @@ namespace NSProgram
             extra = ini.ReadInt("mod>extra");
             fail = ini.ReadInt("mod>fail");
             modIndex = ini.ReadInt("mod>modIndex");
+            margin = ini.ReadInt("mod>margin");
+            bestB = ini.ReadInt("mod>bestB");
+            bestM = ini.ReadInt("mod>bestM");
+            bestI = ini.ReadInt("mod>bestI");
+            progressCount = ini.ReadInt("mod>progressCount");
             bstScore = ini.ReadDouble("mod>score");
-            avgProgress = ini.ReadDouble("mod>progress>avg");
+            progressTotal = ini.ReadDouble("mod>progressTotal");
             historyList.FromSl(ini.ReadListStr("mod>his", "|"));
             last.FromSl(ini.ReadListStr("mod>last", "|"));
-            blunderLimit = ini.ReadInt("mod>blunder>limit");
-            sign = ini.ReadInt("mod>sign");
             mix.SetList(ini.ReadListInt("mod>mix"));
             int length = optionList.CountFactors();
             if (mix.Count != length * 2)
                 mix.SetLen(length * 2);
+            UpdateLimit();
 
+        }
+
+        void UpdateLimit()
+        {
+            limitB = bestB + margin;
+            limitM = bestM + margin * 2;
+            limitI = bestI + margin * 4;
+        }
+
+        public bool ActionLimit()
+        {
+            int marginB = bestB - Program.accuracy.blunders;
+            if (limitB > 0)
+                if (Program.accuracy.blunders > limitB)
+                    return true;
+            if (limitM > 0)
+                if (Program.accuracy.mistakes > limitM + marginB * 2)
+                    return true;
+            if (limitI > 0)
+                if (Program.accuracy.inaccuracies > limitI + marginB * 4)
+                    return true;
+            return false;
         }
 
         public void LoadFromCode()
@@ -606,102 +640,107 @@ namespace NSProgram
                 }
         }
 
-        public void PrintBlunderLimit()
+        public void PrintLimit()
         {
-            int bl = blunderLimit;
-            int count = Program.accuracy.Count;
-            int b = bl / (count * count);
-            bl = bl - b * count * count;
-            int m = bl / count;
-            int i = bl - m * count;
-            Console.WriteLine($"limit blunders {b} mistakes {m} inaccuracies {i}");
+            Console.WriteLine($"limit blunders {limitB} mistakes {limitM} inaccuracies {limitI}");
         }
 
 
         bool Modify(int modTry)
         {
             int countFactors = optionList.CountFactors();
-            if (modTry >= countFactors)
+            if (++modTry > countFactors)
                 return false;
-            int factorIndex = modIndex % countFactors;
-            int factorDelta = modIndex / countFactors;
+            if (mix.Count == 0)
+                return false;
+            int factorIndex = modIndex % mix.Count;
+            int factorDelta = modIndex / mix.Count;
+            int mixIndex = mix.GetVal(factorIndex);
             modIndex++;
             optionList.BstToCur();
-            optionList.index = mix.GetVal(factorIndex);
-            optionList.GetIndexSubIndex(optionList.index, out int idx, out int sub);
-            COption option = optionList[idx];
-            optionList.delta = 1 << (factorDelta / 2);
-            if ((factorDelta & 1) == sign)
-                optionList.delta = -optionList.delta;
-            Console.WriteLine();
-            if (option.Modify(sub, optionList.delta))
+            optionList.factorIndex = mixIndex % countFactors;
+            optionList.factorDelta = 1 << factorDelta;
+            if (mixIndex >= countFactors)
+                optionList.factorDelta = -optionList.factorDelta;
+            if (optionList.Modify())
             {
-                Console.WriteLine($">> {bstScore:N2} {modIndex * 50 / countFactors}% delta {optionList.delta} {option.name} {option.bst} >> {option.cur}");
+                COption option = optionList.GetOption();
+                if (option == null)
+                    return false;
+                Console.WriteLine();
+                Console.WriteLine($">> {bstScore:N2} {modIndex * 50 / countFactors}% fIndex: {optionList.factorIndex} fDelta: {optionList.factorDelta} {option.name} {option.bst} >> {option.cur}");
                 return true;
             }
-            return Modify(modTry + 1);
+            return Modify(modTry);
+        }
+
+        void Clear()
+        {
+            modIndex = 0;
+            extra = 0;
+            fail = 0;
+            mix.Shuffle();
+            SaveToIni();
         }
 
         public bool SetScore()
         {
             double score = Program.accuracy.GetAccuracy();
-            bool lastAdd = false;
-            if (Program.accuracy.GetProgress() == 100)
-                lastAdd = last.AddVal(score);
-            if ((blunderLimit == 0) || (bstScore < score) || (blunderLimit > Program.accuracy.BlunderLimit()))
-            {
-                blunderLimit = Program.accuracy.BlunderLimit();
-                PrintBlunderLimit();
-            }
+            bool lastAdd = (extra == 0) && (Program.accuracy.GetProgress() == 100);
+            if (extra > 0)
+                extra--;
+            if (lastAdd)
+                last.AddVal(score);
             if (bstScore < score)
             {
                 bstScore = score;
-                modIndex = 0;
-                extra = 0;
-                fail = 0;
-                sign = rnd.Next(2);
-                mix.Shuffle();
+                bestB = Program.accuracy.blunders;
+                bestM = Program.accuracy.mistakes;
+                bestI = Program.accuracy.inaccuracies;
+                UpdateLimit();
+                PrintLimit();
                 optionList.CurToBst();
                 optionList.SaveToCode();
-                historyList.RemoveIndex(optionList.index);
-                SaveToIni();
+                historyList.RemoveIndex(optionList.factorIndex);
+                Clear();
                 log.Add($"!! {score:N2} ({Program.accuracy.blunders} {Program.accuracy.mistakes} {Program.accuracy.inaccuracies} {Program.accuracy.Count})");
                 Console.WriteLine();
                 Console.WriteLine($"!! {score:N2} {optionList.OptionsBst()}");
             }
             else
             {
-                if (historyList.Add(score, optionList.index, optionList.delta))
-                    if (lastAdd && (extra == 0))
-                        extra = 2;
+                if (lastAdd && historyList.Add(score, optionList.factorIndex, optionList.factorDelta))
+                    extra = 2;
                 if (extra > 0)
                 {
-                    extra--;
                     string names = string.Empty;
-                    optionList.GetIndexSubIndex(optionList.index, out int idx, out int _);
-                    COption opt = optionList.GetOption(idx);
+                    optionList.GetOptIndexOptDelta(optionList.factorIndex, out int oIndex, out int _);
+                    COption opt = optionList.GetOption(oIndex);
                     if (opt != null)
-                        names = $"{opt.name} {optionList.index}";
+                        names = $"{opt.name} {optionList.factorIndex}";
                     optionList.Modify();
                     int modified = 0;
                     for (int n = 0; n < historyList.Count; n++)
                     {
                         CHis h = historyList[n];
-                        if (h.index != optionList.index)
+                        if (h.factorIndex != optionList.factorIndex)
                         {
-                            optionList.GetIndexSubIndex(h.index, out idx, out _);
-                            opt = optionList.GetOption(idx);
+                            optionList.GetOptIndexOptDelta(h.factorIndex, out oIndex, out _);
+                            opt = optionList.GetOption(oIndex);
                             if (opt != null)
-                                names += $" {opt.name} {h.index}";
-                            optionList.Modify(h.index, h.delta);
+                                names += $" {opt.name} {h.factorIndex}";
+                            optionList.Modify(h.factorIndex, h.factorDelta);
                             if (++modified >= extra)
                                 break;
                         }
                     }
                     if (extra > modified)
                         extra = modified;
-                    Console.WriteLine($"extra {extra} {names}");
-                    return modified > 0;
+                    if (extra > 0)
+                    {
+                        Console.WriteLine($"extra {extra} {names}");
+                        return true;
+                    }
                 }
             }
             return Modify(0);
@@ -709,28 +748,32 @@ namespace NSProgram
 
         public void Reset()
         {
-            fail = 0;
             bstScore = 0;
-            avgProgress = 0;
-            blunderLimit = 0;
-            modIndex = 0;
-            sign = rnd.Next(2);
+            bestB = 0;
+            bestM = 0;
+            bestI = 0;
+            limitB = 0;
+            limitM = 0;
+            limitI = 0;
+            progressTotal = 0;
+            progressCount = 0;
+            last.Clear();
             historyList.Clear();
-            mix.Shuffle();
             optionList.BstToCur();
-            SaveToIni();
+            Clear();
             Console.WriteLine(optionList.OptionsCur());
         }
 
-        public double GetAvgProgress()
+        public double GetProgress()
         {
             double progress = Program.accuracy.GetProgress();
-            return avgProgress * 0.9 + progress * 0.1;
+            return (progressTotal + progress) / (progressCount + 1);
         }
 
-        public void SetAvgProgress()
+        public void SetProgress()
         {
-            avgProgress = GetAvgProgress();
+            progressTotal += Program.accuracy.GetProgress();
+            progressCount++;
         }
 
     }

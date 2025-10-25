@@ -34,11 +34,6 @@ namespace NSProgram
         public CRapLog his = new CRapLog("accuracy.his");
         readonly static Random rnd = new Random();
 
-        public int BlunderLimit()
-        {
-            return blunders * Count * Count + mistakes * Count + inaccuracies;
-        }
-
         public int GetLimit()
         {
             if (!valid)

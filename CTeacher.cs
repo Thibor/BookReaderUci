@@ -481,6 +481,8 @@ namespace NSProgram
 
         void AccuracyStart(string student)
         {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
             string name = Path.GetFileNameWithoutExtension(student);
             if (!SetStudent(student))
             {
@@ -495,6 +497,8 @@ namespace NSProgram
             double accuracy = Program.accuracy.GetAccuracy();
             Program.accuracy.log.Add($"{name} {EngineDate(student)} accuracy {accuracy:N2}% ({Program.accuracy.blunders} {Program.accuracy.mistakes} {Program.accuracy.inaccuracies} {Program.accuracy.index}) < {Program.accuracy.Count} {Program.accuracy.badFen.fen} ({Program.accuracy.badFen.bstMove} => {Program.accuracy.badFen.badMove}) ({Program.accuracy.badFen.bstScore} => {Program.accuracy.badFen.badScore}) ({winChanceSou} => {winChanceDes})");
             StudentTerminate();
+            stopwatch.Stop();
+            Console.WriteLine($"time {stopwatch.Elapsed.TotalSeconds / Program.accuracy.index:N2} sec");
         }
 
         public void AccuracyStart()
@@ -526,7 +530,7 @@ namespace NSProgram
         {
             double accuracy = Program.accuracy.GetAccuracy();
             double progress = Program.accuracy.GetProgress();
-            double avg = mod.GetAvgProgress();
+            double avg = mod.GetProgress();
             ConsoleWrite($"\rprogress {progress:N2}% avg {avg:N2}% accuracy {accuracy:N2}% blunders {Program.accuracy.blunders} mistakes {Program.accuracy.mistakes} inaccuracies {Program.accuracy.inaccuracies} total {Program.accuracy.index}");
         }
 
@@ -543,7 +547,7 @@ namespace NSProgram
                     Program.accuracy.AddScore(tdg.line.fen, tdg.bestMove);
                     RenderLineMod();
                 }
-                if (!Program.accuracy.confirm && (mod.blunderLimit > 0) && (Program.accuracy.BlunderLimit() > mod.blunderLimit))
+                if (!Program.accuracy.confirm && mod.ActionLimit())
                     break;
                 CTData tds = new CTData
                 {
@@ -559,7 +563,7 @@ namespace NSProgram
                 StudentWriteLine($"position fen {tds.line.fen}");
                 StudentWriteLine(Constants.go);
             }
-            mod.SetAvgProgress();
+            mod.SetProgress();
             Console.WriteLine();
         }
 
@@ -568,7 +572,7 @@ namespace NSProgram
             string name = Path.GetFileNameWithoutExtension(student);
             Console.WriteLine($"start {name}");
             Console.WriteLine($"factors {mod.optionList.CountFactors()} fens {Program.accuracy.Count} limit {Program.accuracy.GetLimit()} accuracy {mod.bstScore:N2}");
-            mod.PrintBlunderLimit();
+            mod.PrintLimit();
             while (true)
             {
                 Program.accuracy.Prolog();
@@ -587,10 +591,6 @@ namespace NSProgram
                         else
                             StudentWriteLine($"setoption name {opt.name} value {opt.cur}");
                 }
-                /* if(Program.accuracy.confirm)
-                    Console.WriteLine(mod.optionList.OptionsBst());
-                else
-                    Console.WriteLine(mod.optionList.OptionsCur());*/
                 ModStudent();
                 if (Program.accuracy.confirm || !mod.SetScore())
                     break;
