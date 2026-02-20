@@ -290,7 +290,7 @@ namespace NSProgram
                                     break;
                                 default:
                                     Console.WriteLine($"Unknown command [{uci.tokens[1]}]");
-                                    Console.WriteLine($"accuracy help - show book commands");
+                                    Console.WriteLine($"accuracy help - show accuracy commands");
                                     break;
                             }
                         accuracy.PrintInfo();

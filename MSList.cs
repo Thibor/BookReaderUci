@@ -29,6 +29,7 @@ namespace NSProgram
         public string fen = String.Empty;
         public int depth = 0;
         public double loss = 100;
+        const double minAcc = 10.0;
 
         public bool Valid()
         {
@@ -91,16 +92,21 @@ namespace NSProgram
             return 50 + 50 * (2 / (1 + Math.Exp(-0.00368208 * centipawns)) - 1);
         }
 
-        public static double GetAccuracy(double winPercentBefore, double winPercentAfter)
+        public static double GetAccuracy(double wcBefore, double wcAfter)
         {
-            return 103.1668 * Math.Exp(-0.04354 * (winPercentBefore - winPercentAfter)) - 3.1669;
+            double a = 103.1668 * Math.Exp(-0.04354 * (wcBefore - wcAfter)) - 3.1669;
+            if (a < minAcc)
+                a = minAcc;
+            if (a > 100)
+                a = 100;
+            return a;
         }
 
         public static double GetAccuracy(int scoreBefore, int scoreAfter)
         {
-            double winPercentBefore = WiningChances(scoreBefore);
-            double winPercentAfter = WiningChances(scoreAfter);
-            return GetAccuracy(winPercentBefore, winPercentAfter);
+            double wcBefore = WiningChances(scoreBefore);
+            double wcAfter = WiningChances(scoreAfter);
+            return GetAccuracy(wcBefore, wcAfter);
         }
 
         public static double GetLoss(int before, int after)

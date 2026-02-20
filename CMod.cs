@@ -588,9 +588,6 @@ namespace NSProgram
             historyList.FromSl(ini.ReadListStr("mod>his", "|"));
             last.FromSl(ini.ReadListStr("mod>last", "|"));
             mix.SetList(ini.ReadListInt("mod>mix"));
-            int length = optionList.CountFactors();
-            if (mix.Count != length * 2)
-                mix.SetLen(length * 2);
             UpdateLimit();
 
         }
@@ -598,22 +595,22 @@ namespace NSProgram
         void UpdateLimit()
         {
             limitB = bestB + margin;
-            limitM = bestM + margin * 2;
-            limitI = bestI + margin * 4;
+            limitM = bestM + margin;
+            limitI = bestI + margin;
         }
 
         public bool ActionLimit()
         {
-            int marginB = bestB - Program.accuracy.blunders;
-            if (limitB > 0)
+            bool valid = limitB + limitM + limitI > 0;
+            if (valid)
+            {
                 if (Program.accuracy.blunders > limitB)
                     return true;
-            if (limitM > 0)
-                if (Program.accuracy.mistakes > limitM + marginB * 2)
+                if (Program.accuracy.mistakes > limitM)
                     return true;
-            if (limitI > 0)
-                if (Program.accuracy.inaccuracies > limitI + marginB * 4)
+                if (Program.accuracy.inaccuracies > limitI)
                     return true;
+            }
             return false;
         }
 
@@ -668,7 +665,7 @@ namespace NSProgram
                 if (option == null)
                     return false;
                 Console.WriteLine();
-                Console.WriteLine($">> {bstScore:N2} {modIndex * 50 / countFactors}% fIndex: {optionList.factorIndex} fDelta: {optionList.factorDelta} {option.name} {option.bst} >> {option.cur}");
+                Console.WriteLine($">> {bstScore:N2} {modIndex * 50 / countFactors}% {option.name} ({optionList.factorIndex} {optionList.factorDelta}) {option.bst} >> {option.cur}");
                 return true;
             }
             return Modify(modTry);
@@ -685,7 +682,7 @@ namespace NSProgram
 
         public bool SetScore()
         {
-            double score = Program.accuracy.GetAccuracy();
+            double score = Program.accuracy.GetTotalAccuracy();
             bool lastAdd = (extra == 0) && (Program.accuracy.GetProgress() == 100);
             if (extra > 0)
                 extra--;
@@ -717,7 +714,7 @@ namespace NSProgram
                     optionList.GetOptIndexOptDelta(optionList.factorIndex, out int oIndex, out int _);
                     COption opt = optionList.GetOption(oIndex);
                     if (opt != null)
-                        names = $"{opt.name} {optionList.factorIndex}";
+                        names = $"{opt.name} ({optionList.factorIndex} {optionList.factorDelta})";
                     optionList.Modify();
                     int modified = 0;
                     for (int n = 0; n < historyList.Count; n++)
@@ -728,7 +725,7 @@ namespace NSProgram
                             optionList.GetOptIndexOptDelta(h.factorIndex, out oIndex, out _);
                             opt = optionList.GetOption(oIndex);
                             if (opt != null)
-                                names += $" {opt.name} {h.factorIndex}";
+                                names += $" {opt.name} ({h.factorIndex} {h.factorDelta})";
                             optionList.Modify(h.factorIndex, h.factorDelta);
                             if (++modified >= extra)
                                 break;
@@ -760,6 +757,7 @@ namespace NSProgram
             last.Clear();
             historyList.Clear();
             optionList.BstToCur();
+            mix.SetLen(optionList.CountFactors() * 2);
             Clear();
             Console.WriteLine(optionList.OptionsCur());
         }

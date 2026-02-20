@@ -23,7 +23,6 @@ namespace NSProgram
         public int index = 0;
         int totalCount = 0;
         public double totalLoss = 0;
-        public double totalLossBst = 0;
         double totalAccuracy = 0;
         public int inaccuracies = 0;
         public int mistakes = 0;
@@ -42,7 +41,7 @@ namespace NSProgram
                 return Count;
             if (check)
                 return Count;
-            return Constants.limit < 1 ? Count : Math.Min(Constants.limit, Count);
+            return Constants.limit == 0 ? Count : Math.Min(Constants.limit, Count);
         }
 
         public double GetProgress()
@@ -60,7 +59,6 @@ namespace NSProgram
             blunders = 0;
             totalCount = 0;
             totalLoss = 0;
-            totalLossBst = 0;
             totalAccuracy = 0;
             badFen = default;
             badFen.worstAccuracy = 100;
@@ -125,36 +123,26 @@ namespace NSProgram
             MSLine msl = GetLine(fen);
             int bstScore = msl.First().score;
             int curScore = msl.GetScore(curMove);
-            double bstWC = MSLine.WiningChances(bstScore);
-            double curWC = MSLine.WiningChances(curScore);
-            double curAccuracy = Math.Max(10.0, MSLine.GetAccuracy(bstWC, curWC));
-            double loss = bstWC - curWC;
-            totalLossBst += msl.loss;
-            if (confirm)
-                msl.loss = loss;
+            double wcBest = MSLine.WiningChances(bstScore);
+            double wcCurrent = MSLine.WiningChances(curScore);
+            double curAccuracy = MSLine.GetAccuracy(wcBest, wcCurrent);
+            double loss = wcBest - wcCurrent;
+            msl.loss = loss;
             totalCount++;
-            totalAccuracy += 1.0 / curAccuracy;
+            totalAccuracy += curAccuracy;
             totalLoss += loss;
-            bool swap = true;
             if (loss >= Constants.blunder)
             {
-                Swap(index - 1, blunders);
-                swap = false;
                 blunders++;
                 if (check)
                     DeleteFen(fen);
             }
             if (loss >= Constants.mistake)
             {
-                if (swap)
-                    Swap(index - 1, mistakes);
-                swap = false;
                 mistakes++;
             }
             if (loss >= Constants.inaccuracy)
             {
-                if (swap)
-                    Swap(index - 1, inaccuracies);
                 inaccuracies++;
             }
             if (badFen.worstAccuracy > curAccuracy)
@@ -182,11 +170,11 @@ namespace NSProgram
             return null;
         }
 
-        public double GetAccuracy()
+        public double GetTotalAccuracy()
         {
             if (totalCount == 0)
                 return 0;
-            return totalCount / totalAccuracy;
+            return totalAccuracy / totalCount;
         }
 
         public bool NextLine(out MSLine line)
